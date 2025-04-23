@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomePage | ShopNexts</title>
+    <link rel="icon" href="img/icon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style> @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap'); </style>
+
+</head>
+<body>
+    
+  
+  <!-- Primera Cabecera del Sitio Web -->
+  <header>
+          
+    <div id="header-black">
+
+      <p>Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!</p>
+      <h2>Buy Now!</h2>
+
+      <select id="languages">
+        <option value="Español:">Español:</option>
+        <option value="English">English</option>
+      </select>
+
+    </div>
+
+      <!-- Segunda Cabecera del Sitio Web -->
+
+      <div id="header-principal">
+
+        <a href="html/login.html">
+          <img src="img/logo-negativo.png" alt="Logo ShopNexs">
+        </a>
+
+        <div id="nav">
+          <a href="index.html">Inicio</a>
+          <a href="html/sign-up.html">Regístrate</a>
+          <a href="html/about-us.html">Acerca de</a>
+          <a href="html/contact.html">Contacto</a>
+        </div>
+
+        <!-- Contenedor de la barra de búsqueda -->
+        <div class="buscador">
+          <input type="text" placeholder="¿Qué estás buscando?">
+          <button type="submit">
+          <i class="fa-solid fa-magnifying-glass" style="color: #121212;"></i>
+          </button>
+        </div>
+                  
+        <!-- Botón de Corazón-->
+
+        <div class="heart">
+          <button type="submit">
+          <i class="fa-solid fa-heart" style="color: #121212;"></i>
+          </button>
+        </div>
+
+        <!-- Botón de Carrito-->
+                
+         <div class="cart">
+            <button type="submit">
+            <i class="fa-solid fa-cart-shopping" style="color: #121212;"></i>
+            </button>
+      </div>
+    </div>
+
+    <div class="linea1"></div>
+    <div class="linea2"></div>
+    <div class="linea3"></div>
+
+  </header>
+
+  <div id="categories">
+
+    <i class="fa-solid fa-venus" style="color: #8E06C2;"></i><a href="/html/categories.html">Ropa Femenina</a><hr>
+    <i class="fa-solid fa-person" style="color: #8E06C2;"></i><a href="/html/categories.html">Ropa Masculina</a><hr>
+    <i class="fa-solid fa-laptop" style="color: #8E06C2;"></i><a href="/html/">Electrónica</a><hr>
+    <i class="fa-solid fa-house" style="color: #8E06C2;"></i><a href="/html/categories.html">Hogar & Estilo de Vida</a><hr>
+    <i class="fa-solid fa-pills" style="color: #8E06C2;"></i><a href="/html/categories.html">Medicina</a><hr>
+    <i class="fa-solid fa-futbol" style="color: #8E06C2;"></i><a href="/html/categories.html">Deportes</a><hr>
+    <i class="fa-solid fa-gamepad" style="color: #8E06C2;"></i><a href="/html/categories.html">Bebés & Juguetes</a><hr>
+    <i class="fa-solid fa-paw" style="color: #8E06C2;"></i><a href="/html/categories.html">Mascotas</a><hr>
+    <i class="fa-solid fa-eye" style="color: #8E06C2;"></i><a href="/html/categories.html">Salud & Belleza</a>
+
+  </div>
+
+  <div id="carrusel">
+
+    <div class="slide activo">
+      <img src="img/carrousel/carrousel1.png" alt="Apple 14">
+    </div>
+
+    <div class="slide">
+      <img src="img/carrousel/carrousel2.png" alt="Car Rental">
+    </div>
+
+    <div class="slide">
+      <img src="img/carrousel/carrousel3.png" alt="PC Sale">
+    </div>
+              
+    <button class="flecha izquierda" onclick="cambiarSlide(-1)">←</button>
+    <button class="flecha derecha" onclick="cambiarSlide(1)">→</button>
+  </div>
+
+
+  <div id="flash-sales">
+
+    <h2>¡Solo Hoy!</h2>
+    <h3>Ventas Relámpago</h3>
+
+     <div id="control">
+      <img src="/img/rampage/control.png" alt="Control">
+      <h2>HAVIT HV-G92 Gamepad</h2>
+      <h3>$120</h3>
+      <h4>$160</h4>
+      <div class="stars">
+        <img src="/img/star/star purple.png" alt="Star Purple1">
+        <img src="/img/star/star purple.png" alt="Star Purple2">
+        <img src="/img/star/star purple.png" alt="Star Purple3">
+        <img src="/img/star/star purple.png" alt="Star Purple4">
+        <img src="/img/star/star purple.png" alt="Star Purple5">
+      </div>
+      <div id="icon-products-heart">
+        <img src="/img/Fill Heart.png" alt="Fill Heart">
+      </div>
+      <div id="icon-products-eye">
+        <img src="/img/Fill Eye.png" alt="Fill Eye">
+      </div>
+      <h5>(88)</h5>
+      <h6>-40%</h6>
+    </div>
+
+    <div id="keyboard">
+      <img src="/img/rampage/keyboard.png" alt="Keyboard">
+      <h2>AK-900 Wired Keyboard</h2>
+      <h3>$960</h3>
+      <h4>$1160</h4>
+      <img src="/img/star/star purple.png" alt="Star Purple1">
+      <img src="/img/star/star purple.png" alt="Star Purple2">
+      <img src="/img/star/star purple.png" alt="Star Purple3">
+      <img src="/img/star/star purple.png" alt="Star Purple4">
+      <img src="/img/star/star gray.png" alt="Star Gray1">
+      <div id="icon-products-heart">
+        <img src="/img/Fill Heart.png" alt="Fill Heart">
+      </div>
+      <div id="icon-productos-eye">
+        <img src="/img/Fill Eye.png" alt="Fill Eye">
+      </div>
+      <h5>(75)</h5>
+      <h6>-35%</h6>
+    </div>
+
+    <div id="monitor">
+      <img src="/img/rampage/monitor.png" alt="Monitor">
+      <h2>IPS LCD Gaming Monitor</h2>
+      <h3>$370</h3>
+      <h4>$400</h4>
+      <img src="/img/star/star purple.png" alt="Star Purple1">
+      <img src="/img/star/star purple.png" alt="Star Purple2">
+      <img src="/img/star/star purple.png" alt="Star Purple3">
+      <img src="/img/star/star purple.png" alt="Star Purple4">
+      <img src="/img/star/star purple.png" alt="Star Purple5">
+      <div id="icon-products-heart">
+        <img src="/img/Fill Heart.png" alt="Fill Heart">
+      </div>
+      <div id="icon-products-eye">
+        <img src="/img/Fill Eye.png" alt="Fill Eye">
+      </div>
+      <h5>(99)</h5>
+      <h6>-30%</h6>
+    </div>
+
+    <div id="chair">
+      <img src="/img/rampage/chair.png" alt="Chair">
+      <h2>S-Series Comfort Chair</h2>
+      <h3>$375</h3>
+      <h4>$400</h4>
+      <img src="/img/star/star purple.png" alt="Star Purple1">
+      <img src="/img/star/star purple.png" alt="Star Purple2">
+      <img src="/img/star/star purple.png" alt="Star Purple3">
+      <img src="/img/star/star purple.png" alt="Star Purple4">
+      <img src="/img/star/star-half.png" alt="Star Half">
+      <div id="icon-products-heart">
+        <img src="/img/Fill Heart.png" alt="Fill Heart">
+      </div>
+      <div id="icon-productos-eye">
+        <img src="/img/Fill Eye.png" alt="Fill Eye">
+      </div>
+      <h5>(99)</h5>
+      <h6>-25%</h6>
+    </div>
+
+    <div class="view-all">
+      <button type="submit">Mirar todos los productos</button>
+   </div>
+  </div>
+
+  <div class="categories-shop">
+
+    <h2>Categorias</h2>
+    <h3>Busca por categoría</h3>
+
+    <div class="image-categories">
+      <li><i class="fa-solid fa-mobile" style="color: #0c0c0c;"></i>Celulares</li>
+      <li><i class="fa-solid fa-desktop" style="color: #0c0c0c;"></i>Computadoras</li>
+      <li><i class="fa-solid fa-clock" style="color: #0c0c0c;"></i>SmartWatch</li>
+    </div>
+  </div> 
+
+  <footer>
+    <div class="footer-section">
+      <img src="img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
+    </div>
+
+    <div class="send-message">
+      <input type="text" placeholder="Envía un correo">
+      <button type="submit">
+        <i class="fa-solid fa-paper-plane" style="color: #0c0c0c;"></i>
+      </button>
+    </div>
+  
+    <div class="footer-section">
+      <h3>Información</h3>
+      <ul>
+        <li><a href="/html/about-us.html">Acerca de</a></li>
+        <li><a href="/html/contact.html">Contacto</a></li>
+        <li><a href="/html/sign-up.html">Regístrate</a></li>
+      </ul>
+    </div>
+  
+    <div class="footer-section">
+      <h3>Soporte</h3>
+      <ul>
+        <li><a>soporteshopnexts@gmail.com</a></li>
+        <li><a>Calle 133 # 123 - 34 Piso 12</a></li>
+        <li><a>+57 343 948 9283</a></li>
+      </ul>
+    </div>
+  
+    <div class="footer-section">
+      <h3>Contacto</h3>
+      <ul>
+        <li><a>Redes Sociales</a></li>
+
+        <img src="../img/Icon-Twitter.png" alt="Icon Twitter">
+        <img src="../img/icon-instagram.png" alt="Icon Instagram">
+        <img src="../img/Icon-Linkedin.png" alt="Icon LinkedIn">
+      </ul>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+
+</body>
+</html>
