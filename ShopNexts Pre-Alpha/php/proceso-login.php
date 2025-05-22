@@ -20,10 +20,6 @@ if ($stmt->num_rows == 1) {
     $stmt->bind_result($id_usuario, $hash_password, $rol);
     $stmt->fetch();
 
-    // Para DEBUG TEMPORAL (elimínalo luego)
-    echo "Clave: $clave<br>";
-    echo "Hash: $hash_password<br>";
-
     if (password_verify($clave, $hash_password)) {
         $_SESSION['id_usuario'] = $id_usuario;
         $_SESSION['correo'] = $correo;
@@ -33,7 +29,7 @@ if ($stmt->num_rows == 1) {
         $conexion->close();
 
         if ($rol === 'admin') {
-            header("Location: ../html/dashboard_admin.php");
+            header("Location: ../html/dashboard-admin.php");
         } else if ($rol === 'cliente') {
             header("Location: ../html/index.html");
         } else if ($rol === 'vendedor') {

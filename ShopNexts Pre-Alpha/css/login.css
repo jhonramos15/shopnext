@@ -2,16 +2,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 *{
-    background-color: #fefefe;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-  }
-  
-section:first-of-type {
-  margin-top: 20px;
-  padding-top: 20px;
+  background-color: #fefefe;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
 section {
@@ -20,71 +15,64 @@ section {
   margin-top: 60px;
 }
 
-.section-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-}
-
   /* Homepage */
   /* Header oscuro */
   
-  #header-black{
-      background-color: #121212;
-      height: 50px;
-      justify-content: center;
-      align-items: center;
-      display: flex;
-      
-  }
+#header-black{
+  background-color: #121212;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
   
-  #header-black p{
-      color:  #fefefe;
-      background-color: #121212;
-      padding-right: 20px;
-  }
+#header-black p{
+  color:  #fefefe;
+  background-color: #121212;
+  padding-right: 20px;
+}
   
-  #header-black h2{
-      color: #fefefe;
-      background-color: #121212;
-      border-bottom: 1px solid #fefefe;
-      font-size: 19px;
-  }
+#header-black h2{
+  color: #fefefe;
+  background-color: #121212;
+  border-bottom: 1px solid #fefefe;
+  font-size: 19px;
+}
   
-  #header-black #languages{
-      background-color: #121212;
-      color: #fefefe;
-      border: #121212;
-      width: 80px;
-      height: 30px;
-      border-radius: 10px;
-      position: relative;
-      left: 330px;
-  }
+#header-black #languages{
+  background-color: #121212;
+  color: #fefefe;
+  border: #121212;
+  width: 80px;
+  height: 30px;
+  border-radius: 10px;
+  position: relative;
+  left: 330px;
+}
   
   /* Header Principal */
   
-  #header-principal img{
-    width: 200px;
-    padding-top: 25px;
-    padding-left: 20px;
-    position: relative;
-  }
+#header-principal img{
+  width: 200px;
+  padding-top: 25px;
+  padding-left: 20px;
+  position: relative;
+}
   
-  #header-principal #nav{
-    text-align: center;
-    background-color: none;
-  }
+#header-principal #nav{
+  text-align: center;
+  background-color: none;
+}
   
-  #header-principal #nav a{
-    margin: 0 15px;
-    text-decoration: none;
-    color: #8E06C2;
-    font-weight: bold;
-    position: relative;
-    padding-right: 40px;
-    top: -35px;
-  }
+#header-principal #nav a{
+  margin: 0 15px;
+  text-decoration: none;
+  color: #8E06C2;
+  font-weight: bold;
+  position: relative;
+  padding-right: 40px;
+  top: -35px;
+}
   
   /* Contenedor del buscador */
   
@@ -92,8 +80,8 @@ section {
     display: flex;
     align-items: center;
     position: absolute;
-    right: 40px; /* Ajusta según el espacio que quieras desde el borde derecho */
-    top: 80px; /* Ajusta según tu header */
+    right: 40px;
+    top: 80px;
   }
   
   .buscador input {
@@ -351,7 +339,6 @@ section {
   }
   
   .form-sign-up h4{
-    font-family: 'Poppins' 'sans-serif';
     color: #898989;
     font-size: 17px;
     font-weight: lighter;
@@ -361,7 +348,6 @@ section {
   }
   
   .form-sign-up a{
-    font-family: 'Poppins' 'sans-serif';
     color: #700B97;
     font-size: 15px;
     font-weight: bold;
@@ -373,7 +359,6 @@ section {
   }
   
   #flash-sales h2{
-    font-family: 'Poppins' 'sans-serif';
     color: #8E06C2;
     position: absolute;
     top: 835px;
@@ -383,7 +368,6 @@ section {
   }
   
   #flash-sales h3{
-    font-family: 'Poppins' 'sans-serif';
     font-size: 38px;
     position: absolute;
     left: 22px;
@@ -392,8 +376,7 @@ section {
 
   footer {
     margin-top: 50px;
-       padding: 40px 20px; /* Añade relleno horizontal */
-       font-family: 'Poppins', sans-serif;
+       padding: 40px 20px;
        background-color: #121212;
        color: white;
        display: flex;
@@ -402,7 +385,6 @@ section {
    }
    
    .footer-section img.footer-logo {
-     font-family: 'Poppins' 'sans-serif';
      max-width: 150px; 
      height: auto;
      display: block;
@@ -411,7 +393,6 @@ section {
    }
    
    .send-message input {
-     font-family: 'Poppins' 'sans-serif';
      background-color: #121212;
      padding-left: 10px;
      border-color: #F5F5F5;
@@ -426,7 +407,6 @@ section {
    }
    
    .send-message button {
-     font-family: 'Poppins' 'sans-serif';
      width: 40px;
      height: 40px;
      border: 1px solid #f1f1f1;
@@ -444,7 +424,6 @@ section {
    
    
    .footer-section {
-     font-family: 'Poppins' sans-serif;
      flex: 1;
      padding: 20px;
      margin: 10px;
@@ -454,13 +433,11 @@ section {
    }
    
    .footer-section h3 {
-     font-family: 'Poppins' sans-serif;
      margin-bottom: 10px;
      background: none;
    }
    
    .footer-section ul {
-     font-family: 'Poppins' sans-serif;
      list-style: none;
      padding: 0;
      background: none;
@@ -468,12 +445,10 @@ section {
    
    .footer-section ul li {
      margin-bottom: 10px;
-     font-family: 'Poppins' sans-serif;
      background: none;
    }
    
    .footer-section a {
-     font-family: 'Poppins' sans-serif;
      text-decoration: none;
      color: #f1f1f1;
      background: none;
@@ -486,7 +461,6 @@ section {
    }
    
    .footer-section a:hover {
-     font-family: 'Poppins' sans-serif;
      text-decoration: underline;
      background: none;
    }
