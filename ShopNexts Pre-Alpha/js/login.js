@@ -1,27 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const loginForm = document.getElementById("formLogin");
+  const loginForm = document.getElementById("formLogin");
 
-    if (loginForm) {
-        loginForm.addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevenir el envío del formulario
+  if (loginForm) {
+    loginForm.addEventListener("submit", function (event) {
+      event.preventDefault();
 
-            const correo = document.getElementById("correo").value.trim();
-            const clave = document.getElementById("clave").value.trim();
+      const correo = document.getElementById("correo").value.trim();
+      const clave = document.getElementById("clave").value.trim();
 
-            console.log("Correo:", correo); // Para ver lo que se captura
-            console.log("Contraseña:", clave); // Para ver lo que se captura
-            
-            if (correo === "" || clave === "") {
-                alert("Por favor completa todos los campos.");
-                return; // Esto debería detener la ejecución si los campos están vacíos
-            }
+      if (correo === "" || clave === "") {
+        alert("Por favor completa todos los campos.");
+        return;
+      }
 
-            if (!correo.includes("@") || !correo.includes(".")) {
-                alert("Por favor ingresa un correo válido.");
-                return;
-            }
+      // Validación sencilla correo
+      if (!correo.includes("@") || !correo.includes(".")) {
+        alert("Por favor ingresa un correo válido.");
+        return;
+      }
 
-            alert("¡Inicio de sesión exitoso!");
-        });
-    }
+      this.submit(); // envía el formulario si todo está bien
+    });
+  }
 });
