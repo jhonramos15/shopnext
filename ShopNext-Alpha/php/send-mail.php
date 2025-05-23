@@ -1,5 +1,5 @@
 <?php
-include 'conexion.php'; // Tu archivo de conexión a la BD
+include 'proceso-login.php'; // Archivo de conexión a la BD
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
@@ -17,11 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("sss", $token, $expira, $email);
         $stmt->execute();
 
-        $link = "http://localhost/shopnexs/recuperar.php?token=$token";
+        $link = "http://localhost/shopnexs/shopnext-alpha/php/update-password?token=$token";
 
         // ENVIAR CORREO (usando mail o PHPMailer)
         $asunto = "Recupera tu contraseña en ShopNexs";
-        $mensaje = "Haz clic en el siguiente enlace para restablecer tu contraseña:\n$link";
+        $mensaje = "Haz clic en el siguiente enlace para restablecer tu contraseña: \n$link";
         $cabeceras = "From: no-responder@shopnexs.com";
 
         mail($email, $asunto, $mensaje, $cabeceras);

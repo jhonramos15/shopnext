@@ -31,7 +31,7 @@ if ($stmt->num_rows == 1) {
         if ($rol === 'admin') {
             header("Location: ../html/dashboard-admin.php");
         } else if ($rol === 'cliente') {
-            header("Location: ../index.html");
+            header("Location: ../html/account.html");
         } else if ($rol === 'vendedor') {
             header("Location: ../index.html");
         } else {
