@@ -9,15 +9,14 @@
   font-family: "Poppins", sans-serif;
 }
 
-section {
-  border-top: 1px solid #eee;
-  padding-top: 60px;
-  margin-top: 60px;
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
 }
 
   /* Homepage */
   /* Header oscuro */
-  
 #header-black{
   background-color: #121212;
   height: 50px;
@@ -25,20 +24,29 @@ section {
   align-items: center;
   display: flex;
 }
-  
+
+/* Párrafo principal */
+
 #header-black p{
-  color:  #fefefe;
+  color: #fefefe;
   background-color: #121212;
   padding-right: 20px;
+  font-weight: 400;
+  position: relative;
+  top: 1px;
 }
-  
+
+/* Compra ahora h2 */
+
 #header-black h2{
   color: #fefefe;
   background-color: #121212;
   border-bottom: 1px solid #fefefe;
   font-size: 19px;
+  font-weight: 600;
 }
-  
+
+/* Contenedor idioma */
 #header-black #languages{
   background-color: #121212;
   color: #fefefe;
@@ -48,129 +56,164 @@ section {
   border-radius: 10px;
   position: relative;
   left: 330px;
+  font-weight: 400;
 }
-  
-  /* Header Principal */
-  
-#header-principal img{
-  width: 200px;
-  padding-top: 25px;
-  padding-left: 20px;
+
+/* Header Principal */
+
+#header-principal{
+  padding-bottom: 0px; 
+  margin-bottom: -30px; 
   position: relative;
+  top: -10px;
 }
-  
+
+#header-principal img{
+  width: 220px;
+  padding-left: 100px;
+  margin-bottom: -140px;
+  position: relative;
+  bottom: 35px;
+}
+
 #header-principal #nav{
   text-align: center;
   background-color: none;
+  position: relative;
+  bottom: 7px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
 }
-  
-#header-principal #nav a{
-  margin: 0 15px;
+
+/* Secciones del header */
+
+#header-principal #nav a {
   text-decoration: none;
   color: #8E06C2;
-  font-weight: bold;
+  font-weight: 400;
   position: relative;
-  padding-right: 40px;
-  top: -35px;
+  top: -32px;
+  right: 70px;
+  display: inline-block;
+  margin: 10px 30px;
 }
-  
-  /* Contenedor del buscador */
-  
-  .buscador {
-    display: flex;
-    align-items: center;
-    position: absolute;
-    right: 40px;
-    top: 80px;
-  }
-  
-  .buscador input {
-    background-color: #F5F5F5;
-    padding-left: 10px;
-    border-color: #F5F5F5;
-    border-radius: 5px 0 0 5px;
-    width: 200px;
-    height: 40px;
-    outline: none;
-    border: 1px solid #ccc;
-    position: absolute;
-    right: 340px;
-    top: 5px;
-  }
-  
-  .buscador button {
-    width: 40px;
-    height: 40px;
-    border: 1px solid #ccc;
-    border-left: none;
-    background-color: #F5F5F5;
-    border-radius: 0 5px 5px 0;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    right: 300px;
-    top: 5px;
-  }
-  
-  .heart{
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    right: 210px;
-    top: 85px;
-  }
-  
-  .heart button{
-    background: none;
-    border: none;
-    outline: none;
-    padding: 0;
-    cursor: pointer;
-  }
-  
-  .heart i {
-    color: #121212;
-    font-size: 20px;
-  }
-  
-  .cart{
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    right: 160px;
-    top: 85px;
-  }
-  
-  .cart button{
-    background: none;
-    border: none;
-    outline: none;
-    padding: 0;
-    cursor: pointer;
-  }
-  
-  .cart i {
-  
-    color: #121212;
-    font-size: 20px;
-  }
-  
-  .linea1 {
-    width: 100%;
-    height: 2px;
-    background-color: #898989;
-    margin: 20px 0;
-    position: relative;
-    bottom: 20px;
-  }
+
+#header-principal #nav a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background-color: #8E06C2;
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+#header-principal #nav a:hover::after {
+  transform: translateX(-50%) scaleX(1);
+  opacity: 1;
+}
+
+/* Contenedor del buscador */
+
+.buscador {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 40px; 
+  top: 40px;
+}
+
+/* Texto del buscador */
+
+.buscador input {
+  background-color: #F5F5F5;
+  padding-left: 10px;
+  border-color: #F5F5F5;
+  border-radius: 5px 0 0 5px;
+  width: 200px;
+  height: 36px;
+  outline: none;
+  border: 1px solid #ccc;
+  position: absolute;
+  right: 340px;
+  top: 5px;
+}
+
+/* Botón */
+
+.buscador button {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-left: none;
+  background-color: #F5F5F5;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 300px;
+  top: 5px;
+}
+
+/* Corazón */
+
+.heart{
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 210px;
+  top: 45px;
+}
+
+/* Botón */
+
+.heart button{
+  background: none;
+  border: none;
+  outline: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.heart i {
+  color: #121212;
+  font-size: 20px;
+}
+
+/* Carrito */
+
+.cart{
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 160px;
+  top: 45px;
+}
+
+.cart button{
+  background: none;
+  border: none;
+  outline: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.cart i {
+  color: #121212;
+  font-size: 20px;
+}
   
   
   #categories{
