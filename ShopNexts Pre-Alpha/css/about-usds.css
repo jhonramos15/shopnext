@@ -67,11 +67,9 @@ section {
   width: 80px;
   height: 30px;
   border-radius: 10px;
-  position: absolute;
-  right: 30px;
+  position: relative;
+  left: 330px;
   font-weight: 400;
-  display: flex;
-  align-items: center;
 }
 
 /* Header Principal */
@@ -84,8 +82,6 @@ section {
 }
 
 #header-principal img{
-  display: flex;
-  align-items: center;
   width: 220px;
   padding-left: 100px;
   margin-bottom: -140px;
@@ -113,7 +109,6 @@ section {
   right: 70px;
   display: inline-block;
   margin: 10px 30px;
-  align-items: center;
 }
 
 #header-principal #nav a::after {
@@ -143,8 +138,6 @@ section {
   position: absolute;
   right: 40px; 
   top: 40px;
-  display: flex;
-  align-items: center;
 }
 
 /* Texto del buscador */
@@ -159,7 +152,7 @@ section {
   outline: none;
   border: 1px solid #ccc;
   position: absolute;
-  right: 240px;
+  right: 340px;
   top: 5px;
 }
 
@@ -177,7 +170,7 @@ section {
   justify-content: center;
   align-items: center;
   position: absolute;
-  right: 200px;
+  right: 300px;
   top: 5px;
 }
 
@@ -190,10 +183,8 @@ section {
   justify-content: center;
   align-items: center;
   position: absolute;
-  right: 130px;
+  right: 210px;
   top: 45px;
-  display: flex;
-  align-items: center;
 }
 
 /* Carrito */
@@ -205,7 +196,7 @@ section {
   justify-content: center;
   align-items: center;
   position: absolute;
-  right: 90px;
+  right: 160px;
   top: 45px;
 }
 
@@ -268,9 +259,7 @@ section {
     margin: 5px;
     background: none;
   }
-
 }
-
 .stats-container {
   font-family: 'Poppins' 'sans-serif';
   display: flex;
@@ -507,7 +496,6 @@ footer {
   position: relative;
   top: 380px;
   left: 690px;
-  display: flex;
 }
 
 #perfil-about-2 h2{
@@ -533,7 +521,6 @@ footer {
   position: relative;
   top: -90px;
   right: 155px;
-  display: flex;
 }
 
 
@@ -576,108 +563,4 @@ footer {
 .benefit-box p {
   font-size: 12px;
   color: #333;
-}
-
-@media (max-width: 768px) {
-
-  /* Nav */
-  #header-principal #nav a {
-    display: block;
-    margin: 10px auto;
-    right: 0;
-    top: 0;
-  }
-
-  /* Logo */
-  #header-principal img {
-    padding-left: 0;
-    margin: 0 auto;
-    display: block;
-  }
-
-  /* Buscador */
-  .buscador input,
-  .buscador button {
-    position: static;
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  .buscador {
-    flex-direction: column;
-    align-items: stretch;
-    position: static;
-    padding: 10px;
-  }
-
-  /* Iconos */
-  .cart, .heart {
-    position: static;
-    margin: 10px auto;
-  }
-
-  /* Stats */
-  .stats-container {
-    flex-direction: column;
-    gap: 20px;
-    top: 0;
-  }
-
-  .stat-box {
-    width: 90%;
-    margin: auto;
-    bottom: 0;
-  }
-
-  /* Historia */
-  #history {
-    flex-direction: column;
-    padding: 20px;
-  }
-
-  #text-history h2 {
-    font-size: 28px;
-  }
-
-  #text-history p {
-    font-size: 16px;
-  }
-
-  #perfil-about-1 .perfil-about-img,
-  #perfil-about-2 .perfil-about-img {
-    position: static;
-    width: 80%;
-    margin: 20px auto;
-  }
-
-  #perfil-about-1 h2,
-  #perfil-about-2 h2,
-  #perfil-about-1 h3,
-  #perfil-about-2 h3 {
-    position: static;
-    text-align: center;
-    margin-top: 10px;
-  }
-
-  #perfil-about-1 img,
-  #perfil-about-2 img {
-    display: none;
-  }
-
-  /* Beneficios */
-  .benefits-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .benefit-box {
-    max-width: 90%;
-    margin-bottom: 20px;
-  }
-
-  /* Footer */
-  footer, .footer-contact {
-    flex-direction: column;
-    text-align: center;
-  }
 }
