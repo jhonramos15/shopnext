@@ -31,9 +31,9 @@ if ($stmt->num_rows == 1) {
         if ($rol === 'admin') {
             header("Location: ../html/dashboard-admin.php");
         } else if ($rol === 'cliente') {
-            header("Location: ../html/index.html");
+            header("Location: ../index.html");
         } else if ($rol === 'vendedor') {
-            header("Location: ../html/index.html");
+            header("Location: ../index.html");
         } else {
             header("Location: dashboard_cliente.php");
         }

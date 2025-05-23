@@ -1,7 +1,8 @@
 <?php
-session_start();
-session_unset();
-session_destroy();
-header("Location: ../html/login.html");
+require_once 'SessionManager.php';
+
+$session = new SessionManager();
+$session->logout();
+
+header("Location: proceso-login.php");
 exit;
-?>
