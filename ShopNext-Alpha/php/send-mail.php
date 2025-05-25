@@ -1,33 +1,38 @@
 <?php
-include 'proceso-login.php'; // Archivo de conexión a la BD
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'];
+require 'PHPMailer/src/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
 
-    $stmt = $conn->prepare("SELECT * FROM usuarios WHERE correo = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $resultado = $stmt->get_result();
+$mail = new PHPMailer(true);
 
-    if ($resultado->num_rows > 0) {
-        $token = bin2hex(random_bytes(16));
-        $expira = date("Y-m-d H:i:s", strtotime('+1 hour'));
+try {
+    // Configuración del servidor SMTP de Gmail
+    $mail->isSMTP();
+    $mail->Host = 'smtp.gmail.com';
+    $mail->SMTPAuth = true;
+    
+    // Tu cuenta de Gmail
+    $mail->Username = 'shopnextsoporte@gmail.com';
+    $mail->Password = 'mxxw vncl jixh ekco'; // Genera un password de aplicación en tu cuenta Google
+    
+    $mail->SMTPSecure = 'tls';
+    $mail->Port = 587;
 
-        $stmt = $conn->prepare("UPDATE usuarios SET token_recuperacion=?, token_expiracion=? WHERE correo=?");
-        $stmt->bind_param("sss", $token, $expira, $email);
-        $stmt->execute();
+    // Remitente y destinatario
+    $mail->setFrom('tu-email@gmail.com', 'ShopNexs');
+    $mail->addAddress($email); // $email es el correo del usuario que quieres enviar
 
-        $link = "http://localhost/shopnexs/shopnext-alpha/php/update-password?token=$token";
+    // Contenido del correo
+    $mail->isHTML(true);
+    $mail->Subject = 'Recupera tu contraseña en ShopNext';
+    $mail->Body = "Haz clic en el siguiente enlace para restablecer tu contraseña: <a href='$link'>$link</a>";
 
-        // ENVIAR CORREO (usando mail o PHPMailer)
-        $asunto = "Recupera tu contraseña en ShopNexs";
-        $mensaje = "Haz clic en el siguiente enlace para restablecer tu contraseña: \n$link";
-        $cabeceras = "From: no-responder@shopnexs.com";
-
-        mail($email, $asunto, $mensaje, $cabeceras);
-        echo "Correo enviado";
-    } else {
-        echo "Correo no registrado";
-    }
+    $mail->send();
+    echo "Correo enviado correctamente.";
+} catch (Exception $e) {
+    echo "Error al enviar correo: {$mail->ErrorInfo}";
 }
 ?>
