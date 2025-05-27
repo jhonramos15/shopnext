@@ -1,13 +1,13 @@
 <?php
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer; // Dirección para darle funcionalidad al correo
+use PHPMailer\PHPMailer\Exception; // Segunda dirección para darle funcionalidad al correo
 
-require 'PHPMailer/src/Exception.php';
-require 'PHPMailer/src/PHPMailer.php';
-require 'PHPMailer/src/SMTP.php';
+require 'PHPMailer/src/Exception.php'; // Tercera dirección para darle funcionalidad al correo
+require 'PHPMailer/src/PHPMailer.php'; // Cuarta dirección para darle funcionalidad al correo
+require 'PHPMailer/src/SMTP.php'; // Quinta dirección para darle funcionalidad al correo
 
 // Conexión a la base de datos
-$conexion = new mysqli("localhost", "root", "", "shopnexs");
+$conexion = new mysqli("localhost", "root", "", "shopnexs"); 
 if ($conexion->connect_error) {
     die("Error de conexión: " . $conexion->connect_error);
 }
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587; // Puerto (no tocar)
 
-            $mail->setFrom('shopnextnoreply@gmail.com', 'ShopNexs');
+            $mail->setFrom('shopnextnoreply@gmail.com', 'ShopNexs'); // Correo que envía los tokens
             $mail->addAddress($email);
 
             $mail->isHTML(true);
