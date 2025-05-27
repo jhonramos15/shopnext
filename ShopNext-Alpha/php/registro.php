@@ -14,7 +14,7 @@ $clave = $_POST['clave'];
 $direccion = $_POST['direccion'] ?? '';
 $fecha_registro = date('Y-m-d');
 
-// Validar que el correo no exista
+// Validar que el correo exista
 $stmt = $conexion->prepare("SELECT id_usuario FROM usuario WHERE correo_usuario = ?");
 $stmt->bind_param("s", $correo);
 $stmt->execute();

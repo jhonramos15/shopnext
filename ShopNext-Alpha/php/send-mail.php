@@ -6,36 +6,64 @@ require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
 
-// Obtener el correo del formulario
-$email = $_POST['email']; // Asegúrate de que el campo del formulario se llame "email"
-$link = $_POST['link'];   // Supongo que también estás enviando el link para restablecer
+// Conexión a la base de datos
+$conexion = new mysqli("localhost", "root", "", "shopnexs");
+if ($conexion->connect_error) {
+    die("Error de conexión: " . $conexion->connect_error);
+}
 
-$mail = new PHPMailer(true);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'];
 
-try {
-    // Configuración del servidor SMTP de Gmail
-    $mail->isSMTP();
-    $mail->Host = 'smtp.gmail.com';
-    $mail->SMTPAuth = true;
-    
-    $mail->Username = 'shopnextnoreply@gmail.com'; // Correo que mandará los mensajes
-    $mail->Password = 'uhym jhjw dzym pyyf'; // Contraseña aplicación Google
+    // Verificar si el correo existe en la base de datos
+    $stmt = $conexion->prepare("SELECT id_usuario FROM usuario WHERE correo_usuario = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
 
-    $mail->SMTPSecure = 'tls';
-    $mail->Port = 587;
+    if ($stmt->num_rows === 1) {
+        // Crear el token
+            $token = bin2hex(random_bytes(16));
+            $expira = date("Y-m-d H:i:s", strtotime('+1 hour'));
 
-    // Remitente y destinatario
-    $mail->setFrom('tu-email@gmail.com', 'ShopNexs');
-    $mail->addAddress($email); // Ahora $email está definido
+        // Guardar el token en la base de datos
+            $stmt = $conexion->prepare("UPDATE usuario SET token_recuperacion=?, token_expiracion=? WHERE correo_usuario=?");
+            $stmt->bind_param("sss", $token, $expira, $email);
+            $stmt->execute();
 
-    // Contenido del correo
-    $mail->isHTML(true);
-    $mail->Subject = 'Recupera tu clave en ShopNext';
-    $mail->Body = "Haz clic en el siguiente enlace para restablecer tu contraseña, si no solicitaste el código, haz caso omiso. <a href='$link'>$link</a>";
+        // Crear el link con el token
+            $link = "http://localhost/shopnexs/ShopNext-Alpha/html/recovery-password.php?token=$token";
 
-    $mail->send();
-    echo "Correo enviado correctamente.";
-} catch (Exception $e) {
-    echo "Error al enviar correo: {$mail->ErrorInfo}";
+        // Crear la instancia de PHPMailer
+        $mail = new PHPMailer(true);
+
+        try {
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com'; // Hosting
+            $mail->SMTPAuth = true;
+            $mail->Username = 'shopnextnoreply@gmail.com'; // Correo que enviará las claves
+            $mail->Password = 'uhym jhjw dzym pyyf'; // Contraseña Google generada
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 587; // Puerto (no tocar)
+
+            $mail->setFrom('shopnextnoreply@gmail.com', 'ShopNexs');
+            $mail->addAddress($email);
+
+            $mail->isHTML(true);
+            $mail->Subject = '¡Recupera tu clave en ShopNext!';
+            $mail->Body = "Haz clic en el siguiente enlace para restablecer tu contraseña: <a href='$link'>$link</a><br>Este enlace expirará en 1 hora.";
+
+            $mail->send();
+            echo "<script>alert('Correo enviado correctamente.'); window.history.back();</script>";
+        } catch (Exception $e) {
+            echo "<script>alert('Error al enviar el correo.'); window.history.back();</script>";
+        }
+    } else {
+        echo "<script>alert('El correo no está registrado en la base de datos.'); window.history.back();</script>";
+
+    }
+
+    $stmt->close();
+    $conexion->close();
 }
 ?>

@@ -1,29 +1,24 @@
 <?php
-include 'conexion.php'; // Tu conexión a la BD
+require 'conexion.php'; // conexión
 
-$token = $_GET['token'] ?? '';
+$token = $_POST['token'];
+$clave = password_hash($_POST['clave'], PASSWORD_DEFAULT);
 
-if (!$token) {
-    echo "Token no válido.";
-    exit;
-}
-
-// Verificar token y que no esté expirado
-$stmt = $conn->prepare("SELECT correo_usuario FROM usuario WHERE token_recuperacion = ? AND token_expiracion > NOW()");
+$stmt = $conexion->prepare("SELECT id_usuario FROM usuario WHERE token_recuperacion=? AND token_expiracion > NOW()");
 $stmt->bind_param("s", $token);
 $stmt->execute();
-$result = $stmt->get_result();
+$resultado = $stmt->get_result();
 
-if ($result->num_rows === 1) {
-    // Mostrar formulario para nueva contraseña
-    echo '
-    <h2>Restablecer Contraseña</h2>
-    <form method="POST" action="save-new-password.php">
-        <input type="hidden" name="token" value="'.htmlspecialchars($token).'">
-        <label>Nueva contraseña:</label><br>
-        <input type="password" name="nueva_clave" required><br><br>
-        <button type="submit">Cambiar Contraseña</button>
-    </form>';
+if ($resultado->num_rows > 0) {
+    $usuario = $resultado->fetch_assoc();
+    $id = $usuario['id_usuario'];
+
+    $stmt = $conexion->prepare("UPDATE usuario SET contraseña=?, token_recuperacion=NULL, token_expiracion=NULL WHERE id_usuario=?");
+    $stmt->bind_param("si", $clave, $id);
+    $stmt->execute();
+
+    echo "<script>alert('Contraseña actualizada correctamente.'); window.location.href='../html/login.html';</script>";
+
 } else {
     echo "Token inválido o expirado.";
 }
