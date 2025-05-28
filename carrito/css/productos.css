@@ -1,0 +1,262 @@
+.cart-icon button {
+  position: relative;
+  display: inline-block;
+}
+
+#cart-count  {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #7e00ff;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+
+.products-container {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+  }
+
+  .products {
+    display: flex;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+    width: max-content;
+  }
+
+  .product {
+    min-width: 280px; /* antes era 220px */
+    height: auto;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    background-color: transparent;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .product-image-wrapper {
+    position: relative;
+    background-color: #f9f9f9;
+    background-image: grey;
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+  }
+
+  .product img {
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+    padding: 0;
+  }
+
+  .add-to-cart-btn {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 10px 0;
+    font-size: 14px;
+    cursor: pointer;
+    display: none;
+    transition: background 0.3s;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .product-image-wrapper:hover .add-to-cart-btn {
+    display: block;
+  }
+
+  .add-to-cart-btn:hover {
+    background-color: #222;
+  }
+
+  .discount {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #8E06C2;
+    color: white;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  .icons {
+    position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 2;
+  }
+
+  .icons i {
+    color: #555;
+    background: white;
+    border-radius: 50%;
+    padding: 6px;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+  }
+
+  .icons i:hover {
+    background-color: #8000ff;
+    color: white;
+  }
+
+  .product p {
+    padding: 0 1rem;
+    margin: 0.25rem 0;
+    font-size: 14px;
+    text-align: left;
+  }
+
+  .product .price {
+    font-weight: bold;
+    color: #5a00e0;
+  }
+
+  .product .old-price {
+    text-decoration: line-through;
+    color: #aaa;
+    margin-left: 6px;
+  }
+
+  .product .rating {
+    color: #110e16;
+    font-size: 13px;
+    padding-bottom: 1rem;
+  }
+
+ /* Personaliza la barra de scroll horizontal */
+.products-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.products-container::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 10px;
+}
+
+.products-container::-webkit-scrollbar-thumb {
+  background-color: #8e44ad;
+  border-radius: 10px;
+}
+
+/* Quitar las flechitas nativas (en navegadores WebKit) */
+.products-container::-webkit-scrollbar-button {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+/* Firefox */
+.products-container {
+  scrollbar-width: thin;
+  scrollbar-color: #8e44ad #f0f0f0;
+}
+  /* Firefox */
+  .products-container {
+    scrollbar-width: thin;
+    scrollbar-color: #8e44ad #f0f0f0;
+  }
+
+
+  .view-all {
+    display: block;
+    text-align: center;
+    margin-top: 30px;
+  }
+  .view-all button {
+    background: #8e44ad;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  
+  .discount {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #8e44ad;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+  }
+  .icons {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .icons i {
+    color:  #4d4d4d;
+    background: #ffffff;
+    border-radius: 50%;
+    padding: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .icons i:hover {
+    background:  gray;
+  }
+  .icons i.active {
+    color: #8e44ad;
+  }
+  .product img {
+    width: 100%;
+    height: 150px;
+    object-fit: contain;
+  }
+  .price {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  .old-price {
+    text-decoration: line-through;
+    color: gray;
+    margin-left: 5px;
+    font-weight: normal;
+  }
+  .rating {
+    color: #8e44ad;
+    margin-top: 5px;
+  }
+  .view-all {
+    display: block;
+    text-align: center;
+    margin-top: 30px;
+  }
+  .view-all button {
+    background: #8e44ad;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
