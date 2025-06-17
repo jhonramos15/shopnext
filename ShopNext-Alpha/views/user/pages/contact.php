@@ -12,7 +12,7 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="css/indexUser.css">
+    <link rel="stylesheet" href="../../../public/css/contact.css">
     <link rel="icon" href="img/icon_principal.ico" type="image/x-icon">
     <title>ShopNext | Inicio</title>
 </head>

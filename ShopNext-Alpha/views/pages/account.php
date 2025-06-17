@@ -75,38 +75,48 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
           </div>
     </div>
   </header>
-  <section></section>
-        <a href="../../public/index.html">Inicio / Mi Cuenta</a>
+</section>
 
-        <h2>Administrar Mi Cuenta</h2>
+<section class="profile-container">
+  <div id="aAccount"><a href="../../public/index.html">Inicio / Mi Cuenta</a></div>
+  <form class="profile-form">
+    <h2>Editar Perfil</h2>
 
-        <div class="my-profile">
+    <div class="form-group">
+      <input type="text" placeholder="Tu Nombre" id="nombre" name="nombre">
+    </div>
 
-            <h2>Nombre</h2>
-            <input type="text" placeholder="Ej: Daniel" id="nombre" name="nombre">
+    <div class="form-group">
+      <input type="email" placeholder="Correo Electrónico" id="email" name="email">
+    </div>
 
-            <h2>Correo</h2>
-            <input type="email" placeholder="Ej: daniel@gmail.com" id="email" name="email">
+    <div class="form-group">
+      <input type="text" placeholder="Dirección" id="address" name="address">
+    </div>
 
-            <h2>Dirección</h2>
-            <input type="address" placeholder="Ej: Calle 323 # 39 - 9" id="address" name="address">
+    <h3>Cambiar Contraseña</h3>
 
-            <h2>Cambiar Contraseña</h2>
-            <input type="email" placeholder="Contraseña Actual" id="password" name="password">
-            <input type="password" placeholder="Nueva Contraseña" id="password" name="password">
-            <input type="password" placeholder="Confirmar Nueva Contraseña" id="password" name="password">
+    <div class="form-group">
+      <input type="password" placeholder="Contraseña Actual" name="old_password">
+    </div>
+    <div class="form-group">
+      <input type="password" placeholder="Nueva Contraseña" name="new_password">
+    </div>
+    <div class="form-group">
+      <input type="password" placeholder="Confirmar Nueva Contraseña" name="confirm_password">
+    </div>
 
-            <div class="cancelbutton">
-              <a href="../../public/index-user.php"><button>Cancelar</button></a>
-            </div>
+    <div class="button-group">
+      <a href="../../public/index-user.php" class="cancel-btn">Cancelar</a>
+      <button type="submit" class="save-btn">Guardar Cambios</button>
+    </div>
 
-            <div class="buttoncreate">
-              <button type="submit">Guardar Cambios</button>
-            </div>
-          
-            <div class="a-login"><a href="../auth/forgotPassword.html">¿Olvidaste la Contraseña?</a></div>
-        </div>
-        </section>
+    <div class="forgot-password">
+      <a href="../../auth/recoveryPassword.php">¿Olvidaste la Contraseña?</a>
+    </div>
+  </form>
+</section>
+
 
         <footer>
       <div class="footer-section">
