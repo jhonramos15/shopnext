@@ -296,6 +296,10 @@ body {
   text-align: right;
 }
 
+.forgot-password a{
+  text-decoration: none;
+}
+
 @media (max-width: 768px) {
   .profile-form {
     padding: 1rem;
