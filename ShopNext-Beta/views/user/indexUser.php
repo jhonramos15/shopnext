@@ -35,8 +35,8 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
           <img src="../../public/img/logo.svg" alt="Logo ShopNext">
         </a>
         <div id="nav">
-          <a href="index.html">Inicio</a>
-          <a href="pages/aboutUs.php">Acerca de</a>
+          <a href="indexUser.php">Inicio</a>
+          <a href="#">Productos</a>
           <a href="pages/contact.php">Contacto</a>
         </div>
 

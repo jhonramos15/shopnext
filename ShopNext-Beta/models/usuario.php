@@ -16,10 +16,8 @@ class Usuario {
 
     public function actualizarPerfil() {
         try {
-            // Iniciar transacción
             $this->conn->beginTransaction();
 
-            // Actualizar correo y contraseña si vienen
             if (!empty($this->correo)) {
                 $sql = "UPDATE {$this->table_usuario} SET correo_usuario = :correo WHERE id_usuario = :id";
                 $stmt = $this->conn->prepare($sql);
@@ -37,7 +35,6 @@ class Usuario {
                 $stmt->execute();
             }
 
-            // Actualizar cliente
             $sql = "UPDATE {$this->table_cliente} 
                     SET nombre = :nombre, direccion = :direccion 
                     WHERE id_usuario = :id";

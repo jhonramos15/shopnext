@@ -14,6 +14,7 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../../public/css/account.css">
     <link rel="icon" href="img/icon_principal.ico" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>ShopNext | Mi Cuenta</title>
 </head>
 <body>
@@ -37,7 +38,7 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
         <div id="nav">
           <a href="../user/indexUser.php">Inicio</a>
           <a href="#">Productos</a>
-          <a href="contact.php">Contacto</a>
+          <a href="../user/pages/contact.php">Contacto</a>
         </div>
 
       <!-- Contenedor de íconos a la derecha -->
@@ -70,7 +71,7 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
             <div class="dropdown-content" id="dropdownMenu">
               <a href="account.html">Perfil</a>
               <a href="#">Pedidos</a>
-              <a href="#">Cerrar sesión</a>
+              <a href="../../controllers/logout.php">Cerrar sesión</a>
             </div>
           </div>
     </div>
@@ -79,7 +80,7 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
 
 <section class="profile-container">
   <div id="aAccount"><a href="../../public/index.html">Inicio / Mi Cuenta</a></div>
-  <form class="profile-form">
+  <form id="formEditarPerfil" class="profile-form" method="POST" action="../../controllers/actualizarPerfilCliente.php">
     <h2>Editar Perfil</h2>
 
     <div class="form-group">
@@ -107,7 +108,7 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
     </div>
 
     <div class="button-group">
-      <a href="../../public/index-user.php" class="cancel-btn">Cancelar</a>
+      <a href="../user/indexUser.php" class="cancel-btn">Cancelar</a>
       <button type="submit" class="save-btn">Guardar Cambios</button>
     </div>
 
@@ -159,6 +160,6 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
         </ul>
       </div>
     </footer>
-    <script src="../../public/js/account.js"></script>
+    <script src="../../public/js/alertas.js"></script>
 </body>
 </html>

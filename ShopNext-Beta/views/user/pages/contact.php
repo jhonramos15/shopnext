@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
-    header("Location: login.php");
+    header("Location: ../../auth/login.php");
     exit;
 }
 ?>
@@ -12,8 +12,8 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="../../../public/css/contact.css">
-    <link rel="icon" href="img/icon_principal.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../../../public/css/contactUser.css">
+    <link rel="icon" href="../../../public/img/icon_principal.ico" type="image/x-icon">
     <title>ShopNext | Inicio</title>
 </head>
 <body>
@@ -31,12 +31,12 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
 
       <!-- Header Principal -->
       <div id="header-principal">
-        <a href="index.html">
-          <img src="img/logo.png" alt="Logo ShopNext">
+        <a href="../indexUser.php">
+          <img src="../../../public/img/logo.png" alt="Logo ShopNext">
         </a>
         <div id="nav">
-          <a href="index.html">Inicio</a>
-          <a href="aboutUs.php">Acerca de</a>
+          <a href="..indexUser.php">Inicio</a>
+          <a href="#">Productos</a>
           <a href="contact.php">Contacto</a>
         </div>
 
@@ -68,9 +68,9 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
           <div class="user-menu-container">
             <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
             <div class="dropdown-content" id="dropdownMenu">
-              <a href="../views/pages/account.php">Perfil</a>
+              <a href="../../pages/account.php">Perfil</a>
               <a href="#">Pedidos</a>
-              <a href="../controllers/logout.php">Cerrar sesión</a>
+              <a href="../../../controllers/logout.php">Cerrar sesión</a>
             </div>
           </div>
     </div>
@@ -82,12 +82,12 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
 
     <!-- Contenido de contacto -->
     <div class="container-contact">
-        <img src="../../public/img/icons-phone.png" alt="Teléfono Icon">
+        <img src="../../../public/img/icons-phone.png" alt="Teléfono Icon">
         <h2>¡Llámanos!</h2>
         <h3>Estamos disponibles las 24 horas, los 7 días de la semana.</h3>
         <h4>Teléfono: +57 213 834 8232</h4>
 
-        <img src="../../public/img/icons-mail.png" alt="Mail Icon">
+        <img src="../../../public/img/icons-mail.png" alt="Mail Icon">
         <h2>¡Escríbenos!</h2>
         <h3>Contacto contigo las 24, los 7 días de la semana.</h3>
         <h4>soporteshopnexts@gmail.com</h4>
@@ -140,6 +140,6 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
             </ul>
           </div>
     </footer>
-    <script src="../../public/js/contact.js"></script>
+    <script src="../../../public/js/contact.js"></script>
 </body>
 </html>
