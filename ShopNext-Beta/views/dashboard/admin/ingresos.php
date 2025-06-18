@@ -33,7 +33,7 @@ if (isset($_SESSION['last_activity'])) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ingresos</title>
+  <title>Dashboard | Ingresos</title>
   <link rel="stylesheet" href="../../../public/css/admin/ingresos.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -65,7 +65,7 @@ if (isset($_SESSION['last_activity'])) {
         <div id="profileDropdownMenu" class="profile-dropdown">
           <a href="#mi-perfil"><i data-lucide="user"></i>Mi Perfil</a> 
           <a href="#configuracion"><i data-lucide="settings"></i>Configuración</a>
-          <a href="#logout"><i data-lucide="log-out"></i>Cerrar Sesión</a>
+          <a href="../../../controllers/logout.php"><i data-lucide="log-out"></i>Cerrar Sesión</a>
         </div>
       </div>
       </aside>

@@ -33,7 +33,7 @@ if (isset($_SESSION['last_activity'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrador | ShopNext</title>
+    <title>Dashboard | Inicio</title>
     <link rel="stylesheet" href="../../public/css/admin/dashboardAdmin.css">
     <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -64,7 +64,7 @@ if (isset($_SESSION['last_activity'])) {
             <div class="profile-dropdown" id="profileDropdownMenu">
                 <a href="#perfil"><i data-lucide="user"></i><span>Mi Perfil</span></a>
                 <a href="#configuracion"><i data-lucide="settings"></i><span>Configuración</span></a>
-                <a href="#cerrar-sesion"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
+                <a href="../../controllers/logout.php"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
             </div>
         </div>
     </aside>
