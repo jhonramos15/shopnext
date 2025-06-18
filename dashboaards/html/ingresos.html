@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ingresos</title>
+  <link rel="stylesheet" href="/css/ingresos.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="logo-container">
+        <img src="/img/logo (2).svg" alt="Logo" class="logo-img"/>
+      </div>
+      <ul class="menu">
+        <li><a href="/index.html"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
+        <li><a href="/html/productos.html"><i data-lucide="box"></i><span>Productos</span></a></li>
+        <li><a href="/html/clientes.html"><i data-lucide="users"></i><span>Clientes</span></a></li>
+        <li><a href="/html/ingresos.html"><i data-lucide="bar-chart-2"></i><span>Ingresos</span></a></li>
+        <li><a href="/html/ayuda.html"><i data-lucide="help-circle"></i><span>Ayuda</span></a></li>
+        <li><a href="/html/vendedores.html"><i data-lucide="user-check"></i><span>Vendedores</span></a></li>
+      </ul>
+      
+      <div class="profile-area">
+        <div class="user" id="userProfileBtn">
+          <img src="https://i.pravatar.cc/40" alt="usuario" />
+          <div class="user-info">
+            <p>Brayan</p>
+            <small>Administrador</small>
+          </div>
+          <i data-lucide="chevron-down" class="profile-arrow"></i>
+        </div>
+        <div id="profileDropdownMenu" class="profile-dropdown">
+          <a href="#mi-perfil"><i data-lucide="user"></i>Mi Perfil</a> 
+          <a href="#configuracion"><i data-lucide="settings"></i>Configuración</a>
+          <a href="#logout"><i data-lucide="log-out"></i>Cerrar Sesión</a>
+        </div>
+      </div>
+      </aside>
+
+    <main class="main">
+  <header class="header">
+    <h1>Hola, Brayan 👋</h1>
+    <div class="header-search-container">
+      <div class="input-icon header-search">
+        <i data-lucide="search"></i>
+        <input type="text" placeholder="Buscar..." />
+      </div>
+    </div>
+  </header>
+
+  <section class="cards ingresos">
+    <div class="card ingreso-card">
+      <i data-lucide="hand-coins"></i>
+      <div>
+        <h3>Ingresos 30 días</h3>
+        <p>$ 22,485 <span class="success">↑ 1% este mes</span></p>
+      </div>
+    </div>
+    <div class="card ingreso-card">
+      <i data-lucide="dollar-sign"></i>
+      <div>
+        <h3>Ingresos 7 días</h3>
+        <p>$ 1,228 <span class="danger">↓ 6% esta semana</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="table-section">
+    <div class="table-header">
+      <h2>Últimas Ventas</h2>
+      <div class="right-controls">
+        <div class="input-icon table-search">
+          <i data-lucide="search"></i>
+          <input type="text" placeholder="Buscar..." />
+        </div>
+        <div class="custom-select table-select">
+          <select>
+            <option>Ordenar: Todos</option>
+            <option>Ordenar: Entregado</option>
+            <option>Ordenar: Cancelado</option>
+            <option>Ordenar: Enviado</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre Cliente</th>
+          <th>Producto</th>
+          <th>Precio</th>
+          <th>Email</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Jane Cooper</td><td>Microsoft</td><td>$ 484</td><td>jane@microsoft.com</td><td><span class="badge entregado">Entregado</span></td></tr>
+        <tr><td>Floyd Miles</td><td>Yahoo</td><td>$ 824</td><td>floyd@yahoo.com</td><td><span class="badge cancelado">Cancelado</span></td></tr>
+        <tr><td>Ronald Richards</td><td>Adobe</td><td>$ 123</td><td>ronald@adobe.com</td><td><span class="badge enviado">Enviado</span></td></tr>
+        <tr><td>Marvin McKinney</td><td>Tesla</td><td>$ 82</td><td>marvin@tesla.com</td><td><span class="badge cancelado">Cancelado</span></td></tr>
+        <tr><td>Jerome Bell</td><td>Google</td><td>$ 928</td><td>jerome@google.com</td><td><span class="badge enviado">Enviado</span></td></tr>
+        <tr><td>Kathryn Murphy</td><td>Microsoft</td><td>$ 10</td><td>kathryn@microsoft.com</td><td><span class="badge entregado">Entregado</span></td></tr>
+        <tr><td>Jacob Jones</td><td>Yahoo</td><td>$ 283</td><td>jacob@yahoo.com</td><td><span class="badge entregado">Entregado</span></td></tr>
+        <tr><td>Kristin Watson</td><td>Facebook</td><td>$ 384</td><td>kristin@facebook.com</td><td><span class="badge entregado">Entregado</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="pagination-controls">
+      <div class="data-count">Viendo datos de 1 a 8 de <span>256,000</span> ingresos</div>
+      <div class="pagination">
+        <button class="pagination-button" disabled><i data-lucide="chevron-left"></i></button>
+        <button class="pagination-button page-number active">1</button>
+        <button class="pagination-button page-number">2</button>
+        <button class="pagination-button page-number">3</button>
+        <span class="pagination-ellipsis">...</span>
+        <button class="pagination-button page-number">40</button>
+        <button class="pagination-button"><i data-lucide="chevron-right"></i></button>
+      </div>
+    </div>
+  </section>
+</main>
+
+   <script>
+    lucide.createIcons();
+  </script>
+  <script src="/js/ingresos.js"></script>
+</body>
+</html>
