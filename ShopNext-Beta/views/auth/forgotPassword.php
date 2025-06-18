@@ -1,3 +1,5 @@
+<?php echo "<script>console.log('PHP cargado correctamente');</script>"; ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,6 +9,7 @@
   <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">
   <link rel="stylesheet" href="../../public/css/forgot-password.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     
@@ -65,7 +68,7 @@
             </button>
       </div>
     </div>
-
+  </header>
     <div class="forgot">
     <section>
 
@@ -120,4 +123,6 @@
         </ul>
       </div>
     </footer>
-  </header>
+  <script src="../../public/js/alertas.js"></script>
+</body>
+</html>

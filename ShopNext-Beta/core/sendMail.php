@@ -54,12 +54,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->Body = "Haz clic en el siguiente enlace para restablecer tu contraseña: <a href='$link'>$link</a><br>Este enlace expirará en 1 hora.";
 
             $mail->send();
-            echo "<script>alert('Correo enviado correctamente.'); window.history.back();</script>";
+                header("Location: ../views/auth/forgotPassword.php?status=correo_enviado");
+            exit;
+
         } catch (Exception $e) {
-            echo "<script>alert('Error al enviar el correo.'); window.history.back();</script>";
+        header("Location: ../views/auth/forgotPassword.php?status=error_envio");
+        exit;
         }
     } else {
-        echo "<script>alert('El correo no está registrado en la base de datos.'); window.history.back();</script>";
+        header("Location: ../views/auth/forgotPassword.php?status=no_existe");
+        exit;
 
     }
 

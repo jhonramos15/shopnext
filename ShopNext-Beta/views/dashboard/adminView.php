@@ -3,12 +3,12 @@ session_start();
 
 // Verificar si el usuario está logueado y tiene el rol correcto
 if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'admin') {
-    header("Location: ../auth/login.html");
+    header("Location: ../auth/login.php");
     exit;
 }
 
 // Tiempo máximo de inactividad (5 minutos)
-$inactividad = 100;
+$inactividad = 300;
 
 // Verificar si existe el tiempo de última actividad
 if (isset($_SESSION['last_activity'])) {
@@ -20,175 +20,237 @@ if (isset($_SESSION['last_activity'])) {
         session_destroy();
         header("Location: ../auth/login.php?mensaje=sesion_expirada");
         exit;
+    } else {
+        $_SESSION['last_activity'] = time(); // ✅ Refresca el tiempo de actividad
     }
+} else {
+    $_SESSION['last_activity'] = time(); // ✅ Inicializa el tiempo de actividad si no existía
 }
-
-// Actualiza el tiempo de última actividad
-$_SESSION['last_activity'] = time();
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../public/css/dashboardAdmin.css">
+    <title>Administrador | ShopNext</title>
+    <link rel="stylesheet" href="../../public/css/admin/dashboardAdmin.css">
     <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="https://unpkg.com/lucide@latest"></script>
-    <title>Dashboard Admin | ShopNext</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    <div class="dashboard">
     <aside class="sidebar">
-      <div class="logo-container"> <img src="../../public/img/logo.svg" alt="Logo" class="logo-img"/>
+        <div class="logo-container">
+            <img src="../../public/img/logo.svg" alt="Logo" class="logo-img">
         </div>
-      <ul class="menu">
-        <li class="active"><a href="#dashboard"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
-        <li><a href="#productos"><i data-lucide="box"></i><span>Productos</span></a></li>
-        <li><a href="#clientes"><i data-lucide="users"></i><span>Clientes</span></a></li>
-        <li><a href="#ingresos"><i data-lucide="bar-chart-2"></i><span>Ingresos</span></a></li>
-        <li><a href="#ayuda"><i data-lucide="help-circle"></i><span>Ayuda</span></a></li>
-        <li><a href="#vendedores"><i data-lucide="user-check"></i><span>Vendedores</span></a></li>
-      </ul>
-      <div class="user-profile-container">
-          <div class="user" id="userProfileBtn">
-              <img src="https://i.pravatar.cc/40" alt="user" />
-              <div class="user-info"> <p>Brayan</p>
-                  <small>Administrador</small>
-              </div>
-              <i data-lucide="chevron-down" class="profile-arrow"></i>
-          </div>
-          <div class="profile-dropdown" id="profileDropdownMenu">
-              <a href="#perfil"><i data-lucide="user"></i><span>Mi Perfil</span></a>
-              <a href="#configuracion"><i data-lucide="settings"></i><span>Configuración</span></a>
-              <a href="../../controllers/logout.php"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
-
-          </div>
-      </div>
+        <ul class="menu">
+            <li><a href="adminView.php"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
+            <li><a href="admin/productos.php"><i data-lucide="box"></i><span>Productos</span></a></li>
+            <li><a href="admin/clientes.php"><i data-lucide="users"></i><span>Clientes</span></a></li>
+            <li><a href="admin/ingresos.php"><i data-lucide="bar-chart-2"></i><span>Ingresos</span></a></li>
+            <li><a href="admin/ayuda.php"><i data-lucide="help-circle"></i><span>Ayuda</span></a></li>
+            <li><a href="admin/vendedores.php"><i data-lucide="user-check"></i><span>Vendedores</span></a></li>
+        </ul>
+        <div class="user-profile-container">
+            <div class="user" id="userProfileBtn">
+                <img src="https://i.pravatar.cc/40?u=brayan" alt="user" />
+                <div class="user-info">
+                    <p>Brayan</p>
+                    <small>Administrador</small>
+                </div>
+                <i data-lucide="chevron-down" class="profile-arrow"></i>
+            </div>
+            <div class="profile-dropdown" id="profileDropdownMenu">
+                <a href="#perfil"><i data-lucide="user"></i><span>Mi Perfil</span></a>
+                <a href="#configuracion"><i data-lucide="settings"></i><span>Configuración</span></a>
+                <a href="#cerrar-sesion"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
+            </div>
+        </div>
     </aside>
 
     <main class="main">
-      <header class="header" id="dashboard-header">
-        <h1>Hola, Brayan 👋</h1>
-        <div class="header-search-container"> <div class="input-icon header-search"> <i data-lucide="search"></i>
-                <input type="text" placeholder="Buscar..." />
+        <header class="header">
+            <h1>Hola, Brayan 👋</h1>
+            <div class="header-search-container">
+                <div class="input-icon header-search">
+                    <i data-lucide="search"></i>
+                    <input type="text" placeholder="Buscar..." />
+                </div>
             </div>
-        </div>
-      </header>
+        </header>
 
-      <section class="cards" id="productos-cards">
-        <div class="card">
-          <i data-lucide="users"></i>
-          <div>
-            <h3>Clientes Totales</h3>
-            <p>5,423 <span class="success">18% este mes</span></p>
-          </div>
-        </div>
-        <div class="card">
-          <i data-lucide="user-x"></i>
-          <div>
-            <h3>Miembros</h3>
-            <p>1,893 <span class="danger">1% este mes</span></p>
-          </div>
-        </div>
-        <div class="card">
-          <i data-lucide="monitor"></i>
-          <div>
-            <h3>Activos Ahora</h3>
-            <p>189</p>
-          </div>
-        </div>
-      </section>
+        <div class="dashboard-content">
+            <section class="overview-cards">
+                <div class="card">
+                    <i data-lucide="eye"></i>
+                    <div>
+                        <h3>Total de visitas</h3>
+                        <p>4.42.236 <span class="percentage positive">+59.3%</span></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <i data-lucide="users-2"></i>
+                    <div>
+                        <h3>Total de usuarios</h3>
+                        <p>78.250 <span class="percentage positive">+70.5%</span></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <i data-lucide="shopping-cart"></i>
+                    <div>
+                        <h3>Pedido total</h3>
+                        <p>18.800 <span class="percentage neutral">+27.4%</span></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <i data-lucide="dollar-sign"></i>
+                    <div>
+                        <h3>Ventas totales</h3>
+                        <p>$35,078 <span class="percentage neutral">+27.4%</span></p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="grid-row top-row">
+                <div class="card unique-visitor-card">
+                    <div class="chart-header">
+                        <h3>Visitante único</h3>
+                        <div class="chart-controls">
+                            <button class="active">Mes</button>
+                            <button>Semana</button>
+                        </div>
+                    </div>
+                    <div class="chart-canvas-container">
+                        <canvas id="uniqueVisitorChart"></canvas>
+                    </div>
+                </div>
+                <div class="card income-summary-card">
+                    <h3>Resumen de Ingresos</h3>
+                    <p class="this-week-stats">Estadísticas de esta semana</p>
+                    <p class="income-amount">$7,650</p>
+                    <div class="chart-canvas-container income-chart-container">
+                        <canvas id="weeklyIncomeChart"></canvas>
+                    </div>
+                </div>
+            </section>
 
-      <section class="table-section" id="clientes-table">
-        <div class="table-header">
-          <h2>Todos los Clientes</h2>
-          <div class="right-controls">
-            <div class="input-icon table-search">
-              <i data-lucide="search"></i>
-              <input type="text" placeholder="Buscar cliente..." />
-            </div>
-            <div class="custom-select table-select">
-              <select>
-                <option selected>Ordenar: Nuevo</option>
-                <option>Ordenar: Activo</option>
-                <option>Ordenar: Inactivo</option>
-              </select>
-            </div>
-          </div>
+            <section class="grid-row middle-row">
+                <div class="card recent-orders-card">
+                    <h3>Pedidos recientes</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>NÚMERO DE SEGUIMIENTO</th>
+                                    <th>PRODUCTO</th>
+                                    <th>ESTADO</th>
+                                    <th>IMPORTE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>25/03/2024</td><td>Teclado</td><td><span class="status rejected">Rechazado</span></td><td>$70,999</td></tr>
+                                <tr><td>25/03/2024</td><td>Accesorios</td><td><span class="status approved">Aprobado</span></td><td>$83,348</td></tr>
+                                <tr><td>26/03/2024</td><td>Lente de cámara</td><td><span class="status rejected">Rechazado</span></td><td>$40,570</td></tr>
+                                <tr><td>26/03/2024</td><td>TELEVISOR</td><td><span class="status pending">Pendiente</span></td><td>$410,780</td></tr>
+                                <tr><td>26/03/2024</td><td>Auricular</td><td><span class="status approved">Aprobado</span></td><td>$10,239</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card analysis-report-card">
+                     <h3>Informe de análisis</h3>
+                    <div class="analysis-content">
+                        <div class="analysis-item">
+                            <p>Crecimiento de finanzas</p>
+                            <span class="value positive">+45.14%</span>
+                        </div>
+                        <div class="analysis-item">
+                            <p>Ratio de gastos</p>
+                            <span class="value">0.58%</span>
+                        </div>
+                        <div class="analysis-item">
+                            <p>Riesgo empresarial</p>
+                            <span class="value status-low">Bajo</span>
+                        </div>
+                    </div>
+                    <div class="chart-canvas-container analysis-chart-container">
+                        <canvas id="companyFinanceChart"></canvas>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="grid-row bottom-row">
+                <div class="card sales-report-card">
+                    <div class="chart-header">
+                        <h3>Informe de ventas</h3>
+                        <div class="chart-controls text-style">
+                             <button>Hoy</button>
+                             <button>Semana</button>
+                             <button>Mes</button>
+                             <button class="active">Año</button>
+                        </div>
+                    </div>
+                    <p class="net-benefit">Beneficio neto</p>
+                    <p class="net-benefit-amount">$230,000</p>
+                    <div class="chart-canvas-container">
+                        <canvas id="salesReportChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card transaction-history-card">
+                    <h3>Historial de transacciones</h3>
+                    <div class="transaction-list">
+                        <div class="transaction-item">
+                            <div class="transaction-icon green-bg"><span>+</span></div>
+                            <div class="transaction-details">
+                                <p>Pedido #002434</p>
+                                <span>Hoy, 2:00 AM</span>
+                            </div>
+                            <div class="transaction-amount">
+                                <span class="amount positive">+ $1,430</span>
+                            </div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="transaction-icon blue-bg"><span>+</span></div>
+                            <div class="transaction-details">
+                                <p>Pedido n.º 984947</p>
+                                <span>5 de agosto, 13:45</span>
+                            </div>
+                            <div class="transaction-amount">
+                                <span class="amount positive">+ $302</span>
+                            </div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="transaction-icon red-bg"><span>+</span></div>
+                            <div class="transaction-details">
+                                <p>Pedido n.º 988784</p>
+                                <span>Hace 7 horas</span>
+                            </div>
+                            <div class="transaction-amount">
+                                <span class="amount positive">+ $682</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card chat-support-card">
+                    <div class="chat-avatars">
+                        <img src="https://i.pravatar.cc/35?img=1" alt="Avatar 1">
+                        <img src="https://i.pravatar.cc/35?img=2" alt="Avatar 2">
+                        <img src="https://i.pravatar.cc/35?img=3" alt="Avatar 3">
+                    </div>
+                    <p>Repetición típica en 5 minutos</p>
+                    <button class="help-button">¿Necesitas ayuda?</button>
+                </div>
+            </section>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Nombre Cliente</th>
-              <th>Ciudad</th>
-              <th>Teléfono</th>
-              <th>Email</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Jane Cooper</td>
-              <td>Microsoft</td>
-              <td>(225) 555-0118</td>
-              <td>jane@microsoft.com</td>
-              <td><span class="status active">Activo</span></td>
-            </tr>
-            <tr>
-              <td>Floyd Miles</td>
-              <td>Yahoo</td>
-              <td>(205) 555-0100</td>
-              <td>floyd@yahoo.com</td>
-              <td><span class="status inactive">Inactivo</span></td>
-            </tr>
-            <tr>
-              <td>Ronald Richards</td>
-              <td>Adobe</td>
-              <td>(302) 555-0107</td>
-              <td>ronald@adobe.com</td>
-              <td><span class="status inactive">Inactivo</span></td>
-            </tr>
-            <tr>
-              <td>Marvin McKinney</td>
-              <td>Tesla</td>
-              <td>(252) 555-0126</td>
-              <td>marvin@tesla.com</td>
-              <td><span class="status active">Activo</span></td>
-            </tr>
-            <tr>
-                <td>Jerome Bell</td>
-                <td>Google</td>
-                <td>(629) 555-0129</td>
-                <td>jerome@google.com</td>
-                <td><span class="status active">Activo</span></td>
-            </tr>
-            <tr>
-                <td>Kathryn Murphy</td>
-                <td>Microsoft</td>
-                <td>(406) 555-0120</td>
-                <td>kathryn@microsoft.com</td>
-                <td><span class="status active">Activo</span></td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="pagination">
-            <button class="pagination-button" disabled><i data-lucide="chevron-left"></i> <span>Anterior</span></button>
-            <button class="pagination-button page-number active">1</button>
-            <button class="pagination-button page-number">2</button>
-            <button class="pagination-button page-number">3</button>
-            <span class="pagination-ellipsis">...</span>
-            <button class="pagination-button page-number">8</button>
-            <button class="pagination-button"><span>Siguiente</span> <i data-lucide="chevron-right"></i></button>
-        </div>
-      </section>
     </main>
-  </div>
 
-  <script>
-    lucide.createIcons();
-  </script>
-  <script src="../../public/js/scriptAdmin.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+    <script src="../../public/js/admin/script-admin.js"></script>
 </body>
 </html>

@@ -70,7 +70,7 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
             <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
             <div class="dropdown-content" id="dropdownMenu">
               <a href="account.html">Perfil</a>
-              <a href="#">Pedidos</a>
+              <a href="#">Pedidos 🚧</a>
               <a href="../../controllers/logout.php">Cerrar sesión</a>
             </div>
           </div>
@@ -79,7 +79,7 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
 </section>
 
 <section class="profile-container">
-  <div id="aAccount"><a href="../../public/index.html">Inicio / Mi Cuenta</a></div>
+  <div id="aAccount"><a href="../user/indexUser.php">Inicio / Mi Cuenta</a></div>
   <form id="formEditarPerfil" class="profile-form" method="POST" action="../../controllers/actualizarPerfilCliente.php">
     <h2>Editar Perfil</h2>
 
@@ -161,5 +161,6 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
       </div>
     </footer>
     <script src="../../public/js/alertas.js"></script>
+      <script src="../../public/js/account.js"></script>
 </body>
 </html>

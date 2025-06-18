@@ -35,7 +35,7 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
           <img src="../../../public/img/logo.png" alt="Logo ShopNext">
         </a>
         <div id="nav">
-          <a href="..indexUser.php">Inicio</a>
+          <a href="../indexUser.php">Inicio</a>
           <a href="#">Productos</a>
           <a href="contact.php">Contacto</a>
         </div>
@@ -69,7 +69,7 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
             <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
             <div class="dropdown-content" id="dropdownMenu">
               <a href="../../pages/account.php">Perfil</a>
-              <a href="#">Pedidos</a>
+              <a href="#">Pedidos 🚧</a>
               <a href="../../../controllers/logout.php">Cerrar sesión</a>
             </div>
           </div>

@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute();
 
     if ($stmt->affected_rows > 0) {
-        echo "Contraseña actualizada correctamente. Puedes <a href='login.html'>iniciar sesión</a>.";
+        echo "Contraseña actualizada correctamente. Puedes <a href='login.php'>iniciar sesión</a>.";
     } else {
         echo "Error al actualizar la contraseña o token inválido.";
     }

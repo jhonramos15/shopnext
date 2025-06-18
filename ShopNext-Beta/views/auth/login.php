@@ -26,6 +26,7 @@ if (isset($_SESSION['id_usuario'])) {
     <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">
     <link rel="stylesheet" href="../../public/css/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>    
 </head>
 
   <!-- Alerta Descuento -->
@@ -95,7 +96,7 @@ if (isset($_SESSION['id_usuario'])) {
             <div class="buttoncreate">
               <button type="submit">Iniciar Sesión</button>
             </div>
-            <div class="a-login"><a href="forgotPassword.html">¿Olvidaste la Contraseña?</a></div>
+            <div class="a-login"><a href="forgotPassword.php">¿Olvidaste la Contraseña?</a></div>
           </form>
         </div>
       </div>
@@ -133,5 +134,6 @@ if (isset($_SESSION['id_usuario'])) {
     </footer>
 
   <script src="../../public/js/login.js"></script>
+  <script src="../../public/js/alertas.js"></script>
 </body>
 </html>
