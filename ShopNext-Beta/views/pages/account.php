@@ -31,13 +31,13 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
 
       <!-- Header Principal -->
       <div id="header-principal">
-        <a href="index.html">
+        <a href="../user/indexUser.php">
           <img src="../../public/img/logo.svg" alt="Logo ShopNext">
         </a>
         <div id="nav">
-          <a href="index.html">Inicio</a>
-          <a href="../user/pages/aboutUs.php">Acerca de</a>
-          <a href="../user/pages/contact.php">Contacto</a>
+          <a href="../user/indexUser.php">Inicio</a>
+          <a href="#">Productos</a>
+          <a href="contact.php">Contacto</a>
         </div>
 
       <!-- Contenedor de íconos a la derecha -->
@@ -112,7 +112,7 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
     </div>
 
     <div class="forgot-password">
-      <a href="../../auth/recoveryPassword.php">¿Olvidaste la Contraseña?</a>
+      <a href="../auth/forgotPassword.html">¿Olvidaste la Contraseña?</a>
     </div>
   </form>
 </section>
