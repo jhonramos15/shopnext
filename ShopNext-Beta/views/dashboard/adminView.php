@@ -124,6 +124,7 @@ if (isset($_SESSION['last_activity'])) {
                     <div class="chart-canvas-container">
                         <canvas id="uniqueVisitorChart"></canvas>
                     </div>
+                    <button class="descargar-reporte" onclick="descargarReporte('uniqueVisitorChart')">Descargar PDF</button>
                 </div>
                 <div class="card income-summary-card">
                     <h3>Resumen de Ingresos</h3>
@@ -132,6 +133,7 @@ if (isset($_SESSION['last_activity'])) {
                     <div class="chart-canvas-container income-chart-container">
                         <canvas id="weeklyIncomeChart"></canvas>
                     </div>
+                <button class="descargar-reporte" onclick="descargarReporte('weeklyIncomeChart')">Descargar PDF</button>
                 </div>
             </section>
 
@@ -178,6 +180,7 @@ if (isset($_SESSION['last_activity'])) {
                     <div class="chart-canvas-container analysis-chart-container">
                         <canvas id="companyFinanceChart"></canvas>
                     </div>
+                    <button class="descargar-reporte" onclick="descargarReporte('companyFinanceChart')">Descargar PDF</button>
                 </div>
             </section>
             
@@ -197,8 +200,8 @@ if (isset($_SESSION['last_activity'])) {
                     <div class="chart-canvas-container">
                         <canvas id="salesReportChart"></canvas>
                     </div>
-                </div>
-                
+                    <button class="descargar-reporte" onclick="descargarReporte('salesReportChart')">Descargar PDF</button>
+                </div>                
                 <div class="card transaction-history-card">
                     <h3>Historial de transacciones</h3>
                     <div class="transaction-list">
@@ -234,7 +237,6 @@ if (isset($_SESSION['last_activity'])) {
                         </div>
                     </div>
                 </div>
-
                 <div class="card chat-support-card">
                     <div class="chat-avatars">
                         <img src="https://i.pravatar.cc/35?img=1" alt="Avatar 1">
@@ -247,6 +249,9 @@ if (isset($_SESSION['last_activity'])) {
             </section>
         </div>
     </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <script>
         lucide.createIcons();

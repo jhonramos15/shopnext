@@ -1,4 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+window.descargarReporte = async function(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    const image = await html2canvas(canvas);
+    const imgData = image.toDataURL('image/png');
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.text("Reporte de Gráfica", 10, 10);
+    doc.addImage(imgData, 'PNG', 10, 20, 180, 100);
+
+    // Usa el ID para nombrar el archivo
+    doc.save(`reporte_${canvasId}.pdf`);
+}
+
     
     // --- Lógica para el menú desplegable del perfil ---
     const userProfileBtn = document.getElementById('userProfileBtn');
