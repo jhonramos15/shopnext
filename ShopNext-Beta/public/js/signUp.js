@@ -1,4 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
+  document.querySelector(".hamburger").addEventListener("click", () => {
+    document.getElementById("navMenu").classList.toggle("active");
+  });
+
+  // tu código de validación del formulario aquí...
+});
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
   const signUpForm = document.getElementById("formSignUp");
 
   if (signUpForm) {
