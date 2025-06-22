@@ -41,3 +41,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+// Menu hamburguesa
+  function toggleMenu() {
+    document.getElementById("navMenu").classList.toggle("active");
+  }
+
+

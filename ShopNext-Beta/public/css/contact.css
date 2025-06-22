@@ -1,350 +1,381 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+/* Fuente principal del sitio */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-/* Homepage */
-/* Header oscuro */
-
-*{
-  margin-top: 0px;
-  margin-left: 0px;
-  margin-right: 0px;
-  font-family: "Poppins", sans-serif;
-  font-style: normal;
+/* Reseteo de márgenes y paddings, y se aplica la fuente */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
-section:first-of-type {
-  margin-top: 20px;
-  padding-top: 20px;
-}
-
-.team-section {
-  margin-top: 300px;
-  padding-top: 20px;
-}
-
+/* División entre cada sección  */
 section {
   border-top: 1px solid #eee;
-  padding-top: 60px;
-  margin-top: 60px;
 }
 
-.section-header {
+/* Parte superior del header (alerta y selector de idioma) */
+.header-top {
+  background: #121212;
+  color: #fff;
+  padding: 10px 20px;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-}
-
-
-#header-black{
-  background-color: #121212;
-  height: 50px;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  display: flex;
-}
-
-/* Párrafo principal */
-
-#header-black p{
-  color: #fefefe;
-  background-color: #121212;
-  padding-right: 20px;
-  font-weight: 400;
+  text-align: center;
   position: relative;
-  top: 1px;
 }
 
-/* Compra ahora h2 */
+/* Estilo para el selector de idioma */
+.header-top select {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background: #121212;
+  color: #fff;
+  border-radius: 6px;
+  padding: 4px;
+  border: none;
+}
 
-#header-black h2{
-  color: #fefefe;
-  background-color: #121212;
-  border-bottom: 1px solid #fefefe;
-  font-size: 19px;
+/* Tamaño del texto en el párrafo y título */
+.header-top p,
+.header-top h2 {
+  font-size: 14px;
+}
+
+/* Título con subrayado */
+.header-top h2 {
+  border-bottom: 1px solid #fff;
   font-weight: 600;
 }
 
-/* Contenedor idioma */
-#header-black #languages{
-  background-color: #121212;
-  color: #fefefe;
-  border: #121212;
-  width: 80px;
-  height: 30px;
-  border-radius: 10px;
-  position: absolute;
-  right: 30px;
-  font-weight: 400;
+/* Contenedor principal del header */
+.header-main {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 20px 30px;
+  background-color: #fff;
+  gap: 15px;
+}
+
+/* Agrupa el logo y el botón del menú */
+.header-row {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
-/* Header Principal */
-
-#header-principal{
-  padding-bottom: 0px; 
-  margin-bottom: -30px; 
-  position: relative;
-  top: -10px;
+/* Tamaño del logo */
+.logo img {
+  width: 160px;
+  display: block;
 }
 
-#header-principal img{
+/* Botón del menú hamburguesa */
+.hamburger {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Menú de navegación (horizontal en escritorio) */
+.nav-links {
   display: flex;
-  align-items: center;
-  width: 220px;
-  padding-left: 100px;
-  margin-bottom: -140px;
-  position: absolute;
-  bottom: 100px;
+  gap: 25px;
 }
 
-#header-principal #nav{
-  text-align: center;
-  background-color: none;
-  position: relative;
-  bottom: 7px;
-  margin-bottom: 100px;
-  padding-bottom: 0px;
-}
-
-/* Secciones del header */
-
-#header-principal #nav a {
+/* Estilo para los enlaces del menú */
+.nav-links a {
   text-decoration: none;
   color: #8E06C2;
   font-weight: 400;
   position: relative;
-  top: 50px;
-  right: 70px;
-  display: inline-block;
-  margin: 10px 30px;
-  align-items: center;
 }
 
-#header-principal #nav a::after {
+/* Línea inferior animada al pasar el mouse */
+.nav-links a::after {
   content: "";
   position: absolute;
+  bottom: -3px;
   left: 50%;
-  bottom: -2px;
-  width: 100%;
+  width: 0;
   height: 2px;
-  background-color: #8E06C2;
-  transform: translateX(-50%) scaleX(0);
-  transform-origin: center;
-  opacity: 0;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  background: #8E06C2;
+  transform: translateX(-50%);
+  transition: width 0.3s;
 }
 
-#header-principal #nav a:hover::after {
-  transform: translateX(-50%) scaleX(1);
-  opacity: 1;
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* Contenedor de buscador, íconos y login */
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 /* Contenedor del buscador */
-
 .buscador {
   display: flex;
   align-items: center;
-  position: absolute;
-  right: 40px; 
-  top: 40px;
-  display: flex;
-  align-items: center;
+  overflow: hidden;
 }
 
-/* Texto del buscador */
-
+/* Input del buscador */
 .buscador input {
-  background-color: #F5F5F5;
-  padding-left: 10px;
-  border-color: #F5F5F5;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  width: 100%;
+  background: #f5f5f5;
   border-radius: 5px 0 0 5px;
-  width: 200px;
-  height: 36px;
-  outline: none;
-  border: 1px solid #ccc;
-  position: absolute;
-  right: 240px;
-  top: 5px;
 }
 
-/* Botón */
-
+/* Botón del buscador */
 .buscador button {
-  width: 40px;
-  height: 40px;
+  padding: 6px 10px;
+  cursor: pointer;
   border: 1px solid #ccc;
-  border-left: none;
-  background-color: #F5F5F5;
+  background: #f5f5f5;
   border-radius: 0 5px 5px 0;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  right: 200px;
-  top: 5px;
+  position: relative;
+  right: 1px;
 }
 
-/* Corazón */
-
-.heart{
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  right: 130px;
-  top: 45px;
-  display: flex;
-  align-items: center;
-}
-
-/* Carrito */
-
-.cart{
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  right: 90px;
-  top: 45px;
-}
-
-.cart button{
+/* Íconos como favoritos y carrito */
+.icon-btn {
   background: none;
   border: none;
-  outline: none;
-  padding: 0;
+  font-size: 18px;
   cursor: pointer;
 }
 
-.cart i {
-  color: #121212;
-  font-size: 20px;
-}
-
-/* Botón */
-
-.heart button{
-  background: none;
-  border: none;
-  outline: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-.heart i {
-  color: #121212;
-  font-size: 20px;
-}
-
-/* Contacto */
-
-.container-contact img{
-  padding-top: 100px;
-  position: relative;
-  top: 10px;
-  left: 33px;
-  background: none;
-  padding-top: 20px;
-}
-
-.container-contact h2{
-  font-size: 25px;
-  position: relative;
-  bottom: 35px;
-  left: 87px;
-  font-weight: normal;
-  background: none;
+/* Botón de iniciar sesión */
+.login-btn {
+  text-decoration: none;
   font-weight: 500;
+  color: #121212;
 }
 
-.container-contact h3{
-  font-size: 16px;
-  position: relative;
-  bottom: 30px;
-  left: 32px;
-  font-weight: 400;
-  background: none;
+/* Estilos responsive para laptops */
+@media (max-width: 1024px) {
+  .header-main {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 15px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .icons {
+    flex-wrap: nowrap;
+    overflow: auto;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .buscador {
+    width: 100%;
+    max-width: 260px;
+    justify-content: center;
+  }
+
+  .logo-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
 }
 
-.container-contact h4{
-  font-size: 16px;
-  position: relative;
-  bottom: 30px;
-  left: 29px;
-  font-weight: 400;
-  background: none;
+/* Estilos responsive para móviles */
+@media (max-width: 600px) {
+  .header-main {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .logo-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .icons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .buscador {
+    flex: 1 1 100px;
+    max-width: 160px;
+    justify-content: center;
+  }
+
+  .icon-btn,
+  .login-btn {
+    flex-shrink: 0;
+  }
+
+  .login-btn {
+    margin-top: 0;
+  }
 }
 
-.container-contact{
+/* Contenedor principal */
+.main-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  padding: 50px 20px;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  background-color: #ffffff;
+}
+
+/* Contenedor de contacto */
+.container-contact {
+  flex: 1 1 350px;
+  max-width: 400px;
   background-color: #fcfcfc;
-  height: 450px;
-  width: 540px;
-  position: absolute;
-  left: 170px;
-  top: 300px;
+  padding: 30px;
   border-radius: 12px;
   border: 1px solid #e0e0e0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.container-form-contact input{
-  font-family: 'Poppins' 'sans-serif';
-  background: none;
-  background-color: #f1f1f1;
-  width: 280px;
-  height: 40px;
-  border-radius: 7px;
-  position: relative;
-  top: 40px;
-  left: 40px;
-  border: none;
-  text-align: left;
-  padding-left: 6px;
+.container-contact img {
+  width: 40px;
+  margin-bottom: 10px;
 }
 
-.container-form-contact-message{
-  font-family: 'Poppins' 'sans-serif';
-  background: none;
-  background-color: #f1f1f1;
-  width: 870px;
-  height: 230px;
+.container-contact h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.container-contact h3 {
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 5px;
+  color: #444;
+}
+
+.container-contact h4 {
+  font-size: 14px;
+  font-weight: 400;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Formulario */
+.container-form-contact {
+  flex: 1 1 500px;
+  max-width: 700px;
+  background-color: #fcfcfc;
+  padding: 30px;
   border-radius: 12px;
-  position: relative;
-  top: 70px;
-  left: 35px;
-  border: none;
-  text-align: left;
-  padding: 15px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.container-form-contact button{
-  font-family: 'Poppins' 'sans-serif';
-  width: 150px;
-  height: 50px;
-  position: relative;
-  top: 70px;
-  left: 754px;
+.container-form-contact form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.container-form-contact input,
+.container-form-contact textarea {
+  background-color: #f1f1f1;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.container-form-contact textarea.container-form-contact-message {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.buttoncontact {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.buttoncontact button {
   background-color: #8E06C2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 14px;
+  cursor: pointer;
 }
 
-.container-form-contact{
-  background-color: #fcfcfc;
-  height: 450px;
-  width: 940px;
-  position: absolute;
-  left: 770px;
-  top: 300px;
-  border-radius: 12px;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+.buttoncontact button:hover {
+  background-color: #7205a1;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .main-section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .container-contact,
+  .container-form-contact {
+    width: 100%;
+    max-width: 90%;
+  }
 }
 
 /* Responsive */
@@ -365,82 +396,87 @@ section {
 
 /* footer*/
 
-main, .contenido {
-  flex: 1;
-}
-
-footer {
-  margin-top: 10px;
-  padding: 40px 20px; 
-  font-family: 'Poppins', sans-serif;
-  background-color: #121212;
-  color: white;
-  display: flex;
-  position: relative;
-}
-
+footer,
 .footer-contact {
-  margin-top: 800px;
-  padding: 40px 20px; 
+  margin-top: 0;
+  padding: 40px 20px;
   font-family: 'Poppins', sans-serif;
   background-color: #121212;
   color: white;
   display: flex;
-  position: relative;
-}
-
-.footer-section img.footer-logo {
-  font-family: 'Poppins' 'sans-serif';
-  max-width: 150px; 
-  height: auto;
-  display: block;
-  margin: 0 auto; 
-  background: none;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
 }
 
 .footer-section {
-  font-family: 'Poppins' sans-serif;
-  flex: 1;
+  flex: 1 1 200px;
+  max-width: 250px;
   padding: 20px;
-  margin: 10px;
   background-color: #121212;
-  border-radius: 8px; 
 }
 
 .footer-section h3 {
-  font-family: 'Poppins' sans-serif;
   margin-bottom: 10px;
-  background: none;
 }
 
 .footer-section ul {
-  font-family: 'Poppins' sans-serif;
   list-style: none;
   padding: 0;
-  background: none;
 }
 
 .footer-section ul li {
   margin-bottom: 10px;
-  font-family: 'Poppins' sans-serif;
-  background: none;
 }
 
 .footer-section a {
-  font-family: 'Poppins' sans-serif;
   text-decoration: none;
   color: #f1f1f1;
-  background: none;
-}
-
-.footer-section img{
-  background: #f1f1f1;
-  border: 15px;
-  border-radius: 5px;
 }
 
 .footer-section a:hover {
-  font-family: 'Poppins' sans-serif;
   text-decoration: underline;
-  background: none;
+}
+
+/* Logo */
+.footer-logo {
+  max-width: 150px;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px auto;
+}
+
+/* Íconos sociales */
+.social-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.social-icons li {
+  list-style: none;
+}
+
+.social-icons img {
+  width: 28px;
+  height: 28px;
+  background: white;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-contact {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-section {
+    max-width: 100%;
+  }
+
+  .social-icons {
+    justify-content: center;
+  }
 }

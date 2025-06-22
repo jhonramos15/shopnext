@@ -49,11 +49,6 @@ if ($tipo === "cliente") {
     $stmt->bind_param("sssi", $nombre, $direccion, $fecha_registro, $id_usuario);
     $stmt->execute();
     echo "Cliente registrado con éxito.";
-} else if ($tipo === "vendedor") {
-    $stmt = $conexion->prepare("INSERT INTO vendedor (nombre, direccion, correo, telefono, fecha_registro, id_usuario) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssi", $nombre, $direccion, $correo, $telefono, $fecha_registro, $id_usuario);
-    $stmt->execute();
-    echo "Vendedor registrado con éxito.";
 }
 
 $stmt->close();

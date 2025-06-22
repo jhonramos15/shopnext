@@ -2,63 +2,61 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contacto | ShopNext</title>
-    <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../../public/css/contact.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-  
-  <!-- Primera Cabecera del Sitio Web -->
-  <header>
-    <div id="header-black">
-      <p>Rebajas de Verano en Todos los Trajes de Baño y Envío Exprés Gratuito: ¡50 % de Descuento!</p>
-      <h2>¡Compra ahora!</h2>
-      <select id="languages">
-        <option value="Español:">Español:</option>
-        <option value="English">English</option>
-      </select>
+<header>
+  <!-- Header Negro -->
+    <div class="header-top">
+        <p>Rebajas de Verano: ¡50 % de Descuento!</p>
+        <h2>¡Compra Ahora!</h2>
+        <select>
+            <option value="es">Español</option>
+            <option value="en">English</option>
+        </select>
     </div>
 
-    <!-- Segunda Cabecera del Sitio Web -->
-    <div id="header-principal">
-      <a href="../html/login.html">
-        <img src="../../public/img/logo.svg" alt="Logo ShopNext">
-      </a>
-      <div id="nav">
-          <a href="../../public/index.html">Inicio</a>
-          <a href="../auth/signUp.html">Regístrate</a>
-          <a href="aboutUs.html">Acerca de</a>
-          <a href="contact.html">Contacto</a>
-      </div>
+  <!-- Header Principal -->
+    <div class="header-main">
+        <!-- Logo Principal -->
+        <div class="logo-menu">
+            <div class="logo">
+                <a href="../../public/index.html"><img src="../../public/img/logo.svg" alt="ShopNext"></a>
+            </div>
+            <!-- Menú Hamburguesa -->
+            <button class="hamburger" onclick="toggleMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
 
-      <!-- Contenedor de la barra de búsqueda -->
-      <div class="buscador">
-        <input type="text" placeholder="¿Qué estás buscando?">
-        <button type="submit">
-          <i class="fa-solid fa-magnifying-glass" style="color: #121212;"></i>
-        </button>
-      </div>
-                  
-      <!-- Botón de Corazón-->
-      <div class="heart">
-        <button type="submit">
-          <i class="fa-solid fa-heart" style="color: #121212;"></i>
-        </button>
-      </div>
+        <!-- Nav Menú -->
+        <nav class="nav-links" id="navMenu">
+            <a href="index.html">Inicio</a>
+            <a href="../auth/signUp.html">Regístrate</a>
+            <a href="contact.html">Contacto</a>
+            <a href="aboutUs.html">Acerca de</a>
+        </nav>
 
-      <!-- Botón de Carrito-->
-      <div class="cart">
-        <button type="submit">
-          <i class="fa-solid fa-cart-shopping" style="color: #121212;"></i>
-        </button>
-      </div>
+        <!-- Buscador -->
+        <div class="icons">
+            <div class="buscador">
+                <input type="text" placeholder="¿Qué estás buscando?">
+                <button><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            <!-- Favoritos -->
+            <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
+            <!-- Carrito -->
+            <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
+            <!-- Iniciar Sesión -->
+            <a href="../auth/login.php" class="login-btn">Iniciar Sesión</a>
+        </div>
     </div>
-  </header>
-  
-  <section class="main-section"></section>
-
+</header>
+<section class="main-section">
     <!-- Contenido de contacto -->
     <div class="container-contact">
         <img src="../../public/img/icons-phone.png" alt="Teléfono Icon">
@@ -76,49 +74,45 @@
     <div class="container-form-contact">
         <form id="formContact">
             <input type="text" placeholder="Tu Nombre *" id="nombre" name="nombre" required style="margin-right: 10px;">
-            <input type="email" placeholder="Tu Correo *" id="correo" name="correo" required style="margin-right: 10px;">
-            <input type="tel" placeholder="Tu Teléfono" id="telefono" name="telefono" style="margin-right: 10px;">
-            <textarea class="container-form-contact-message" placeholder="Tu Mensaje" id="mensaje" name="mensaje" required></textarea>
+            <input type="email" placeholder="Correo *" id="correo" name="correo" required style="margin-right: 10px;">
+            <input type="tel" placeholder="Teléfono" id="telefono" name="telefono" style="margin-right: 10px;">
+            <textarea class="container-form-contact-message" placeholder="Mensaje" id="mensaje" name="mensaje" required></textarea>
 
             <div class="buttoncontact">
                 <button type="submit" style="color: white;">Enviar Mensaje</button>
             </div>
         </form>
     </div>
-
-    <footer class="footer-contact">
-      <div class="footer-section">
-          <img src="../img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
-      </div>
-
-      <div class="footer-section">
-          <h3>Información</h3>
-          <ul>
-              <li><a href="/html/about-us.html">Acerca de</a></li>
-              <li><a href="/html/contact.html">Contacto</a></li>
-              <li><a href="/html/sign-up.html">Regístrate</a></li>
-          </ul>
-      </div>
-
-      <div class="footer-section">
-          <h3>Soporte</h3>
-          <ul>
-              <li><a>soporteshopnexts@gmail.com</a></li>
-              <li><a>Calle 133 # 123 - 34 Piso 12</a></li>
-              <li><a>+57 343 948 9283</a></li>
-          </ul>
-      </div>
-
-      <div class="footer-section">
-          <h3>Contacto</h3>
-          <ul>
-              <li><a>Redes Sociales</a></li>
-              <img src="../img/Icon-Twitter.png" alt="Icon Twitter">
-              <img src="../img/icon-instagram.png" alt="Icon Instagram">
-              <img src="../img/Icon-Linkedin.png" alt="Icon LinkedIn">
-            </ul>
-          </div>
-    </footer>
-    <script src="../../public/js/contact.js"></script>
+</section>
+<footer class="footer-contact">
+  <div class="footer-section">
+    <img src="../../public/img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
+  </div>
+  <div class="footer-section">
+    <h3>Información</h3>
+    <ul>
+      <li><a href="aboutUs.html">Acerca de</a></li>
+      <li><a href="contact.html">Contacto</a></li>
+      <li><a href="../auth/signUp.html">Regístrate</a></li>
+    </ul>
+  </div>
+  <div class="footer-section">
+    <h3>Soporte</h3>
+    <ul>
+      <li><a>soporteshopnexts@gmail.com</a></li>
+      <li><a>Calle 133 # 123 - 34 Piso 12</a></li>
+      <li><a>+57 343 948 9283</a></li>
+    </ul>
+  </div>
+  <div class="footer-section">
+    <h3>Contacto</h3>
+    <ul class="social-icons">
+      <li><a href="#"><img src="../../public/img/Icon-Twitter.png" alt="Twitter"></a></li>
+      <li><a href="#"><img src="../../public/img/icon-instagram.png" alt="Instagram"></a></li>
+      <li><a href="#"><img src="../../public/img/Icon-Linkedin.png" alt="LinkedIn"></a></li>
+    </ul>
+  </div>
+</footer>
+<script src="../../public/js/contact.js"></script>
 </body>
 </html>
