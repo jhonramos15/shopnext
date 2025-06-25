@@ -23,6 +23,7 @@ if (isset($_SESSION['id_usuario'])) {
     <title>Iniciar Sesión | ShopNext</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../../public/css/newLogin.css">
+    <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">      
 </head>
 <body>
 
@@ -52,10 +53,10 @@ if (isset($_SESSION['id_usuario'])) {
 
     <!-- Nav Menú -->
     <nav class="nav-links" id="navMenu">
-      <a href="index.html">Inicio</a>
+      <a href="../../public/index.html">Inicio</a>
       <a href="signUp.html">Regístrate</a>
-      <a href="../views/pages/contact.html">Contacto</a>
-      <a href="../views/pages/aboutUs.html">Acerca de</a>
+      <a href="../pages/contact.html">Contacto</a>
+      <a href="../pages/aboutUs.html">Acerca de</a>
     </nav>
 
     <!-- Buscador -->
@@ -118,9 +119,9 @@ if (isset($_SESSION['id_usuario'])) {
       <div class="footer-section">
         <h3>Información</h3>
         <ul>
-          <li><a href="/html/about-us.html">Acerca de</a></li>
-          <li><a href="/html/contact.html">Contacto</a></li>
-          <li><a href="/html/sign-up.html">Regístrate</a></li>
+          <li><a href="../pages/aboutUs.html">Acerca de</a></li>
+          <li><a href="../pages/contact.html">Contacto</a></li>
+          <li><a href="signUp.html">Regístrate</a></li>
         </ul>
       </div>
       <div class="footer-section">
