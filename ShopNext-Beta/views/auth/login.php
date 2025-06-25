@@ -1,7 +1,5 @@
 <?php
 session_start();
-
-// Si ya está logueado, redirigir
 if (isset($_SESSION['id_usuario'])) {
     if ($_SESSION['rol'] === 'admin') {
         header("Location: ../dashboard/adminView.php");
@@ -13,98 +11,109 @@ if (isset($_SESSION['id_usuario'])) {
         header("Location: ../dashboard/vendedorView.php");
         exit;
     }
-} if (isset($_GET['mensaje']) && $_GET['mensaje'] === 'sesion_expirada'): ?>
-    <div class="alert">Tu sesión ha expirado por inactividad. Por favor, inicia sesión de nuevo.</div>
-<?php endif; ?>
+}
+?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión | ShopNext</title>
-    <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">
-    <link rel="stylesheet" href="../../public/css/login.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="../../public/css/newLogin.css">
 </head>
+<body>
 
-  <!-- Alerta Descuento -->
-  <header>
-    <div id="header-black">
-      <p>Rebajas de Verano en Todos los Trajes de Baño y Envío Exprés Gratuito: ¡50 % de Descuento!</p>
-      <h2>¡Compra Ahora!</h2>
-      <select id="languages">
-        <option value="Español:">Español:</option>
-        <option value="English">English</option>
-      </select>
+<header>
+  <!-- Header Negro -->
+  <div class="header-top">
+    <p>Rebajas de Verano: ¡50 % de Descuento!</p>
+    <h2>¡Compra Ahora!</h2>
+    <select>
+      <option value="es">Español</option>
+      <option value="en">English</option>
+    </select>
+  </div>
+
+  <!-- Header Principal -->
+  <div class="header-main">
+    <!-- Logo Principal -->
+    <div class="logo-menu">
+      <div class="logo">
+        <a href="../../public/index.html"><img src="../../public/img/logo.svg" alt="ShopNext"></a>
+      </div>
+      <!-- Menú Hamburguesa -->
+      <button class="hamburger" onclick="toggleMenu()">
+        <i class="fa-solid fa-bars"></i>
+      </button>
     </div>
 
-      <!-- Header Principal -->
-      <div id="header-principal">
-        <a href="../../public/index.html">
-          <img src="../../public/img/logo.svg" alt="Logo ShopNext">
-        </a>
-        <div id="nav">
-          <a href="../../public/index.html">Inicio</a>
-          <a href="signUp.html">Regístrate</a>
-          <a href="../pages/aboutUs.html">Acerca de</a>
-          <a href="../pages/contact.html">Contacto</a>
-        </div>
+    <!-- Nav Menú -->
+    <nav class="nav-links" id="navMenu">
+      <a href="index.html">Inicio</a>
+      <a href="signUp.html">Regístrate</a>
+      <a href="../views/pages/contact.html">Contacto</a>
+      <a href="../views/pages/aboutUs.html">Acerca de</a>
+    </nav>
 
-        <!-- Contenedor de la barra de búsqueda -->
-        <div class="buscador">
-          <input type="text" placeholder="¿Qué estás buscando?">
-          <button type="submit">
-          <i class="fa-solid fa-magnifying-glass" style="color: #121212;"></i>
-          </button>
-        </div>
-
-        <!-- Botón de Corazón-->
-        <div class="heart">
-          <button type="submit">
-          <i class="fa-solid fa-heart" style="color: #121212;"></i>
-          </button>
-        </div>
-
-        <!-- Botón de Carrito-->
-        <div class="cart">
-          <button type="submit">
-          <i class="fa-solid fa-cart-shopping" style="color: #121212;"></i>
-        </button>
+    <!-- Buscador -->
+    <div class="icons">
+      <div class="buscador">
+        <input type="text" placeholder="¿Qué estás buscando?">
+        <button><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
+      <!-- Favoritos -->
+      <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
+      <!-- Carrito -->
+      <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
+      <!-- Iniciar Sesión -->
+      <a href="../views/auth/login.html" class="login-btn">Iniciar Sesión</a>
     </div>
-  </header>
+  </div>
+</header>
 
+<section class="main-section">
+  <div class="sign-up">
 
-      <!-- Registro -->
-      <section class="main-section"></section>
-      <div class="sign-up">
-        <div class="img-sign-up">
-          <img src="../../public/img/foto-login.png" alt="Sign-Up" />
+    <!-- Imagen izquierda -->
+    <div class="img-sign-up">
+      <img src="../../public/img/foto-login.png" alt="Login">
+    </div>
+
+    <!-- Formulario a la derecha -->
+    <div class="form-sign-up">
+      <h2>Iniciar Sesión</h2>
+      <h3>Ingresa los detalles abajo</h3>
+
+      <form method="POST" action="../../controllers/procesoLogin.php">
+        <div class="input-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" name="correo" placeholder="Email" required>
         </div>
-        <h2>Iniciar Sesión</h2>
-        <h3>Ingresa los detalles abajo</h3>
-        <div class="form-sign-up">
-          <form id="formLogin" method="post" action="../../controllers/procesoLogin.php">
-            <i class="fa-solid fa-envelope" style="color: #0c0c0c;"></i>
-            <input type="email" placeholder="Email" id="correo" name="correo" required>
-            <br><br>
-            <i class="fa-solid fa-lock" style="color: #0c0c0c;"></i>
-            <input type="password" placeholder="Contraseña" id="clave" name="clave" required>
-            <br><br>
-            <div class="buttoncreate">
-              <button type="submit">Iniciar Sesión</button>
-            </div>
-            <div class="a-login"><a href="forgotPassword.php">¿Olvidaste la Contraseña?</a></div>
-          </form>
-        </div>
-      </div>
 
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" name="password" placeholder="Contraseña" required>
+        </div>
+
+        <div class="buttoncreate">
+          <button type="submit">Iniciar Sesión</button>
+        </div>
+
+        <div class="a-login">
+          <a href="forgotPassword.php">¿Olvidaste la Contraseña?</a>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</section>
     <!-- Footer -->
     <footer>
       <div class="footer-section">
-        <img src="../img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
+        <img src="../../public/img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
       </div>
       <div class="footer-section">
         <h3>Información</h3>
@@ -126,14 +135,15 @@ if (isset($_SESSION['id_usuario'])) {
         <h3>Contacto</h3>
         <ul>
           <li><a>Redes Sociales</a></li>
-          <img src="../img/Icon-Twitter.png" alt="Icon Twitter">
-          <img src="../img/icon-instagram.png" alt="Icon Instagram">
-          <img src="../img/Icon-Linkedin.png" alt="Icon LinkedIn">
+          <img src="../../public/img/Icon-Twitter.png" alt="Icon Twitter">
+          <img src="../../public/img/icon-instagram.png" alt="Icon Instagram">
+          <img src="../../public/img/Icon-Linkedin.png" alt="Icon LinkedIn">
         </ul>
       </div>
     </footer>
-
-  <script src="../../public/js/login.js"></script>
-  <script src="../../public/js/alertas.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="../../public/js/login.js"></script>
+<script src="../../public/js/alertas.js"></script>
+<script src="../../public/js/menuHamburguer.js"></script>
 </body>
 </html>

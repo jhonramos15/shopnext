@@ -28,7 +28,7 @@ $token = $_GET['token'] ?? '';
     <!-- Segunda Cabecera del Sitio Web -->
     <div id="header-principal">
       <a href="../../public/index.html">
-        <img src="../../public/img/logo.png" alt="Logo ShopNexs">
+        <img src="../../public/img/logo.png" alt="Logo ShopNext">
       </a>
 
       <div id="nav">

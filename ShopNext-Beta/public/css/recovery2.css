@@ -1,5 +1,7 @@
 /* Fuente principal del sitio */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
 
 /* Reseteo de márgenes y paddings, y se aplica la fuente */
 * {
@@ -10,8 +12,12 @@
 }
 
 /* División entre cada sección  */
-section {
+section{
   border-top: 1px solid #eee;
+}
+
+section.no-border {
+  border-top: none;
 }
 
 /* Parte superior del header (alerta y selector de idioma) */
@@ -262,258 +268,164 @@ section {
     margin-top: 0;
   }
 }
-
-  /* Sign-In */
-
-/* Sección principal */
-.main-section {
+/* Contenedor principal */
+.forgot {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  padding: 40px 20px;
+  padding: 100px 20px;
+  text-align: center;
 }
 
-/* Contenedor general */
-.sign-up {
-  display: flex;
-  flex-direction: row;
-  gap: 60px;
-  align-items: center;
-  justify-content: center;
-  max-width: 1200px;
+.forgot h2 {
+  font-weight: 400;
+  font-size: 32px;
+  margin-top: 30px;
+  padding-bottom: 30px;
+}
+
+/* Sección de formulario */
+.forgot section {
+  max-width: 500px;
   width: 100%;
-  margin: auto;
-  flex-wrap: wrap;
 }
 
-.img-sign-up {
-  flex: 1;
-  display: flex;
-  justify-content: flex-start;
-}
-/* Imagen */
-.img-sign-up img {
-  max-width: 600px;
-  width: 100%;
-  border-radius: 8px;
-}
-
-/* Texto del formulario */
-.sign-up h2 {
-  font-size: 30px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.sign-up h3 {
-  font-size: 18px;
-  margin-bottom: 20px;
-  color: #555;
+/* Título */
+#h2-principal h2 {
+  font-size: 32px;
+  margin-top: 30px;
+  font-weight: 300;
+  padding-top: 30px;
 }
 
 /* Formulario */
-.form-sign-up {
-  flex: 1;
+#form-password {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  padding: 0 20px;
+}
+
+/* Campo de contraseña */
+#form-password input[type="password"] {
+  width: 100%;
   max-width: 400px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-right: 100px;
-}
-
-.form-sign-up form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* Iconos */
-.form-sign-up i {
-  font-size: 20px;
-  margin-right: 10px;
-}
-
-/* Inputs */
-.form-sign-up input {
-  padding: 12px;
-  font-size: 16px;
-  width: 100%;
-  max-width: 350px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  height: 45px;
+  background-color: #ccc;
+  border-radius: 10px;
+  border: none;
+  text-align: center;
+  font-size: 17px;
 }
 
 /* Botón */
-.buttoncreate button {
-  padding: 12px;
-  background-color: #700B97;
-  color: white;
-  font-size: 16px;
+.password-button button {
+  width: 100%;
+  width: 150px;
+  height: 50px;
+  background-color: #8E06C2;
+  border-radius: 10px;
   border: none;
-  border-radius: 7px;
-  cursor: pointer;
-  width: 100%;
-  max-width: 200px;
-}
-
-/* Enlace de recuperación */
-.a-login {
-  margin-top: 10px;
-}
-
-.a-login a {
-  text-decoration: none;
-  color: #700B97;
-  font-weight: bold;
-  font-size: 14px;
-}
-
-/* Agrupador de icono + input */
-.input-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  background: #fff;
-  width: 100%;
-  max-width: 350px;
-  margin-bottom: 15px;
-}
-
-/* Ícono dentro del input */
-.input-group i {
+  color: #eee;
   font-size: 18px;
-  color: #121212;
+  cursor: pointer;
 }
 
-/* Input en sí */
-.input-group input {
-  border: none;
-  outline: none;
-  font-size: 16px;
-  flex: 1;
-  background: transparent;
-}
-
-/* Responsivo */
+/* Responsive para pantallas pequeñas */
 @media (max-width: 768px) {
-  .sign-up {
+  #h2-principal h2 {
+    font-size: 24px;
+  }
+
+  .password-button button {
+    font-size: 16px;
+  }
+}
+
+/* footer*/
+
+footer,
+.footer-contact {
+  margin-top: 0;
+  padding: 40px 20px;
+  font-family: 'Poppins', sans-serif;
+  background-color: #121212;
+  color: white;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+.footer-section {
+  flex: 1 1 200px;
+  max-width: 250px;
+  padding: 20px;
+  background-color: #121212;
+}
+
+.footer-section h3 {
+  margin-bottom: 10px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 10px;
+}
+
+.footer-section a {
+  text-decoration: none;
+  color: #f1f1f1;
+}
+
+.footer-section a:hover {
+  text-decoration: underline;
+}
+
+/* Logo */
+.footer-logo {
+  max-width: 150px;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px auto;
+}
+
+/* Íconos sociales */
+.social-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.social-icons li {
+  list-style: none;
+}
+
+.social-icons img {
+  width: 28px;
+  height: 28px;
+  background: white;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-contact {
     flex-direction: column;
+    align-items: center;
     text-align: center;
   }
 
-  .img-sign-up img {
+  .footer-section {
     max-width: 100%;
   }
 
-  .form-sign-up {
-    align-items: center;
-  }
-
-  .form-sign-up input,
-  .buttoncreate button {
-    max-width: 100%;
-  }
-
-  .form-sign-up i {
-    display: none; /* opcional: oculta íconos en móvil si ocupan espacio */
+  .social-icons {
+    justify-content: center;
   }
 }
-
-
-/* footer */
-
-  footer {
-    margin-top: 50px;
-       padding: 40px 20px;
-       background-color: #121212;
-       color: white;
-       display: flex;
-       justify-content: space-between;
-       flex-wrap: wrap;
-   }
-   
-   .footer-section img.footer-logo {
-     max-width: 150px; 
-     height: auto;
-     display: block;
-     margin: 0 auto; 
-     background: none;
-   }
-   
-   .send-message input {
-     background-color: #121212;
-     padding-left: 10px;
-     border-color: #F5F5F5;
-     border-radius: 5px 0 0 5px;
-     width: 200px;
-     height: 40px;
-     outline: none;
-     border: 1px solid #f1f1f1;
-     position: absolute;
-     left: 180px;
-     top: 4350px;
-   }
-   
-   .send-message button {
-     width: 40px;
-     height: 40px;
-     border: 1px solid #f1f1f1;
-     border-left: none;
-     background-color: #F5F5F5;
-     border-radius: 0 5px 5px 0;
-     cursor: pointer;
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     position: absolute;
-     left: 380px;
-     top: 4350px;
-   }
-   
-   
-   .footer-section {
-     flex: 1;
-     padding: 20px;
-     margin: 10px;
-     background-color: #121212;
-     border-radius: 8px; 
-     
-   }
-   
-   .footer-section h3 {
-     margin-bottom: 10px;
-     background: none;
-   }
-   
-   .footer-section ul {
-     list-style: none;
-     padding: 0;
-     background: none;
-   }
-   
-   .footer-section ul li {
-     margin-bottom: 10px;
-     background: none;
-   }
-   
-   .footer-section a {
-     text-decoration: none;
-     color: #f1f1f1;
-     background: none;
-   }
-   
-   .footer-section img{
-     background: #f1f1f1;
-     border: 15px;
-     border-radius: 5px;
-   }
-   
-   .footer-section a:hover {
-     text-decoration: underline;
-     background: none;
-   }

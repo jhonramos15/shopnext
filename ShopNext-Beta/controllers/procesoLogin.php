@@ -3,7 +3,7 @@ session_start();
 require_once "../config/conexion.php"; // si tienes una conexión centralizada
 
 $correo = $_POST['correo'] ?? '';
-$clave = $_POST['clave'] ?? '';
+$clave = $_POST['password'] ?? '';
 
 if (empty($correo) || empty($clave)) {
     header("Location: ../views/auth/login.php?error=vacio");
@@ -32,7 +32,7 @@ if ($stmt->num_rows === 1) {
         if ($rol === 'admin') {
             header("Location: ../views/dashboard/adminView.php");
         } elseif ($rol === 'cliente') {
-            header("Location: ../views../user/indexUser.php");
+            header("Location: ../views/user/indexUser.php");
         } elseif ($rol === 'vendedor') {
             header("Location: ../views/dashboard/vendedorView.php");
         } else {
