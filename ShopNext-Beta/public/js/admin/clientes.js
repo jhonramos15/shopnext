@@ -46,13 +46,13 @@ document.querySelectorAll(".action-icon[title='Editar']").forEach((btn) => {
     document.getElementById("edit-direccion").value = cells[1].innerText;
     document.getElementById("edit-email").value = cells[2].innerText;
 
-    document.getElementById("edit-form-row").style.display = "table-row";
+    document.getElementById("edit-modal-overlay").style.display = "flex";
   });
 });
 
   // Cancelar edición
   document.getElementById("cancel-edit").addEventListener("click", () => {
-    document.getElementById("edit-form-row").style.display = "none";
+    document.getElementById("edit-modal-overlay").style.display = "none";
   });
 
   // Guardar cambios
@@ -84,7 +84,9 @@ document.getElementById("edit-form").addEventListener("submit", async (e) => {
     row.children[1].innerText = direccion;
     row.children[2].innerText = correo;
 
-    document.getElementById("edit-form-row").style.display = "none";
+    const overlay = document.getElementById("edit-modal-overlay");
+overlay.classList.add("show");
+
   } else {
     alert("Error al guardar cambios");
     console.error("Respuesta del servidor:", response);

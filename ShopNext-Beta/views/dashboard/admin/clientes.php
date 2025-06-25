@@ -171,39 +171,26 @@ if (!$resultado) {
 </tr>
 <?php endwhile; ?>
 </tbody>
-
-          <!-- Formulario de edición oculto -->
-          <tr id="edit-form-row" style="display: none;">
-            <td colspan="5">
-              <form id="edit-form">
-                <input type="hidden" id="edit-id">
-                <input type="text" id="edit-nombre" placeholder="Nombre">
-                <input type="text" id="edit-direccion" placeholder="Dirección">
-                <input type="email" id="edit-email" placeholder="Email">
-                <button type="submit">Guardar Cambios</button>
-                <button type="button" id="cancel-edit">Cancelar</button>
-              </form>
-            </td>
-          </tr>
-        </table>
-        <div class="pagination-controls">
-            <div class="data-count">
-                Mostrando <span>1</span> a <span>8</span> de <span>256,000</span> ingresos
-            </div>
-            <div class="pagination">
-                <button class="pagination-button" disabled><i data-lucide="chevron-left"></i> <span>Anterior</span></button>
-                <button class="pagination-button page-number active">1</button>
-                <button class="pagination-button page-number">2</button>
-                <button class="pagination-button page-number">3</button>
-                <span class="pagination-ellipsis">...</span>
-                <button class="pagination-button page-number">8</button>
-                <button class="pagination-button"><span>Siguiente</span> <i data-lucide="chevron-right"></i></button>
-            </div>
-        </div>
-      </section>
-    </main>
+</table>
+</section>
+</main>
   </div>
-  <script>lucide.createIcons();</script>
-  <script src="../../../public/js/admin/clientes.js"></script>
+<!-- Modal de edición -->
+<div id="edit-modal-overlay" style="display: none;">
+  <div id="edit-modal">
+    <form id="edit-form">
+      <input type="hidden" id="edit-id">
+      <input type="text" id="edit-nombre" placeholder="Nombre">
+      <input type="text" id="edit-direccion" placeholder="Dirección">
+      <input type="email" id="edit-email" placeholder="Correo">
+      <div class="edit-form-buttons">
+        <button type="submit">Guardar</button>
+        <button type="button" id="cancel-edit">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>lucide.createIcons();</script>
+<script src="../../../public/js/admin/clientes.js"></script>
 </body>
 </html>

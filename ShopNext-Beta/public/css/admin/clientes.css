@@ -410,6 +410,60 @@ thead tr:first-child th:last-child { border-top-right-radius: 8px; }
     gap: 15px; /* Espacio entre los elementos */
 }
 
+#edit-modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+#edit-modal {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #0003;
+  width: 100%;
+  max-width: 500px;
+}
+
+#edit-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.edit-form-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.edit-form-buttons button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.edit-form-buttons button[type="submit"] {
+  background-color: #7f56d9;
+  color: white;
+}
+
+.edit-form-buttons button[type="button"] {
+  background-color: #f44336;
+  color: white;
+}
+
+
 /* Estilo para el contador de datos */
 .data-count {
     font-size: 0.9em;
