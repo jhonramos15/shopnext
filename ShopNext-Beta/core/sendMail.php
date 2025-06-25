@@ -54,15 +54,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->Body = "Haz clic en el siguiente enlace para restablecer tu contraseña: <a href='$link'>$link</a><br>Este enlace expirará en 1 hora.";
 
             $mail->send();
-                header("Location: ../views/auth/forgotPassword.php?status=correo_enviado");
+                header("Location: ../views/auth/forgotPassword.html?status=correo_enviado");
             exit;
 
         } catch (Exception $e) {
-        header("Location: ../views/auth/forgotPassword.php?status=error_envio");
+        header("Location: ../views/auth/forgotPassword.html?status=error_envio");
         exit;
         }
     } else {
-        header("Location: ../views/auth/forgotPassword.php?status=no_existe");
+        header("Location: ../views/auth/forgotPassword.html?status=no_existe");
         exit;
 
     }

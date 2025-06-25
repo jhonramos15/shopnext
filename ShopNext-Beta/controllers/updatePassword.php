@@ -17,7 +17,7 @@ if ($resultado->num_rows > 0) {
     $stmt->bind_param("si", $clave, $id);
     $stmt->execute();
 
-    echo "<script>alert('Contraseña actualizada correctamente.'); window.location.href='../views/auth/login.html';</script>";
+    echo "<script>alert('Contraseña actualizada correctamente.'); window.location.href='../views/auth/login.php';</script>";
 
 } else {
     echo "Token inválido o expirado.";

@@ -11,6 +11,7 @@ $token = $_GET['token'] ?? '';
   <link rel="icon" href="../img/icon.ico" type="image/x-icon">
   <link rel="stylesheet" href="../../public/css/recovery.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">  
 </head>
 <body>
 

@@ -3,7 +3,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const status = params.get('status');
   const error = params.get('error');
 
-  const mensajes = {
+const mensajes = {
+
+  // Registro
+    ok: ['success', '¡Éxito!', 'Cliente registrado correctamente.'],
+    correo: ['error', 'Correo duplicado', 'El correo ya está registrado.'],
+    conexion: ['error', 'Error de conexión', 'No se pudo conectar a la base de datos.'],
+    registro_usuario: ['error', 'Error', 'Error al registrar el usuario.'],
+    registro_cliente: ['error', 'Error', 'Error al registrar el cliente.'],
+
     // Login
     vacio: ['info', 'Campos vacíos', 'Por favor llena todos los campos.'],
     usuario: ['error', 'Usuario no encontrado', 'El correo no está registrado.'],

@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute();
 
     if ($stmt->affected_rows > 0) {
-        echo "Contraseña actualizada correctamente. <a href='../views/auth/login.html'>Iniciar sesión</a>";
+        echo "Contraseña actualizada correctamente. <a href='../views/auth/login.php'>Iniciar sesión</a>";
     } else {
         echo "Error al actualizar la contraseña. Intenta nuevamente.";
     }

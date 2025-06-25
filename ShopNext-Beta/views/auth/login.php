@@ -103,7 +103,7 @@ if (isset($_SESSION['id_usuario'])) {
         </div>
 
         <div class="a-login">
-          <a href="forgotPassword.php">¿Olvidaste la Contraseña?</a>
+          <a href="forgotPassword.html">¿Olvidaste la Contraseña?</a>
         </div>
       </form>
     </div>
