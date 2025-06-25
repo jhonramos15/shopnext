@@ -26,6 +26,24 @@ if (isset($_SESSION['last_activity'])) {
 } else {
     $_SESSION['last_activity'] = time(); // ✅ Inicializa el tiempo de actividad si no existía
 }
+
+// Conexión a la base de datos
+$conexion = new mysqli("localhost", "root", "", "shopnexs");
+if ($conexion->connect_error) {
+    die("Conexión fallida: " . $conexion->connect_error);
+}
+
+// Consulta para obtener los datos de clientes
+$sql = "SELECT c.id_cliente, c.nombre, c.direccion, u.correo_usuario AS correo, u.estado 
+        FROM cliente c
+        INNER JOIN usuario u ON c.id_usuario = u.id_usuario";
+
+$resultado = $conexion->query($sql);
+
+// Verifica si la consulta falló
+if (!$resultado) {
+    die("Error en la consulta: " . $conexion->error);
+}
 ?>
 
 <!DOCTYPE html>
@@ -37,6 +55,7 @@ if (isset($_SESSION['last_activity'])) {
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="icon" href="../../../public/img/icon_principal.ico" type="image/x-icon">    
     <title>Dashboard | Cliente</title>
 </head>
 <body>
@@ -126,110 +145,46 @@ if (isset($_SESSION['last_activity'])) {
           <thead>
             <tr>
               <th>Nombre Cliente</th>
-              <th>Ciudad</th>
-              <th>Teléfono</th>
+              <th>Dirección</th>
               <th>Email</th>
               <th>Estado</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>Jane Cooper</td>
-              <td>Microsoft</td>
-              <td>(225) 555-0118</td>
-              <td>jane@microsoft.com</td>
-              <td>
-                <div class="status-actions-container">
-                  <span class="status active">Activo</span>
-                  <div class="action-icons">
-                    <a href="#" class="action-icon" title="Ver Usuario"><i data-lucide="eye"></i></a>
-                    <a href="#" class="action-icon" title="Editar"><i data-lucide="edit-2"></i></a>
-                    <a href="#" class="action-icon" title="Eliminar"><i data-lucide="trash-2"></i></a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Floyd Miles</td>
-              <td>Yahoo</td>
-              <td>(205) 555-0100</td>
-              <td>floyd@yahoo.com</td>
-              <td>
-                <div class="status-actions-container">
-                  <span class="status inactive">Inactivo</span>
-                  <div class="action-icons">
-                    <a href="#" class="action-icon" title="Ver Usuario"><i data-lucide="eye"></i></a>
-                    <a href="#" class="action-icon" title="Editar"><i data-lucide="edit-2"></i></a>
-                    <a href="#" class="action-icon" title="Eliminar"><i data-lucide="trash-2"></i></a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Ronald Richards</td>
-              <td>Adobe</td>
-              <td>(302) 555-0107</td>
-              <td>ronald@adobe.com</td>
-              <td>
-                <div class="status-actions-container">
-                  <span class="status inactive">Inactivo</span>
-                  <div class="action-icons">
-                    <a href="#" class="action-icon" title="Ver Usuario"><i data-lucide="eye"></i></a>
-                    <a href="#" class="action-icon" title="Editar"><i data-lucide="edit-2"></i></a>
-                    <a href="#" class="action-icon" title="Eliminar"><i data-lucide="trash-2"></i></a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Marvin McKinney</td>
-              <td>Tesla</td>
-              <td>(252) 555-0126</td>
-              <td>marvin@tesla.com</td>
-              <td>
-                <div class="status-actions-container">
-                  <span class="status active">Activo</span>
-                  <div class="action-icons">
-                    <a href="#" class="action-icon" title="Ver Usuario"><i data-lucide="eye"></i></a>
-                    <a href="#" class="action-icon" title="Editar"><i data-lucide="edit-2"></i></a>
-                    <a href="#" class="action-icon" title="Eliminar"><i data-lucide="trash-2"></i></a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-                <td>Jerome Bell</td>
-                <td>Google</td>
-                <td>(629) 555-0129</td>
-                <td>jerome@google.com</td>
-                <td>
-                  <div class="status-actions-container">
-                    <span class="status active">Activo</span>
-                    <div class="action-icons">
-                      <a href="#" class="action-icon" title="Ver Usuario"><i data-lucide="eye"></i></a>
-                      <a href="#" class="action-icon" title="Editar"><i data-lucide="edit-2"></i></a>
-                      <a href="#" class="action-icon" title="Eliminar"><i data-lucide="trash-2"></i></a>
-                    </div>
-                  </div>
-                </td>
-            </tr>
-            <tr>
-                <td>Kathryn Murphy</td>
-                <td>Microsoft</td>
-                <td>(406) 555-0120</td>
-                <td>kathryn@microsoft.com</td>
-                <td>
-                  <div class="status-actions-container">
-                    <span class="status active">Activo</span>
-                    <div class="action-icons">
-                      <a href="#" class="action-icon" title="Ver Usuario"><i data-lucide="eye"></i></a>
-                      <a href="#" class="action-icon" title="Editar"><i data-lucide="edit-2"></i></a>
-                      <a href="#" class="action-icon" title="Eliminar"><i data-lucide="trash-2"></i></a>
-                    </div>
-                  </div>
-                </td>
-            </tr>
-          </tbody>
+<tbody>
+<?php while ($fila = $resultado->fetch_assoc()): ?>
+<tr data-id="<?= $fila['id_cliente'] ?>">
+  <td><?= htmlspecialchars($fila['nombre']) ?></td>
+  <td><?= htmlspecialchars($fila['direccion']) ?></td>
+  <td><?= htmlspecialchars($fila['correo']) ?></td>
+  <td>
+    <div class="status-actions-container">
+      <span class="status <?= $fila['estado'] === 'activo' ? 'active' : 'inactive' ?>">
+        <?= ucfirst($fila['estado']) ?>
+      </span>
+      <div class="action-icons">
+        <a href="#" class="action-icon" title="Ver Usuario"><i data-lucide="eye"></i></a>
+        <a href="#" class="action-icon" title="Editar"><i data-lucide="edit-2"></i></a>
+        <a href="#" class="action-icon" title="Eliminar"><i data-lucide="trash-2"></i></a>
+      </div>
+    </div>
+  </td>
+</tr>
+<?php endwhile; ?>
+</tbody>
+
+          <!-- Formulario de edición oculto -->
+          <tr id="edit-form-row" style="display: none;">
+            <td colspan="5">
+              <form id="edit-form">
+                <input type="hidden" id="edit-id">
+                <input type="text" id="edit-nombre" placeholder="Nombre">
+                <input type="text" id="edit-direccion" placeholder="Dirección">
+                <input type="email" id="edit-email" placeholder="Email">
+                <button type="submit">Guardar Cambios</button>
+                <button type="button" id="cancel-edit">Cancelar</button>
+              </form>
+            </td>
+          </tr>
         </table>
         <div class="pagination-controls">
             <div class="data-count">
@@ -248,10 +203,7 @@ if (isset($_SESSION['last_activity'])) {
       </section>
     </main>
   </div>
-
-  <script>
-    lucide.createIcons();
-  </script>
-  <script src="../../../public/js/admin/productos.js"></script>
+  <script>lucide.createIcons();</script>
+  <script src="../../../public/js/admin/clientes.js"></script>
 </body>
 </html>

@@ -37,6 +37,7 @@ if (isset($_SESSION['last_activity'])) {
   <link rel="stylesheet" href="../../../public/css/admin/ingresos.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">  
 </head>
 <body>
   <div class="dashboard">
