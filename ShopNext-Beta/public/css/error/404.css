@@ -1,7 +1,5 @@
 /* Fuente principal del sitio */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
-
 
 /* Reseteo de márgenes y paddings, y se aplica la fuente */
 * {
@@ -12,12 +10,8 @@
 }
 
 /* División entre cada sección  */
-section{
+section {
   border-top: 1px solid #eee;
-}
-
-section.no-border {
-  border-top: none;
 }
 
 /* Parte superior del header (alerta y selector de idioma) */
@@ -268,80 +262,79 @@ section.no-border {
     margin-top: 0;
   }
 }
-/* Contenedor principal */
-.forgot {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 100px 20px;
-  text-align: center;
+
+/* 404 */
+
+/* Página de error 404 responsiva */
+
+section {
+  padding: 20px;
 }
 
-.forgot h2 {
+/* Ruta */
+.inicio-h2 h2 {
+  font-size: 16px;
   font-weight: 400;
-  font-size: 32px;
-  margin-top: 30px;
-  padding-bottom: 30px;
+  margin: 40px 0 0 20px;
 }
 
-/* Sección de formulario */
-.forgot section {
-  max-width: 500px;
-  width: 100%;
-}
-
-/* Título */
-#h2-principal h2 {
-  font-size: 32px;
-  margin-top: 30px;
-  font-weight: 300;
-  padding-top: 30px;
-}
-
-/* Formulario */
-#form-password {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-  padding: 0 20px;
-}
-
-/* Campo de contraseña */
-#form-password input[type="password"] {
-  width: 100%;
-  max-width: 400px;
-  height: 45px;
-  background-color: #ccc;
-  border-radius: 10px;
-  border: none;
+/* Título principal */
+.principal-h3 h3 {
+  font-size: 60px;
+  font-weight: 500;
   text-align: center;
-  font-size: 17px;
+  margin: 40px 10px 0;
+}
+
+/* Texto secundario */
+.text-h4 h4 {
+  font-size: 22px;
+  font-weight: 400;
+  text-align: center;
+  margin: 25px 20px;
 }
 
 /* Botón */
-.password-button button {
-  width: 100%;
-  width: 150px;
+.button-error {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  margin-bottom: 80px;
+}
+
+.button-error button {
+  width: 200px;
   height: 50px;
   background-color: #8E06C2;
   border-radius: 10px;
   border: none;
-  color: #eee;
-  font-size: 18px;
+  font-weight: 300;
+  font-size: 20px;
+  color: white;
   cursor: pointer;
 }
 
-/* Responsive para pantallas pequeñas */
-@media (max-width: 768px) {
-  #h2-principal h2 {
-    font-size: 24px;
+/* Responsivo */
+@media screen and (max-width: 600px) {
+  .principal-h3 h3 {
+    font-size: 36px;
   }
 
-  .password-button button {
-    font-size: 16px;
+  .text-h4 h4 {
+    font-size: 18px;
+  }
+
+  .button-error button {
+    width: 90%;
+    font-size: 18px;
+  }
+
+  .inicio-h2 h2 {
+    font-size: 14px;
+    margin-left: 10px;
   }
 }
+
 
 /* footer*/
 
