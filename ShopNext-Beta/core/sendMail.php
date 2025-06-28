@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
 
         // Crear el link con el token
-            $link = "http://localhost/shopnext-brayan/ShopNext-Alpha/views/auth/recoveryPassword.php?token=$token";
+            $link = "http://localhost/shopnext/ShopNext-Beta/views/auth/recoveryPassword.php?token=$token";
 
         // Crear la instancia de PHPMailer
         $mail = new PHPMailer(true);
