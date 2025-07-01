@@ -263,6 +263,140 @@ section {
   }
 }
 
+/* Carrusel */
+.carrusel-wrapper,
+.mySwiper {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.swiper-slide img {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.carrusel-arrow {
+  background: #8e44ad;
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.carrusel-arrow:hover {
+  background: #680493;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Contenedor relativo para posicionar botones */
+.swiper {
+  position: relative;
+}
+
+/* Botones de flecha personalizados para el carrusel */
+.carrusel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background-color: #8e44ad;
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+/* Izquierda */
+.carrusel-arrow:first-of-type {
+  left: 10px;
+}
+
+/* Derecha */
+.carrusel-arrow:last-of-type {
+  right: 10px;
+}
+
+.carrusel-arrow:hover {
+  background-color: #6d2c91;
+}
+
+/* Secciones */
+
+.seccion-categorias {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.etiqueta {
+  color: purple;
+  font-weight: 600;
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+
+.titulo {
+  font-size: 28px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 40px;
+}
+
+.contenedor-categorias {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.categoria {
+  width: 180px;
+  height: 150px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.categoria i {
+  font-size: 36px;
+  color: black;
+  transition: color 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.categoria:hover i {
+  color: white;
+  background-color: black;
+  border-radius: 50%;
+  padding: 10px;
+}
+
+.categoria p {
+  font-size: 16px;
+  color: #000;
+  margin: 0;
+}
 
 /* Descuentos */
 

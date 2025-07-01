@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="css/index.css">
     <link rel="icon" href="img/icon_principal.ico" type="image/x-icon">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <title>ShopNext | Inicio</title>
 </head>
 <body>
@@ -53,6 +55,60 @@
     </div>
   </div>
 </header>
+<section></section>
+
+<div class="swiper mySwiper">
+  <div class="swiper-wrapper">
+    <!-- Slide 1 -->
+    <div class="swiper-slide">
+      <img src="img/carousel/audi.webp" alt="Banner 1">
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="swiper-slide">
+      <img src="img/carousel/ps5.webp" alt="Banner 2">
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="swiper-slide">
+      <img src="img/carousel/apple1.jpg" alt="Banner 3">
+    </div>
+  </div>
+
+    <!-- Botones Swiper -->
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+
+  <!-- Paginación -->
+  <div class="swiper-pagination"></div>
+</div>
+
+
+<section class="seccion-categorias">
+  <p class="etiqueta">Sección</p>
+  <h2 class="titulo">Todas nuestras secciones</h2>
+
+  <div class="contenedor-categorias">
+    <div class="categoria">
+      <i class="fas fa-mobile-alt"></i>
+      <p>Teléfonos</p>
+    </div>
+    <div class="categoria">
+      <i class="fas fa-laptop"></i>
+      <p>Computadores</p>
+    </div>
+    <div class="categoria">
+      <i class="fas fa-headphones-alt"></i>
+      <p>Audífonos</p>
+    </div>
+    <div class="categoria">
+      <i class="fas fa-gamepad"></i>
+      <p>Videojuegos</p>
+    </div>
+  </div>
+</section>
+
+
       <!-- Flash Sales (Ventas Relámpago) -->
 <section>
   <div class="flash-sales">
@@ -603,6 +659,8 @@
         </ul>
       </div>
     </footer>
- <script src="js/index.js"></script>
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="js/index.js"></script>
 </body>
 </html>
