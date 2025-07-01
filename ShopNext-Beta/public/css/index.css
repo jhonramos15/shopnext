@@ -344,7 +344,7 @@ section {
 }
 
 .etiqueta {
-  color: purple;
+  color: #8E06C2;
   font-weight: 600;
   margin-bottom: 5px;
   font-size: 18px;
@@ -387,15 +387,21 @@ section {
 
 .categoria:hover i {
   color: white;
-  background-color: black;
-  border-radius: 50%;
-  padding: 10px;
+  border-radius: 10px;
+}
+
+.categoria:hover {
+  background-color: #8E06C2;
 }
 
 .categoria p {
   font-size: 16px;
-  color: #000;
+  color: #121212;
   margin: 0;
+}
+
+.categoria:hover p{
+  color: #fefefe;
 }
 
 /* Descuentos */
@@ -406,10 +412,11 @@ section {
 }
 
 .flash-header {
+  padding-top: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  padding-bottom: 40px;
   position: relative;
 }
 
@@ -455,6 +462,7 @@ section {
 }
 
 .scroll-controls {
+  margin-top: 40px;
   position: absolute;
   right: 0;
   top: 0;
@@ -466,7 +474,7 @@ section {
 }
 
 .scroll-btn {
-  background: #333;
+  background: #121212;
   color: white;
   border: none;
   width: 36px;
@@ -479,89 +487,89 @@ section {
   transition: background 0.3s;
 }
 .scroll-btn:hover {
-  background: #555;
+  background: #8e44ad;
 }
 
     
-  .products-container {
-    overflow-x: auto;
-    scroll-behavior: smooth;
-  }
+.products-container {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
 
-  .products {
-    display: flex;
-    gap: 1.5rem;
-    padding-bottom: 1rem;
-    width: max-content;
-    padding-left: 50px;
-    padding-right: 50px;
-  }
+.products {
+  display: flex;
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+  width: max-content;
+  padding-left: 50px;
+  padding-right: 50px;
+}
 
-  .product {
-    min-width: 280px;
-    height: auto;
-    border: 1px solid #eee;
-    border-radius: 10px;
-    background-color: transparent;
-    overflow: hidden;
-    position: relative;
-  }
+.product {
+  min-width: 280px;
+  height: auto;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  background-color: transparent;
+  overflow: hidden;
+  position: relative;
+}
 
-  .product-image-wrapper {
-    position: relative;
-    background-color: #f9f9f9;
-    background-image: grey;
-    background-size: 20px 20px;
-    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 200px;
-  }
+.product-image-wrapper {
+  position: relative;
+  background-color: #f9f9f9;
+  background-image: grey;
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
 
-  .product img {
-    width: auto;
-    height: 100%;
-    object-fit: contain;
-    padding: 0;
-  }
+.product img {
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+  padding: 0;
+}
 
-  .add-to-cart-btn {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #000000;
-    color: white;
-    border: none;
-    padding: 10px 0;
-    font-size: 14px;
-    cursor: pointer;
-    display: none;
-    transition: background 0.3s;
-    border-radius: 0 0 10px 10px;
-  }
+.add-to-cart-btn {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #000000;
+  color: white;
+  border: none;
+  padding: 10px 0;
+  font-size: 14px;
+  cursor: pointer;
+  display: none;
+  transition: background 0.3s;
+  border-radius: 0 0 10px 10px;
+}
 
-  .product-image-wrapper:hover .add-to-cart-btn {
-    display: block;
-  }
+.product-image-wrapper:hover .add-to-cart-btn {
+  display: block;
+}
 
-  .add-to-cart-btn:hover {
-    background-color: #222;
-  }
+.add-to-cart-btn:hover {
+  background-color: #222;
+}
 
-  .discount {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: #8E06C2;
-    color: white;
-    padding: 2px 8px;
-    font-size: 12px;
-    font-weight: bold;
-    border-radius: 4px;
-    z-index: 2;
-  }
+.discount {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #8E06C2;
+  color: white;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 4px;
+  z-index: 2;
+}
 
 .product-icons {
   position: absolute;
@@ -588,29 +596,29 @@ section {
   color: white;
 }
 
-  .product p {
-    padding: 0 1rem;
-    margin: 0.25rem 0;
-    font-size: 14px;
-    text-align: left;
-  }
+.product p {
+  padding: 0 1rem;
+  margin: 0.25rem 0;
+  font-size: 14px;
+  text-align: left;
+}
 
-  .product .price {
-    font-weight: bold;
-    color: #5a00e0;
-  }
+.product .price {
+  font-weight: bold;
+  color: #5a00e0;
+}
 
-  .product .old-price {
-    text-decoration: line-through;
-    color: #aaa;
-    margin-left: 6px;
-  }
+.product .old-price {
+  text-decoration: line-through;
+  color: #aaa;
+  margin-left: 6px;
+}
 
-  .product .rating {
-    color: #110e16;
-    font-size: 13px;
-    padding-bottom: 1rem;
-  }
+.product .rating {
+  color: #110e16;
+  font-size: 13px;
+  padding-bottom: 1rem;
+}
 
  /* Personaliza la barra de scroll horizontal */
 .products-container::-webkit-scrollbar {
@@ -1004,6 +1012,74 @@ section {
   box-shadow: 0 5px 15px;
 }
 
+/* Seccion de proximamente */
+
+.contenedor-destacados {
+  display: grid;
+  gap: 20px;
+  grid-template-areas:
+    "ps5 coleccion"
+    "ps5 altavoces"
+    "ps5 perfume";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  padding: 30px;
+}
+
+.tarjeta {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.tarjeta img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.tarjeta:hover img {
+  transform: scale(1.05);
+}
+
+.tarjeta .contenido {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  color: white;
+}
+
+.tarjeta .contenido h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.tarjeta .contenido p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.tarjeta .contenido a {
+  color: white;
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .contenedor-destacados {
+    grid-template-areas:
+      "ps5"
+      "coleccion"
+      "altavoces"
+      "perfume";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+}
+
 /* Estadisticas cerca del footer */
 
 .stats-container {
@@ -1112,8 +1188,7 @@ section {
   color: #333;
 }
 
-
-/* footer*/
+/* Footer*/
 
 footer,
 .footer-contact {
