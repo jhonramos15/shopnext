@@ -28,223 +28,147 @@ if (isset($_SESSION['last_activity'])) {
 }
 ?>
 
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-	<link rel="stylesheet" href="../../public/css/dashboardVendedor.css">
-	<link rel="icon" href="../img/icon.ico" type="image/x-icon">
-	<title>Dashboard Vendedor | ShopNext</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Ventas</title>
+    <link rel="stylesheet" href="../../public/css/vendedor/dashboardVendedor.css">
+    <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-	
-	<!-- SIDEBAR -->
-	<section id="sidebar">
-		<a href="#" class="brand"><i class='bx bxs-smile icon'></i> ShopNext</a>
-		<ul class="side-menu">
-			<li><a href="#" class="active"><i class='bx bxs-dashboard icon' ></i> Dashboard</a></li>
-			<li class="divider" data-text="main">Main</li>
-			<li>
-				<a href="#"><i class='bx bxs-inbox icon' ></i> Elements <i class='bx bx-chevron-right icon-right' ></i></a>
-				<ul class="side-dropdown">
-					<li><a href="#">Alert</a></li>
-					<li><a href="#">Badges</a></li>
-					<li><a href="#">Breadcrumbs</a></li>
-					<li><a href="#">Button</a></li>
-				</ul>
-			</li>
-			<li><a href="#"><i class='bx bxs-chart icon' ></i> Charts</a></li>
-			<li><a href="#"><i class='bx bxs-widget icon' ></i> Widgets</a></li>
-			<li class="divider" data-text="table and forms">Table and forms</li>
-			<li><a href="#"><i class='bx bx-table icon' ></i> Tables</a></li>
-			<li>
-				<a href="#"><i class='bx bxs-notepad icon' ></i> Forms <i class='bx bx-chevron-right icon-right' ></i></a>
-				<ul class="side-dropdown">
-					<li><a href="#">Basic</a></li>
-					<li><a href="#">Select</a></li>
-					<li><a href="#">Checkbox</a></li>
-					<li><a href="#">Radio</a></li>
-				</ul>
-			</li>
-		</ul>
-		<div class="ads">
-			<div class="wrapper">
-				<a href="#" class="btn-upgrade">Upgrade</a>
-				<p>Become a <span>PRO</span> member and enjoy <span>All Features</span></p>
-			</div>
-		</div>
-	</section>
-	<!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo-container">
+            <img src="../../public/img/logo.svg" alt="Logo" class="logo-img">
+        </div>
+        <ul class="menu">
+            <li class="active"><a href="vendedorView.php"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
+           <li><a href="vendedor/productos.php"><i data-lucide="package"></i><span>Productos</span></a></li>
+           <li><a href="vendedor/pedidos.php"><i data-lucide="shopping-cart"></i><span>Pedidos</span></a></li>
+           <li><a href="vendedor/subirProductos.php"><i data-lucide="upload-cloud"></i><span>Subir Producto</span></a></li>
+           <li><a href="vendedor/ingresos.php"><i data-lucide="dollar-sign"></i><span>Ingresos</span></a></li>
+        </ul>
+        <div class="user-profile-container">
+            <div class="user" id="userProfileBtn">
+                <img src="https://i.pravatar.cc/40?u=brayan" alt="user" />
+                <div class="user-info">
+                    <p>Brayan</p>
+                    <small>Administrador</small>
+                </div>
+                <i data-lucide="chevron-down" class="profile-arrow"></i>
+            </div>
+            <div class="profile-dropdown" id="profileDropdownMenu">
+                <a href="#perfil"><i data-lucide="user"></i><span>Mi Perfil</span></a>
+                <a href="#configuracion"><i data-lucide="settings"></i><span>Configuración</span></a>
+                <a href="../../controllers/logout.php"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
+            </div>
+        </div>
+    </aside>
 
-	<!-- NAVBAR -->
-	<section id="content">
-		<!-- NAVBAR -->
-		<nav>
-			<i class='bx bx-menu toggle-sidebar' ></i>
-			<form action="#">
-				<div class="form-group">
-					<input type="text" placeholder="Search...">
-					<i class='bx bx-search icon' ></i>
-				</div>
-			</form>
-			<a href="#" class="nav-link">
-				<i class='bx bxs-bell icon' ></i>
-				<span class="badge">5</span>
-			</a>
-			<a href="#" class="nav-link">
-				<i class='bx bxs-message-square-dots icon' ></i>
-				<span class="badge">8</span>
-			</a>
-			<span class="divider"></span>
-			<div class="profile">
-				<img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="">
-				<ul class="profile-link">
-					<li><a href="#"><i class='bx bxs-user-circle icon' ></i> Profile</a></li>
-					<li><a href="#"><i class='bx bxs-cog' ></i> Settings</a></li>
-					<a href="../../controllers/logoutVendedor.php"><i class='bx bxs-log-out-circle' ></i> Logout</a>
+    <main class="main">
+        <header class="header">
+            <h1>Hola, Brayan 👋</h1>
+            <div class="header-search-container">
+                <div class="input-icon header-search">
+                    <i data-lucide="search"></i>
+                    <input type="text" placeholder="Buscar..." />
+                </div>
+            </div>
+        </header>
 
-				</ul>
-			</div>
-		</nav>
-		<!-- NAVBAR -->
+        <div class="dashboard-content">
+            <section class="overview-cards">
+                <div class="card">
+                    <i data-lucide="dollar-sign"></i>
+                    <div>
+                        <h3>Ingresos Totales</h3>
+                        <p>$12,450 <span class="percentage positive">+15.2%</span></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <i data-lucide="shopping-cart"></i>
+                    <div>
+                        <h3>Pedidos Realizados</h3>
+                        <p>350 <span class="percentage positive">+21.0%</span></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <i data-lucide="user-plus"></i>
+                    <div>
+                        <h3>Nuevos Clientes</h3>
+                        <p>82 <span class="percentage neutral">+5.4%</span></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <i data-lucide="activity"></i>
+                    <div>
+                        <h3>Tasa de Conversión</h3>
+                        <p>4.25% <span class="percentage positive">+1.5%</span></p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="grid-row top-row">
+                <div class="card revenue-summary-card">
+                    <div class="chart-header">
+                        <h3>Resumen de Ingresos</h3>
+                        <div class="chart-controls">
+                            <button class="active">Mes</button>
+                            <button>Semana</button>
+                        </div>
+                    </div>
+                    <div class="chart-canvas-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                <div class="card orders-summary-card">
+                    <h3>Pedidos por Día (Semana)</h3>
+                    <div class="chart-canvas-container income-chart-container">
+                        <canvas id="dailyOrdersChart"></canvas>
+                    </div>
+                </div>
+            </section>
 
-		<!-- MAIN -->
-		<main>
-			<h1 class="title">Dashboard</h1>
-			<ul class="breadcrumbs">
-				<li><a href="#">Home</a></li>
-				<li class="divider">/</li>
-				<li><a href="#" class="active">Dashboard</a></li>
-			</ul>
-			<div class="info-data">
-				<div class="card">
-					<div class="head">
-						<div>
-							<h2>1500</h2>
-							<p>Traffic</p>
-						</div>
-						<i class='bx bx-trending-up icon' ></i>
-					</div>
-					<span class="progress" data-value="40%"></span>
-					<span class="label">40%</span>
-				</div>
-				<div class="card">
-					<div class="head">
-						<div>
-							<h2>234</h2>
-							<p>Sales</p>
-						</div>
-						<i class='bx bx-trending-down icon down' ></i>
-					</div>
-					<span class="progress" data-value="60%"></span>
-					<span class="label">60%</span>
-				</div>
-				<div class="card">
-					<div class="head">
-						<div>
-							<h2>465</h2>
-							<p>Pageviews</p>
-						</div>
-						<i class='bx bx-trending-up icon' ></i>
-					</div>
-					<span class="progress" data-value="30%"></span>
-					<span class="label">30%</span>
-				</div>
-				<div class="card">
-					<div class="head">
-						<div>
-							<h2>235</h2>
-							<p>Visitors</p>
-						</div>
-						<i class='bx bx-trending-up icon' ></i>
-					</div>
-					<span class="progress" data-value="80%"></span>
-					<span class="label">80%</span>
-				</div>
-			</div>
-			<div class="data">
-				<div class="content-data">
-					<div class="head">
-						<h3>Sales Report</h3>
-						<div class="menu">
-							<i class='bx bx-dots-horizontal-rounded icon'></i>
-							<ul class="menu-link">
-								<li><a href="#">Edit</a></li>
-								<li><a href="#">Save</a></li>
-								<li><a href="#">Remove</a></li>
-							</ul>
-						</div>
-					</div>
-					<div class="chart">
-						<div id="chart"></div>
-					</div>
-				</div>
-				<div class="content-data">
-					<div class="head">
-						<h3>Chatbox</h3>
-						<div class="menu">
-							<i class='bx bx-dots-horizontal-rounded icon'></i>
-							<ul class="menu-link">
-								<li><a href="#">Edit</a></li>
-								<li><a href="#">Save</a></li>
-								<li><a href="#">Remove</a></li>
-							</ul>
-						</div>
-					</div>
-					<div class="chat-box">
-						<p class="day"><span>Today</span></p>
-						<div class="msg">
-							<img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="">
-							<div class="chat">
-								<div class="profile">
-									<span class="username">Alan</span>
-									<span class="time">18:30</span>
-								</div>
-								<p>Hello</p>
-							</div>
-						</div>
-						<div class="msg me">
-							<div class="chat">
-								<div class="profile">
-									<span class="time">18:30</span>
-								</div>
-								<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque voluptatum eos quam dolores eligendi exercitationem animi nobis reprehenderit laborum! Nulla.</p>
-							</div>
-						</div>
-						<div class="msg me">
-							<div class="chat">
-								<div class="profile">
-									<span class="time">18:30</span>
-								</div>
-								<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, architecto!</p>
-							</div>
-						</div>
-						<div class="msg me">
-							<div class="chat">
-								<div class="profile">
-									<span class="time">18:30</span>
-								</div>
-								<p>Lorem ipsum, dolor sit amet.</p>
-							</div>
-						</div>
-					</div>
-					<form action="#">
-						<div class="form-group">
-							<input type="text" placeholder="Type...">
-							<button type="submit" class="btn-send"><i class='bx bxs-send' ></i></button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</main>
-		<!-- MAIN -->
-	</section>
-	<!-- NAVBAR -->
-  <script src="../../public/js/scriptVendedor.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+            <section class="grid-row middle-row">
+                <div class="card recent-orders-card">
+                    <h3>Pedidos Recientes</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>NÚMERO DE SEGUIMIENTO</th>
+                                    <th>PRODUCTO</th>
+                                    <th>ESTADO</th>
+                                    <th>IMPORTE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>25/03/2024</td><td>Teclado</td><td><span class="status rejected">Rechazado</span></td><td>$70,999</td></tr>
+                                <tr><td>25/03/2024</td><td>Accesorios</td><td><span class="status approved">Aprobado</span></td><td>$83,348</td></tr>
+                                <tr><td>26/03/2024</td><td>Lente de cámara</td><td><span class="status rejected">Rechazado</span></td><td>$40,570</td></tr>
+                                <tr><td>26/03/2024</td><td>TELEVISOR</td><td><span class="status pending">Pendiente</span></td><td>$410,780</td></tr>
+                                <tr><td>26/03/2024</td><td>Auricular</td><td><span class="status approved">Aprobado</span></td><td>$10,239</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
+                <div class="card category-sales-card">
+                     <h3>Ventas por Categoría</h3>
+                    <div class="chart-canvas-container analysis-chart-container">
+                        <canvas id="categorySalesChart"></canvas>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+    <script src="../../public/js/vendedor/dashboardVendedor.js"></script>
 </body>
 </html>
