@@ -62,7 +62,7 @@ if (isset($_SESSION['last_activity'])) {
             </div>
             <div class="profile-dropdown" id="profileDropdownMenu">
                 <a href="#perfil"><i data-lucide="user"></i><span>Mi Perfil</span></a>
-                <a href="#configuracion"><i data-lucide="settings"></i><span>Configuración</span></a>
+                <a href="../pages/account.php"><i data-lucide="settings"></i><span>Configuración</span></a>
                 <a href="../../controllers/logout.php"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
             </div>
         </div>
