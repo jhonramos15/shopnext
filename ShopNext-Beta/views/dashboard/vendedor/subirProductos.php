@@ -73,19 +73,19 @@ if (isset($_SESSION['last_activity'])) {
                 <h1>Nuevo Producto</h1>
             </header>
 
-            <div class="form-container">
+            <form action="../../../controllers/uploads/uploadProduct.php" method="POST" enctype="multipart/form-data">
                 <section class="new-product-section">
                     <div class="details-column">
                         <div class="form-group">
                             <label for="titulo">Título <span class="required">*</span></label>
-                            <input type="text" id="titulo" placeholder="Crea un nombre corto a tu producto.">
+                            <input type="text" id="titulo" name="titulo" placeholder="Crea un nombre corto a tu producto.">
                             <small class="form-hint">Entre 5 y 100 caracteres alfanuméricos</small>
                         </div>
                         <div class="form-group">
                             <label for="categoria">Categoría <span class="required">*</span></label>
                             <div class="input-icon">
                                 <i data-lucide="tag"></i>
-                                <input type="text" id="categoria" placeholder="Añade tu producto a una categoría existente.">
+                                <input type="text" id="categoria" name="categoria" placeholder="Añade tu producto a una categoría existente.">
                             </div>
                             <div class="category-add">
                                 <i data-lucide="plus-circle"></i>
@@ -94,13 +94,13 @@ if (isset($_SESSION['last_activity'])) {
                         </div>
                         <div class="form-group">
                             <label for="descripcion">Descripción <span class="required">*</span></label>
-                            <textarea id="descripcion" rows="5" placeholder="Dale una descripción breve a tu producto."></textarea>
+                            <textarea id="descripcion" name="descripcion" rows="5" placeholder="Dale una descripción breve a tu producto."></textarea>
                         </div>
                         <div class="form-group">
                             <label for="precio">Precio <span class="required">*</span></label>
                             <div class="input-icon">
                                 <i data-lucide="dollar-sign"></i>
-                                <input type="number" id="precio" placeholder="Ponle un precio a tu producto.">
+                                <input type="number" id="precio" name="precio" placeholder="Ponle un precio a tu producto.">
                             </div>
                         </div>
                     </div>
@@ -116,7 +116,7 @@ if (isset($_SESSION['last_activity'])) {
                                 <div class="image-preview-list">
                                     <label for="imageUpload" class="add-image-button">
                                         <i data-lucide="plus"></i>
-                                        <input type="file" id="imageUpload" hidden multiple>
+                                        <input type="file" id="imageUpload" name="imagen[]" hidden multiple>
                                     </label>
                                 </div>
                             </div>
@@ -125,12 +125,11 @@ if (isset($_SESSION['last_activity'])) {
                 </section>
                 
                 <div class="form-actions">
-                    <button class="submit-button">Subir Producto</button>
+                    <button class="submit-button" type="submit" name="subir_producto">Subir Producto</button>
                 </div>
-            </div>
+            </form>
         </main>
     </div>
-
     <script>
         lucide.createIcons();
     </script>

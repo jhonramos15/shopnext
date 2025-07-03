@@ -9,61 +9,50 @@
     <title>Computadores | ShopNext</title>
 </head>
 <body>
-    <!-- Alerta Descuento -->
 <header>
-  <div id="header-black">
-    <p>Rebajas de Verano en Todos los Trajes de Baño y Envío Exprés Gratuito: ¡50 % de Descuento!</p>
+  <!-- Header Negro -->
+  <div class="header-top">
+    <p>Rebajas de Verano: ¡50 % de Descuento!</p>
     <h2>¡Compra Ahora!</h2>
-    <select id="languages">
-      <option value="Español:">Español:</option>
-      <option value="English">English</option>
+    <select>
+      <option value="es">Español</option>
+      <option value="en">English</option>
     </select>
   </div>
 
   <!-- Header Principal -->
-  <div id="header-principal">
-
-    <!-- Logo -->
-    <a href="index.html">
-      <img src="../../../public/img/logo.svg" alt="Logo ShopNext">
-    </a>
-
-    <!-- link header -->
-    <div id="nav">
-      <a href="../../../public/index.html">Inicio</a>
-      <a href="../../auth/signUp.html">Regístrate</a>
-      <a href="../aboutUs.html">Acerca de</a>
-      <a href="../contact.html">Contacto</a>
+  <div class="header-main">
+    <!-- Logo Principal -->
+    <div class="logo-menu">
+      <div class="logo">
+        <a href="../../../public/index.html"><img src="../../../public/img/logo.svg" alt="ShopNext"></a>
+      </div>
+      <!-- Menú Hamburguesa -->
+      <button class="hamburger" onclick="toggleMenu()">
+        <i class="fa-solid fa-bars"></i>
+      </button>
     </div>
 
-    <!-- Contenedor de herramientas: buscador, corazón, carrito -->
-    <div style="display: flex; align-items: center;">
+    <!-- Nav Menú -->
+    <nav class="nav-links" id="navMenu">
+      <a href="../../../public/index.html">Inicio</a>
+      <a href="../../auth/signUp.html">Regístrate</a>
+      <a href="../contact.html">Contacto</a>
+      <a href="../aboutUs.html">Acerca de</a>
+    </nav>
 
-      <!-- Contenedor de la barra de busqueda -->
+    <!-- Buscador -->
+    <div class="header-icons">
       <div class="buscador">
         <input type="text" placeholder="¿Qué estás buscando?">
-        <button type="submit">
-          <i class="fa-solid fa-magnifying-glass" style="color: #121212;"></i>
-        </button>
+        <button><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
-
-      <!-- Boton de Corazón -->
-      <div class="heart">
-        <button type="submit">
-          <i class="fa-solid fa-heart" style="color: #121212;"></i>
-        </button>
-      </div>
-
-      <!-- Boton de Carrito -->
-      <div class="cart">
-        <button type="submit">
-          <i class="fa-solid fa-cart-shopping" style="color: #121212;"></i>
-        </button>
-      </div>
+      <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
+      <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
+      <a href="../auth/login.php" class="login-btn">Iniciar Sesión</a>
     </div>
   </div>
 </header>
-
 <!-- Sección publicitaria -->
 <section class="seccion-computadores">
   <div class="contenido-computadores">
@@ -72,7 +61,6 @@
   <img src="../../../public/img/products/publicidadmsi.png" alt="Monitor Samsung" class="img-computador-izquierda">
   <img src="../../../public/img/products/publicidadasus.png" alt="Laptop Asus" class="img-computador-derecha">
 </section>
-
 
 <!-- Slider de marcas -->
 <section class="seccion-marcas">
@@ -87,9 +75,6 @@
     <div class="marca"><img src="../../../public/img/products/logomsi.png" alt="Vivo"></div>
   </div>
 </section>
-
-
-
 <section class="section-telefonos">
   <h2>Portatiles</h2>
   <div class="product-grid">
@@ -112,11 +97,8 @@
   <p class="price">$1.100.900 <span class="old-price">$1.399.900</span></p>
   <p class="rating">★★★★★ (82)</p>
 </div>
-
-
-
-    <!-- Producto 2 -->
-   <div class="product">
+<!-- Producto 2 -->
+  <div class="product">
   <div class="discount">-23%</div>
 
   <div class="icons">
@@ -133,9 +115,6 @@
   <p class="price">$1.139.900 <span class="old-price">$1.239.900</span></p>
   <p class="rating">★★★★★ (22)</p>
 </div>
-
-
-
     <!-- Producto 3 -->
    <div class="product">
   <div class="discount">-14</div>
@@ -154,8 +133,6 @@
   <p class="price">$1.729.900 <span class="old-price">$1.929.900</span></p>
   <p class="rating">★★★★★ (42)</p>
 </div>
-
-
     <!-- Producto 4 -->
    <div class="product">
   <div class="discount">-17%</div>
@@ -177,9 +154,6 @@
 
   </div>
 </section>
-
-
-
 <section class="section-telefonos">
   <h2>Teléfonos</h2>
   <div class="product-grid">
@@ -202,9 +176,6 @@
   <p class="price">$3.529.000 <span class="old-price">$3.729.000</span></p>
   <p class="rating">★★★★★ (12)</p>
 </div>
-
-
-
     <!-- Producto 6 -->
    <div class="product">
   <div class="discount">-0%</div>
@@ -223,9 +194,6 @@
   <p class="price">$4.699.000 <span class="old-price">$4.899.000</span></p>
   <p class="rating">★★★★★ (52)</p>
 </div>
-
-
-
     <!-- Producto 7 -->
    <div class="product">
   <div class="discount">-30%</div>
@@ -244,9 +212,6 @@
   <p class="price">$4.351.500 <span class="old-price">$4.651.500</span></p>
   <p class="rating">★★★★ (42)</p>
 </div>
-
-
-
     <!-- Producto 8 -->
    <div class="product">
   <div class="discount">-35%</div>
@@ -268,46 +233,36 @@
 </div>
   </div>
 </section>
-  <footer>
-      <div class="footer-section">
-        <img src="../../../public/img/products/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo"> <!-- Agregar el logo correspondiente-->
-      </div>
-  
-      <div class="send-message">
-        <input type="text" placeholder="Envía un correo">
-        <button type="submit">
-          <i class="fa-solid fa-paper-plane" style="color: #0c0c0c;"></i>
-        </button>
-      </div>
-    
-      <div class="footer-section">
-        <h3>Información</h3>
-        <ul>
-          <li><a href="/html/about-us.html">Acerca de</a></li>
-          <li><a href="/html/contact.html">Contacto</a></li>
-          <li><a href="/html/sign-up.html">Regístrate</a></li>
-        </ul>
-      </div>
-    
-      <div class="footer-section">
-        <h3>Soporte</h3>
-        <ul>
-          <li><a>soporteshopnexts@gmail.com</a></li>
-          <li><a>Calle 133 # 123 - 34 Piso 12</a></li>
-          <li><a>+57 343 948 9283</a></li>
-        </ul>
-      </div>
-    
-      <div class="footer-section">
-        <h3>Contacto</h3>
-        <ul>
-          <li><a>Redes Sociales</a></li>
-  
-          <img src="../img/Icon-Twitter.png" alt="Icon Twitter">
-          <img src="../img/icon-instagram.png" alt="Icon Instagram">
-          <img src="../img/Icon-Linkedin.png" alt="Icon LinkedIn">
-        </ul>
-      </div>
-    </footer>
+<!-- Footer -->
+<footer class="footer-contact">
+  <div class="footer-section">
+    <img src="../../../public/img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
+  </div>
+  <div class="footer-section">
+    <h3>Información</h3>
+    <ul>
+      <li><a href="../aboutUs.html">Acerca de</a></li>
+      <li><a href="../contact.html">Contacto</a></li>
+      <li><a href="../../auth/signUp.html">Regístrate</a></li>
+    </ul>
+  </div>
+  <div class="footer-section">
+    <h3>Soporte</h3>
+    <ul>
+      <li><a>soporteshopnexts@gmail.com</a></li>
+      <li><a>Calle 133 # 123 - 34 Piso 12</a></li>
+      <li><a>+57 343 948 9283</a></li>
+    </ul>
+  </div>
+  <div class="footer-section">
+    <h3>Contacto</h3>
+    <ul class="social-icons">
+      <li><a href="#"><img src="../../../public/img/Icon-Twitter.png" alt="Twitter"></a></li>
+      <li><a href="#"><img src="../../../public/img/icon-instagram.png" alt="Instagram"></a></li>
+      <li><a href="#"><img src="../../../public/img/Icon-Linkedin.png" alt="LinkedIn"></a></li>
+    </ul>
+  </div>
+</footer>
+<script src="../../../public/js/menuHamburguer.js"></script>
 </body>
 </html>

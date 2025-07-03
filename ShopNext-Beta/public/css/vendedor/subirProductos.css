@@ -323,7 +323,12 @@ body { font-family: 'Inter', sans-serif; background: #f9fafb; color: #111827; li
 .header h1 { font-size: 1.6em; font-weight: 600; }
 
 /* --- PÁGINA: NUEVO PRODUCTO --- */
-.form-container { background-color: #fff; padding: 25px 30px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); }
+.form-container { 
+  background-color: #fff; 
+  padding: 25px 30px; 
+  border-radius: 16px; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); 
+}
 .new-product-section { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; }
 .form-group { margin-bottom: 55px; }
 .details-column .form-group:last-child { margin-bottom: 0; }
