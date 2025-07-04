@@ -1,49 +1,32 @@
 <?php
-session_start();
+// --- INICIO DEL CÓDIGO PHP PARA OBTENER DATOS ---
 
-// Verificar si el usuario está logueado y tiene el rol correcto
-if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'admin') {
-    header("Location: ../../auth/login.php");
-    exit;
-}
-
-// Tiempo máximo de inactividad (5 minutos)
-$inactividad = 300;
-
-// Verificar si existe el tiempo de última actividad
-if (isset($_SESSION['last_activity'])) {
-    $tiempo_inactivo = time() - $_SESSION['last_activity'];
-
-    if ($tiempo_inactivo > $inactividad) {
-        // Cierra la sesión si pasó el tiempo
-        session_unset();
-        session_destroy();
-        header("Location: ../../auth/login.php?mensaje=sesion_expirada");
-        exit;
-    } else {
-        $_SESSION['last_activity'] = time(); // ✅ Refresca el tiempo de actividad
-    }
-} else {
-    $_SESSION['last_activity'] = time(); // ✅ Inicializa el tiempo de actividad si no existía
-}
-
-// Conexión a la base de datos
+// Conexión a la base de datos (ajusta tus credenciales si es necesario)
 $conexion = new mysqli("localhost", "root", "", "shopnexs");
 if ($conexion->connect_error) {
-    die("Conexión fallida: " . $conexion->connect_error);
+    die("Falló la conexión: " . $conexion->connect_error);
 }
 
-// Consulta para obtener los datos de clientes
-$sql = "SELECT c.id_cliente, c.nombre, c.direccion, u.correo_usuario AS correo, u.estado 
-        FROM cliente c
-        INNER JOIN usuario u ON c.id_usuario = u.id_usuario";
+// Consulta para obtener el total de usuarios (clientes)
+$total_users_query = "SELECT COUNT(*) as total FROM usuario";
+$total_users_result = $conexion->query($total_users_query);
+$total_usuarios = $total_users_result->fetch_assoc()['total'];
 
-$resultado = $conexion->query($sql);
+// Consulta para obtener los usuarios registrados en los últimos 7 días
+$new_users_query = "SELECT COUNT(*) as nuevos_usuarios FROM usuario WHERE fecha_registro >= CURDATE() - INTERVAL 7 DAY";
+$new_users_result = $conexion->query($new_users_query);
+$nuevos_usuarios = $new_users_result->fetch_assoc()['nuevos_usuarios'];
 
-// Verifica si la consulta falló
-if (!$resultado) {
-    die("Error en la consulta: " . $conexion->error);
+// Calcular el cambio porcentual
+$usuarios_anteriores = $total_usuarios - $nuevos_usuarios;
+$cambio_porcentual = 0; // Inicializar en 0
+
+if ($usuarios_anteriores > 0) {
+    $cambio_porcentual = ($nuevos_usuarios / $usuarios_anteriores) * 100;
+} elseif ($nuevos_usuarios > 0) {
+    $cambio_porcentual = 100; // Si no había usuarios y ahora sí, es un 100% de aumento
 }
+// --- FIN DEL CÓDIGO PHP ---
 ?>
 
 <!DOCTYPE html>
@@ -102,18 +85,27 @@ if (!$resultado) {
 
       <section class="cards" id="productos-cards">
         <div class="card">
-          <i data-lucide="users"></i>
-          <div>
-            <h3>Clientes Totales</h3>
-            <p>5,423 <span class="success">18% este mes</span></p>
-          </div>
+            <i data-lucide="users-2"></i>
+            <div>
+                <h3>Clientes Totales</h3>
+                <p>
+                    <?php echo number_format($total_usuarios); ?>
+                    <span class="percentage <?php echo ($cambio_porcentual >= 0) ? 'positive' : 'neutral'; ?>">
+                        <?php echo ($cambio_porcentual >= 0 ? '+' : '') . number_format($cambio_porcentual, 1); ?>%
+                    </span>
+                </p>
+            </div>
         </div>
         <div class="card">
-          <i data-lucide="user-x"></i>
-          <div>
-            <h3>Miembros</h3>
-            <p>1,893 <span class="danger">1% este mes</span></p>
-          </div>
+            <i data-lucide="award"></i> <div>
+                <h3>Miembros</h3>
+                <p>
+                    <?php echo number_format($total_usuarios); ?>
+                    <span class="percentage <?php echo ($cambio_porcentual >= 0) ? 'positive' : 'neutral'; ?>">
+                        <?php echo ($cambio_porcentual >= 0 ? '+' : '') . number_format($cambio_porcentual, 1); ?>%
+                    </span>
+                </p>
+            </div>
         </div>
         <div class="card">
           <i data-lucide="monitor"></i>
@@ -141,35 +133,46 @@ if (!$resultado) {
             </div>
           </div>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Nombre Cliente</th>
-              <th>Dirección</th>
-              <th>Email</th>
-              <th>Estado</th>
+<table>
+    <thead>
+        <tr>
+            <th>Nombre Cliente</th>
+            <th>Email</th>
+            <th>Fecha de Registro</th>
+            <th>Estado</th> <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php
+    // ----- AÑADE ESTA LÍNEA AQUÍ -----
+    // Ejecuta la consulta para obtener todos los clientes y la guarda en $query_resultado
+    $sql_clientes = "SELECT u.id_usuario, c.nombre, u.correo_usuario, u.estado, u.fecha_registro FROM usuario u JOIN cliente c ON u.id_usuario = c.id_usuario WHERE u.rol = 'cliente'";
+    $query_resultado = $conexion->query($sql_clientes);
+
+    // Ahora el 'if' ya puede usar la variable porque acaba de ser creada
+    if ($query_resultado && $query_resultado->num_rows > 0) {
+        while ($fila = $query_resultado->fetch_assoc()) {
+    ?>
+            <tr data-id="<?php echo htmlspecialchars($fila['id_usuario']); ?>">
+                <td><?php echo htmlspecialchars($fila['nombre']); ?></td>
+                <td><?php echo htmlspecialchars($fila['correo_usuario']); ?></td>
+                <td><?php echo htmlspecialchars($fila['fecha_registro']); ?></td>
+                <td>
+                    <span class="status <?php echo ($fila['estado'] === 'activo') ? 'active' : 'inactive'; ?>">
+                        <?php echo ucfirst(htmlspecialchars($fila['estado'])); ?>
+                    </span>
+                </td>
+                <td class="table-actions">
+                    <a href="#" class="action-icon edit-btn" title="Editar Cliente"><i data-lucide="eye"></i></a>
+                    <a href="#" class="action-icon delete-btn" title="Eliminar Cliente"><i data-lucide="trash-2"></i></a>
+                </td>
             </tr>
-          </thead>
-<tbody>
-<?php while ($fila = $resultado->fetch_assoc()): ?>
-<tr data-id="<?= $fila['id_cliente'] ?>">
-  <td><?= htmlspecialchars($fila['nombre']) ?></td>
-  <td><?= htmlspecialchars($fila['direccion']) ?></td>
-  <td><?= htmlspecialchars($fila['correo']) ?></td>
-  <td>
-    <div class="status-actions-container">
-      <span class="status <?= $fila['estado'] === 'activo' ? 'active' : 'inactive' ?>">
-        <?= ucfirst($fila['estado']) ?>
-      </span>
-      <div class="action-icons">
-        <a href="#" class="action-icon" title="Ver Usuario"><i data-lucide="eye"></i></a>
-        <a href="#" class="action-icon" title="Editar"><i data-lucide="edit-2"></i></a>
-        <a href="#" class="action-icon" title="Eliminar"><i data-lucide="trash-2"></i></a>
-      </div>
-    </div>
-  </td>
-</tr>
-<?php endwhile; ?>
+    <?php
+        } // Fin del while
+    } else {
+        echo "<tr><td colspan='5' class='text-center'>No se encontraron clientes.</td></tr>";
+    }
+    ?>
 </tbody>
 </table>
 </section>

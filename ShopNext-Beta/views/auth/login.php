@@ -22,7 +22,7 @@ if (isset($_SESSION['id_usuario'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión | ShopNext</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="../../public/css/newLogin.css">
+    <link rel="stylesheet" href="../../public/css/login.css">
     <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">      
 </head>
 <body>
@@ -85,24 +85,22 @@ if (isset($_SESSION['id_usuario'])) {
 
     <!-- Formulario a la derecha -->
     <div class="form-sign-up">
-      <h2>Iniciar Sesión</h2>
-      <h3>Ingresa los detalles abajo</h3>
+        <h2>Iniciar Sesión</h2>
+        <h3>Ingresa los detalles abajo</h3>
 
-      <form method="POST" action="../../controllers/procesoLogin.php">
+        <form method="POST" action="../../controllers/procesoLogin.php" id="formLogin">
         <div class="input-group">
           <i class="fas fa-envelope"></i>
-          <input type="email" name="correo" placeholder="Email" required>
+          <input type="email" name="correo" placeholder="Email" required id="correo">
         </div>
-
         <div class="input-group">
           <i class="fas fa-lock"></i>
-          <input type="password" name="password" placeholder="Contraseña" required>
+          <input type="password" name="password" placeholder="Contraseña" required id="password">
+          <i class="fas fa-eye" id="togglePassword" style="cursor: pointer; margin-left: -30px; z-index: 2;"></i>
         </div>
-
         <div class="buttoncreate">
           <button type="submit">Iniciar Sesión</button>
         </div>
-
         <div class="a-login">
           <a href="forgotPassword.html">¿Olvidaste la Contraseña?</a>
         </div>

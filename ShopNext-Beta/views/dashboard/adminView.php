@@ -1,31 +1,61 @@
 <?php
 session_start();
 
-// Verificar si el usuario está logueado y tiene el rol correcto
+// Verificar si el usuario está logueado y tiene el rol correcto (admin)
 if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'admin') {
-    header("Location: ../auth/login.php");
+    header("Location: ../auth/login.php"); // Redirigir si no es admin
     exit;
 }
 
-// Tiempo máximo de inactividad (5 minutos)
+// Tiempo máximo de inactividad en segundos (ej. 5 minutos)
 $inactividad = 300;
 
-// Verificar si existe el tiempo de última actividad
 if (isset($_SESSION['last_activity'])) {
     $tiempo_inactivo = time() - $_SESSION['last_activity'];
 
     if ($tiempo_inactivo > $inactividad) {
-        // Cierra la sesión si pasó el tiempo
+        // Cerrar sesión por inactividad
         session_unset();
         session_destroy();
         header("Location: ../auth/login.php?mensaje=sesion_expirada");
         exit;
     } else {
-        $_SESSION['last_activity'] = time(); // ✅ Refresca el tiempo de actividad
+        // Actualizar el tiempo de actividad
+        $_SESSION['last_activity'] = time();
     }
 } else {
-    $_SESSION['last_activity'] = time(); // ✅ Inicializa el tiempo de actividad si no existía
+    // Inicializar el tiempo de actividad
+    $_SESSION['last_activity'] = time();
 }
+
+// 1. Conexión a la base de datos
+$conexion = new mysqli("localhost", "root", "", "shopnexs"); // Ajusta tus credenciales si es necesario
+if ($conexion->connect_error) {
+    die("Falló la conexión: " . $conexion->connect_error);
+}
+
+// 2. Consulta para obtener el total de usuarios
+$total_users_query = "SELECT COUNT(*) as total FROM usuario";
+$total_users_result = $conexion->query($total_users_query);
+$total_usuarios = $total_users_result->fetch_assoc()['total'];
+
+// 3. Consulta para obtener los usuarios registrados en los últimos 7 días
+$new_users_query = "SELECT COUNT(*) as nuevos_usuarios FROM usuario WHERE fecha_registro >= CURDATE() - INTERVAL 7 DAY";
+$new_users_result = $conexion->query($new_users_query);
+$nuevos_usuarios = $new_users_result->fetch_assoc()['nuevos_usuarios'];
+
+// 4. Calcular el cambio porcentual
+$usuarios_anteriores = $total_usuarios - $nuevos_usuarios;
+$cambio_porcentual = 0; // Inicializar en 0
+
+// Evitar división por cero si no hay usuarios anteriores
+if ($usuarios_anteriores > 0) {
+    $cambio_porcentual = ($nuevos_usuarios / $usuarios_anteriores) * 100;
+} elseif ($nuevos_usuarios > 0) {
+    $cambio_porcentual = 100; // Si no había usuarios y ahora sí, es un 100% de aumento
+}
+
+$conexion->close(); // Cerrar la conexión
 ?>
 
 <!DOCTYPE html>
@@ -93,7 +123,12 @@ if (isset($_SESSION['last_activity'])) {
                     <i data-lucide="users-2"></i>
                     <div>
                         <h3>Total de usuarios</h3>
-                        <p>78.250 <span class="percentage positive">+70.5%</span></p>
+                        <p>
+                            <?php echo number_format($total_usuarios); ?>
+                            <span class="percentage <?php echo ($cambio_porcentual >= 0) ? 'positive' : 'neutral'; ?>">
+                                <?php echo ($cambio_porcentual >= 0 ? '+' : '') . number_format($cambio_porcentual, 1); ?>%
+                            </span>
+                        </p>
                     </div>
                 </div>
                 <div class="card">

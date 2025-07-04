@@ -1,598 +1,431 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+/* Fuente principal del sitio */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
-/* Homepage */
-/* Header oscuro */
-
-*{
-  margin-top: 0px;
-  margin-left: 0px;
-  margin-right: 0px;
-  font-family: "Poppins", sans-serif;
-  font-style: normal;
+/* Reseteo de márgenes y paddings, y se aplica la fuente */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
-section:first-of-type {
-  margin-top: 20px;
-  padding-top: 20px;
-}
-
+/* División entre cada sección  */
 section {
   border-top: 1px solid #eee;
-  padding-top: 60px;
-  margin-top: 60px;
 }
 
-.section-header {
+/* Parte superior del header (alerta y selector de idioma) */
+.header-top {
+  background: #121212;
+  color: #fff;
+  padding: 10px 20px;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-}
-
-
-#header-black{
-  background-color: #121212;
-  height: 50px;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  display: flex;
-}
-
-/* Párrafo principal */
-
-#header-black p{
-  color: #fefefe;
-  background-color: #121212;
-  padding-right: 20px;
-  font-weight: 400;
+  text-align: center;
   position: relative;
-  top: 1px;
 }
 
-/* Compra ahora h2 */
+/* Estilo para el selector de idioma */
+.header-top select {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background: #121212;
+  color: #fff;
+  border-radius: 6px;
+  padding: 4px;
+  border: none;
+}
 
-#header-black h2{
-  color: #fefefe;
-  background-color: #121212;
-  border-bottom: 1px solid #fefefe;
-  font-size: 19px;
+/* Tamaño del texto en el párrafo y título */
+.header-top p,
+.header-top h2 {
+  font-size: 14px;
+}
+
+/* Título con subrayado */
+.header-top h2 {
+  border-bottom: 1px solid #fff;
   font-weight: 600;
 }
 
-/* Contenedor idioma */
-#header-black #languages{
-  background-color: #121212;
-  color: #fefefe;
-  border: #121212;
-  width: 80px;
-  height: 30px;
-  border-radius: 10px;
-  position: absolute;
-  right: 30px;
-  font-weight: 400;
+/* Contenedor principal del header */
+.header-main {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 20px 30px;
+  background-color: #fff;
+  gap: 15px;
+}
+
+/* Agrupa el logo y el botón del menú */
+.header-row {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
-/* Header Principal */
-
-#header-principal{
-  padding-bottom: 0px; 
-  margin-bottom: -30px; 
-  position: relative;
-  top: -10px;
+/* Tamaño del logo */
+.logo img {
+  width: 160px;
+  display: block;
 }
 
-#header-principal img{
+/* Botón del menú hamburguesa (móvil) */
+.hamburger {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Menú de navegación (horizontal en escritorio) */
+.nav-links {
   display: flex;
-  align-items: center;
-  width: 220px;
-  padding-left: 100px;
-  margin-bottom: -140px;
-  position: relative;
-  top: 58px;
+  gap: 25px;
 }
 
-#header-principal #nav{
-  text-align: center;
-  background-color: none;
-  position: relative;
-  bottom: 7px;
-  margin-top: 195px;
-  padding-bottom: 0px;
-}
-
-/* Secciones del header */
-
-#header-principal #nav a {
+/* Estilo para los enlaces del menú */
+.nav-links a {
   text-decoration: none;
   color: #8E06C2;
   font-weight: 400;
   position: relative;
-  top: 50px;
-  right: 70px;
-  display: inline-block;
-  margin: 10px 30px;
-  align-items: center;
 }
 
-#header-principal #nav a::after {
+/* Línea inferior animada al pasar el mouse */
+.nav-links a::after {
   content: "";
   position: absolute;
+  bottom: -3px;
   left: 50%;
-  bottom: -2px;
-  width: 100%;
+  width: 0;
   height: 2px;
-  background-color: #8E06C2;
-  transform: translateX(-50%) scaleX(0);
-  transform-origin: center;
-  opacity: 0;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  background: #8E06C2;
+  transform: translateX(-50%);
+  transition: width 0.3s;
 }
 
-#header-principal #nav a:hover::after {
-  transform: translateX(-50%) scaleX(1);
-  opacity: 1;
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* Contenedor de buscador, íconos y login */
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 /* Contenedor del buscador */
-
 .buscador {
   display: flex;
   align-items: center;
-  position: absolute;
-  right: 40px; 
-  top: 40px;
+  overflow: hidden;
 }
 
-/* Texto del buscador */
-
+/* Input del buscador */
 .buscador input {
-  background-color: #F5F5F5;
-  padding-left: 10px;
-  border-color: #F5F5F5;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  width: 100%;
+  background: #f5f5f5;
   border-radius: 5px 0 0 5px;
-  width: 200px;
-  height: 36px;
-  outline: none;
-  border: 1px solid #ccc;
-  position: absolute;
-  right: 340px;
-  top: 5px;
 }
 
-/* Botón */
-
+/* Botón del buscador */
 .buscador button {
-  width: 40px;
-  height: 40px;
+  padding: 6px 10px;
+  cursor: pointer;
   border: 1px solid #ccc;
-  border-left: none;
-  background-color: #F5F5F5;
+  background: #f5f5f5;
   border-radius: 0 5px 5px 0;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  right: 300px;
-  top: 5px;
+  position: relative;
+  right: 1px;
 }
 
-/* Corazón */
-
-.heart{
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  right: 210px;
-  top: 45px;
-}
-
-/* Carrito */
-
-.cart{
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  right: 160px;
-  top: 45px;
-}
-
-.cart button{
+/* Íconos como favoritos y carrito */
+.icon-btn {
   background: none;
   border: none;
-  outline: none;
-  padding: 0;
+  font-size: 18px;
   cursor: pointer;
 }
 
-.cart i {
-  color: #121212;
-  font-size: 20px;
-}
-
-/* Botón */
-
-.heart button{
-  background: none;
-  border: none;
-  outline: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-.heart i {
-  color: #121212;
-  font-size: 20px;
-}
-
-/* Header Principal */
-
-#header-principal{
-  padding-bottom: 0px; 
-  margin-bottom: -30px; 
-  position: relative;
-  top: -10px;
-}
-
-#header-principal img{
-  width: 220px;
-  padding-left: 100px;
-  margin-bottom: -140px;
-  position: relative;
-  bottom: 35px;
-}
-
-#header-principal #nav{
-  text-align: center;
-  background-color: none;
-  position: relative;
-  bottom: 7px;
-  margin-bottom: 0px;
-  padding-bottom: 0px;
-}
-
-/* Secciones del header */
-
-#header-principal #nav a {
+/* Botón de iniciar sesión */
+.login-btn {
   text-decoration: none;
-  color: #8E06C2;
-  font-weight: 400;
-  position: relative;
-  top: -32px;
-  right: 70px;
-  display: inline-block;
-  margin: 10px 30px;
-}
-
-#header-principal #nav a::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -2px;
-  width: 100%;
-  height: 2px;
-  background-color: #8E06C2;
-  transform: translateX(-50%) scaleX(0);
-  transform-origin: center;
-  opacity: 0;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-#header-principal #nav a:hover::after {
-  transform: translateX(-50%) scaleX(1);
-  opacity: 1;
-}
-
-/* Contenedor del buscador */
-
-.buscador {
-  display: flex;
-  align-items: center;
-  position: absolute;
-  right: 40px; 
-  top: 40px;
-}
-
-/* Texto del buscador */
-
-.buscador input {
-  background-color: #F5F5F5;
-  padding-left: 10px;
-  border-color: #F5F5F5;
-  border-radius: 5px 0 0 5px;
-  width: 200px;
-  height: 36px;
-  outline: none;
-  border: 1px solid #ccc;
-  position: absolute;
-  right: 340px;
-  top: 5px;
-}
-
-/* Botón */
-
-.buscador button {
-  width: 40px;
-  height: 40px;
-  border: 1px solid #ccc;
-  border-left: none;
-  background-color: #F5F5F5;
-  border-radius: 0 5px 5px 0;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  right: 300px;
-  top: 5px;
-}
-
-/* Corazón */
-
-.heart{
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  right: 210px;
-  top: 45px;
-}
-
-/* Botón */
-
-.heart button{
-  background: none;
-  border: none;
-  outline: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-.heart i {
+  font-weight: 500;
   color: #121212;
-  font-size: 20px;
 }
 
-/* Carrito */
-
-.cart{
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  right: 160px;
-  top: 45px;
-}
-
-.cart button{
-  background: none;
-  border: none;
-  outline: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-.cart i {
-  color: #121212;
-  font-size: 20px;
-}
-  
-  
-  #categories{
-    color: #8E06C2;
-    margin-left: 100px;
-  }
-  
-  #categories i{
-    width: 40px;
-    height: 40px;
+/* Estilos responsive para laptops */
+@media (max-width: 1024px) {
+  .header-main {
+    flex-direction: column;
     align-items: center;
   }
-  
-  #categories a{
-    padding-right: 10px;
-    color: #8E06C2;
-    font-family: 'Poppins' 'sans-serif';
-    text-decoration: none;
-    font-size: 22px;
+
+  .hamburger {
+    display: block;
   }
-  
-  #categories hr{
-    border: none;
-    padding-top: 10px;
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 15px;
+    width: 100%;
+    margin-top: 10px;
   }
-  
-  .linea2 {
-    width: 2px;
-    height: 530px;
-    background-color: #898989;
-    margin: 20px 0;
-    position: absolute;
-    bottom: 192px;
-    left: 420px;
+
+  .nav-links.active {
+    display: flex;
   }
-  
-  .linea3 {
-    width: 30px;
-    height: 60px;
-    background-color: #8E06C2;
-    margin: 20px 0;
-    position: absolute;
-    top: 800px;
-    left: 20px;
-    border-radius: 3px;
+
+  .icons {
+    flex-wrap: nowrap;
+    overflow: auto;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+    margin-top: 10px;
   }
-  
-  #carrusel {
-      width: 1200px;
-      height: 460px;
-      overflow: hidden;
-      position: relative;
-      left: 500px;
-      bottom: 500px;
-    }
-    
-    .slide {
-      display: none;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-    }
-    
-    .slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .activo {
-      display: block;
-    }
-    
-    .flecha {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: rgba(0,0,0,0.5);
-      color: white;
-      border: none;
-      font-size: 18px;
-      padding: 8px;
-      cursor: pointer;
-    }
-    
-    .izquierda { left: 0; }
-    .derecha { right: 0; }
-    
-  
+
+  .buscador {
+    width: 100%;
+    max-width: 260px;
+    justify-content: center;
+  }
+
+  .logo-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+}
+
+/* Estilos responsive para móviles */
+@media (max-width: 600px) {
+  .header-main {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .logo-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .icons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .buscador {
+    flex: 1 1 100px;
+    max-width: 160px;
+    justify-content: center;
+  }
+
+  .icon-btn,
+  .login-btn {
+    flex-shrink: 0;
+  }
+
+  .login-btn {
+    margin-top: 0;
+  }
+}
+
   /* Sign-In */
-  
-  .sign-up h2{
-    font-family: 'Inter', 'Sans Serif';
-    font-size: 40px;
-    position: relative;
-    bottom: 600px;
-    left: 1200px;
-    font-weight: normal;
-    font-weight: bold;
+
+/* Sección principal */
+.main-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+/* Contenedor general */
+.sign-up {
+  display: flex;
+  flex-direction: row;
+  gap: 60px;
+  align-items: center;
+  justify-content: center;
+  max-width: 1200px;
+  width: 100%;
+  margin: auto;
+  flex-wrap: wrap;
+}
+
+.img-sign-up {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+}
+/* Imagen */
+.img-sign-up img {
+  max-width: 600px;
+  width: 100%;
+  border-radius: 8px;
+}
+
+/* Texto del formulario */
+.sign-up h2 {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.sign-up h3 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+/* Formulario */
+.form-sign-up {
+  flex: 1;
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 100px;
+}
+
+.form-sign-up form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Iconos */
+.form-sign-up i {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+/* Inputs */
+.form-sign-up input {
+  padding: 12px;
+  font-size: 16px;
+  width: 100%;
+  max-width: 350px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Botón */
+.buttoncreate button {
+  padding: 12px;
+  background-color: #700B97;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 200px;
+}
+
+/* Enlace de recuperación */
+.a-login {
+  margin-top: 10px;
+}
+
+.a-login a {
+  text-decoration: none;
+  color: #700B97;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Agrupador de icono + input */
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  background: #fff;
+  width: 100%;
+  max-width: 350px;
+  margin-bottom: 15px;
+}
+
+/* Ícono dentro del input */
+.input-group i {
+  font-size: 18px;
+  color: #121212;
+}
+
+/* Input en sí */
+.input-group input {
+  border: none;
+  outline: none;
+  font-size: 16px;
+  flex: 1;
+  background: transparent;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .sign-up {
+    flex-direction: column;
+    text-align: center;
   }
-  
-  .sign-up h3{
-    font-family: 'Poppins' 'Sans Serif';
-    font-size: 20px;
-    justify-content: center;
-    position: relative;
-    bottom: 580px;
-    left: 1200px;
-    font-weight: normal;
+
+  .img-sign-up img {
+    max-width: 100%;
   }
-  
-  .form-sign-up input{
-    font-family: 'Poppins' 'Sans Serif';
-    font-size: 22px;
-    justify-content: center;
-    position: relative;
-    bottom: 555px;
-    left: 1230px;
-    border-color: #fefefe;
-    border: none;
-    padding: 15px;
-    border-bottom: 1px solid #898989;
-    text-align: left;
+
+  .form-sign-up {
+    align-items: center;
   }
-  
-  .form-sign-up i{
-    font-size: 33px;
-    position: relative;
-    bottom: 540px;
-    left: 1210px;
+
+  .form-sign-up input,
+  .buttoncreate button {
+    max-width: 100%;
   }
-  
-  .form-sign-up .buttoncreate button {
-    font-family: 'Poppins' 'sans-serif';
-    font-size: 20px;
-    color: #fefefe;
-    background-color: #700B97;
-    width: 165px;
-    height: 60px;
-    position: relative;
-    bottom: 520px;
-    left: 1200px;
-    border: none;
-    border-radius: 7px;
+
+  .form-sign-up i {
+    display: none; /* opcional: oculta íconos en móvil si ocupan espacio */
   }
-  
-  .form-sign-up .button-google button{
-    font-family: 'Poppins' 'sans-serif';
-    font-size: 20px;
-    color: #121212;
-    background-color: #fefefe;
-    width: 365px;
-    height: 60px;
-    position: relative;
-    bottom: 490px;
-    left: 1200px;
-    border-color: #898989;
-    border-radius: 7px;
-  }
-  
-  .form-sign-up img{
-    width: 35px;
-    position: relative;
-    bottom: 540px;
-    left: 1220px;
-  }
-  
-  .form-sign-up h4{
-    color: #898989;
-    font-size: 17px;
-    font-weight: lighter;
-    position: relative;
-    bottom: 490px;
-    left: 1220px;
-  }
-  
-  .form-sign-up a{
-    color: #700B97;
-    font-size: 15px;
-    font-weight: bold;
-    border-bottom: #898989;
-    position: relative;
-    bottom: 560px;
-    left: 1380px;
-    text-decoration: none;
-  }
-  
-  #flash-sales h2{
-    color: #8E06C2;
-    position: absolute;
-    top: 835px;
-    background: none;
-    left: 60px;
-    font-size: 25px;
-  }
-  
-  #flash-sales h3{
-    font-size: 38px;
-    position: absolute;
-    left: 22px;
-    top: 900px;
-  }
+}
+
+
+/* footer */
 
   footer {
     margin-top: 50px;
@@ -684,3 +517,8 @@ section {
      text-decoration: underline;
      background: none;
    }
+
+/* Clase para ocultar elementos visualmente */
+.hidden {
+    display: none;
+}
