@@ -3,7 +3,7 @@ session_start();
 
 // Verificar si el usuario está logueado y tiene el rol correcto (admin)
 if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'admin') {
-    header("Location: ../auth/login.php"); // Redirigir si no es admin
+    header("Location: ../auth/login.php?status=sesion_expirada"); // Redirigir si no es admin
     exit;
 }
 
@@ -17,7 +17,7 @@ if (isset($_SESSION['last_activity'])) {
         // Cerrar sesión por inactividad
         session_unset();
         session_destroy();
-        header("Location: ../auth/login.php?mensaje=sesion_expirada");
+        header("Location: ../auth/login.php?status=sesion_expirada");
         exit;
     } else {
         // Actualizar el tiempo de actividad
@@ -284,7 +284,9 @@ $conexion->close(); // Cerrar la conexión
             </section>
         </div>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script src="../../public/js/alertas.js"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 

@@ -30,7 +30,21 @@ const mensajes = {
     // Olvidé contraseña
     correo_enviado: ['success', 'Correo enviado', 'Revisa tu bandeja de entrada.'],
     error_envio: ['error', 'Error', 'No se pudo enviar el correo.'],
-    no_existe: ['info', 'Correo no encontrado', 'Ese correo no está registrado.']
+    no_existe: ['info', 'Correo no encontrado', 'Ese correo no está registrado.'],
+
+    // Logout
+    logout_ok: ['success', 'Sesión Finalizada', 'Has cerrado sesión correctamente.'],
+
+    // Tiempo expirado
+    sesion_expirada: ['info', 'Tu sesión ha expirado', 'Por favor, inicia sesión de nuevo.'],
+
+    // Verificar correo
+    verificar_correo: ['info', 'Casi listo...', 'Te hemos enviado un correo. Por favor, verifica tu cuenta para poder iniciar sesión.'],
+    verificado_ok: ['success', '¡Cuenta Verificada!', 'Tu cuenta ha sido verificada. ya puedes iniciar sesión.'],
+    token_invalido: ['error', 'Error', 'El enlace de verificación no es válido o ya ha expirado.'],
+    no_verificado: ['warning', 'Cuenta no verificada', 'Revisa tu correo y completa la verificación para poder entrar.'],
+    update_failed: ['error', 'Error del Servidor', 'No pudimos actualizar tu estado. Por favor, intenta de nuevo.']
+    
   };
 
   const key = status || error;

@@ -2,9 +2,9 @@
 use PHPMailer\PHPMailer\PHPMailer; // Dirección para darle funcionalidad al correo
 use PHPMailer\PHPMailer\Exception; // Segunda dirección para darle funcionalidad al correo
 
-require 'PHPMailer/src/Exception.php'; // Tercera dirección para darle funcionalidad al correo
-require 'PHPMailer/src/PHPMailer.php'; // Cuarta dirección para darle funcionalidad al correo
-require 'PHPMailer/src/SMTP.php'; // Quinta dirección para darle funcionalidad al correo
+require_once __DIR__ . '/PHPMailer/src/Exception.php';
+require_once __DIR__ . '/PHPMailer/src/PHPMailer.php';
+require_once __DIR__ . '/PHPMailer/src/SMTP.php';
 
 // Conexión a la base de datos
 $conexion = new mysqli("localhost", "root", "", "shopnexs"); 

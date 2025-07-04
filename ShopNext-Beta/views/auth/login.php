@@ -74,6 +74,10 @@ if (isset($_SESSION['id_usuario'])) {
             <img src="../../public/img/vista-frontal-del-concepto-de-compras-en-linea.jpg" alt="Shopping cart with bags">
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="../../public/js/alertas.js"></script> 
+
     <script src="../../public/js/signUpVendedor.js"></script> 
 </body>
 </html>

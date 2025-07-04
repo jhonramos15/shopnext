@@ -1,33 +1,72 @@
 <?php
 session_start();
 
-// Verificar si el usuario está logueado y tiene el rol correcto
+// Guardián para proteger la página
 if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'vendedor') {
-    header("Location: ../auth/login.html");
+    header("Location: ../../auth/login.php");
     exit;
 }
+// Actualiza la última actividad para evitar que la sesión expire
+$_SESSION['last_activity'] = time();
 
-// Tiempo máximo de inactividad (5 minutos)
-$inactividad = 300;
-
-// Verificar si existe el tiempo de última actividad
-if (isset($_SESSION['last_activity'])) {
-    $tiempo_inactivo = time() - $_SESSION['last_activity'];
-
-    if ($tiempo_inactivo > $inactividad) {
-        // Cierra la sesión si pasó el tiempo
-        session_unset();
-        session_destroy();
-        header("Location: ../auth/login.php?mensaje=sesion_expirada");
-        exit;
-    } else {
-        $_SESSION['last_activity'] = time(); // ✅ Refresca el tiempo de actividad
-    }
-} else {
-    $_SESSION['last_activity'] = time(); // ✅ Inicializa el tiempo de actividad si no existía
+// --- CONEXIÓN A LA BASE DE DATOS Y CONSULTAS ---
+$conexion = new mysqli("localhost", "root", "", "shopnexs");
+if ($conexion->connect_error) { 
+    die("Falló la conexión: " . $conexion->connect_error); 
 }
-?>
 
+$id_usuario_session = $_SESSION['id_usuario'];
+$id_vendedor = null;
+$nombre_vendedor = 'Vendedor'; // Nombre por defecto
+
+// 1. Obtenemos el id_vendedor y el nombre a partir del id_usuario de la sesión
+$stmt_vendedor = $conexion->prepare("SELECT id_vendedor, nombre FROM vendedor WHERE id_usuario = ?");
+$stmt_vendedor->bind_param("i", $id_usuario_session);
+$stmt_vendedor->execute();
+$resultado_vendedor = $stmt_vendedor->get_result();
+
+if ($resultado_vendedor->num_rows > 0) {
+    $vendedor = $resultado_vendedor->fetch_assoc();
+    $id_vendedor = $vendedor['id_vendedor'];
+    $nombre_vendedor = $vendedor['nombre']; // Guardamos el nombre para mostrarlo
+}
+$stmt_vendedor->close();
+
+// Si no se encontró un vendedor, es un error y detenemos la ejecución
+if ($id_vendedor === null) {
+    die("Error de seguridad: No se encontró un perfil de vendedor asociado a este usuario.");
+}
+
+// 2. Consultas para las Tarjetas de Estadísticas (solo para este vendedor)
+// Total de productos
+$total_productos_query = $conexion->prepare("SELECT COUNT(*) as total FROM producto WHERE id_vendedor = ?");
+$total_productos_query->bind_param("i", $id_vendedor);
+$total_productos_query->execute();
+$total_productos = $total_productos_query->get_result()->fetch_assoc()['total'];
+$total_productos_query->close();
+
+// Valor del inventario
+$valor_inventario_query = $conexion->prepare("SELECT SUM(precio * stock) as valor_total FROM producto WHERE id_vendedor = ?");
+$valor_inventario_query->bind_param("i", $id_vendedor);
+$valor_inventario_query->execute();
+$valor_inventario = $valor_inventario_query->get_result()->fetch_assoc()['valor_total'];
+$valor_inventario_query->close();
+
+// Productos agotados
+$agotados_query = $conexion->prepare("SELECT COUNT(*) as agotados FROM producto WHERE id_vendedor = ? AND stock = 0");
+$agotados_query->bind_param("i", $id_vendedor);
+$agotados_query->execute();
+$productos_agotados = $agotados_query->get_result()->fetch_assoc()['agotados'];
+$agotados_query->close();
+
+// 3. Consulta para la Tabla de Productos
+$sql_productos = "SELECT id_producto, nombre_producto, precio, categoria, stock, ruta_imagen FROM producto WHERE id_vendedor = ?";
+$stmt_productos = $conexion->prepare($sql_productos);
+$stmt_productos->bind_param("i", $id_vendedor);
+$stmt_productos->execute();
+$resultado_productos = $stmt_productos->get_result();
+
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -37,7 +76,7 @@ if (isset($_SESSION['last_activity'])) {
     <link rel="icon" href="../../../public/img/icon_principal.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
     <script src="https://unpkg.com/lucide@latest"></script>
-    <title>Dashboard - Pedidos en Curso</title>
+    <title>Dashboard - Mis Productos</title>
 </head>
 <body>
       <div class="dashboard">
@@ -46,8 +85,8 @@ if (isset($_SESSION['last_activity'])) {
         <img src="../../../public/img/logo.svg" alt="Logo" class="logo-img"/>
       </div>
       <ul class="menu">
-           <li class="active"><a href="../vendedorView.php"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
-           <li><a href="productos.php"><i data-lucide="package"></i><span>Productos</span></a></li>
+           <li><a href="../vendedorView.php"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
+           <li class="active"><a href="productos.php"><i data-lucide="package"></i><span>Productos</span></a></li>
            <li><a href="pedidos.php"><i data-lucide="shopping-cart"></i><span>Pedidos</span></a></li>
            <li><a href="subirProductos.php"><i data-lucide="upload-cloud"></i><span>Subir Producto</span></a></li>
            <li><a href="ingresos.php"><i data-lucide="dollar-sign"></i><span>Ingresos</span></a></li>
@@ -56,8 +95,8 @@ if (isset($_SESSION['last_activity'])) {
           <div class="user" id="userProfileBtn">
               <img src="https://i.pravatar.cc/40" alt="user" />
               <div class="user-info">
-                  <p>Brayan</p>
-                  <small>Administrador</small>
+                  <p><?php echo htmlspecialchars($nombre_vendedor); ?></p>
+                  <small>Vendedor</small>
               </div>
               <i data-lucide="chevron-down" class="profile-arrow"></i>
           </div>
@@ -71,158 +110,85 @@ if (isset($_SESSION['last_activity'])) {
 
     <main class="main">
       <header class="header" id="productos-header">
-        <h1>Hola, Brayan 👋</h1>
-        <div class="header-search-container">
-            <div class="input-icon header-search">
-                <i data-lucide="search"></i>
-                <input type="text" placeholder="Buscar..." />
-            </div>
-        </div>
-      </header>
+        <h1>Mis Productos</h1>
+        </header>
 
       <section class="cards" id="productos-cards">
         <div class="card">
           <i data-lucide="package"></i>
           <div>
             <h3>Todos los Productos</h3>
-            <p>1,250 <span class="success">120+ nuevos</span></p>
+            <p><?php echo number_format($total_productos); ?></p>
           </div>
         </div>
         <div class="card">
           <i data-lucide="dollar-sign"></i>
           <div>
             <h3>Valor del Inventario</h3>
-            <p>$250,430.00</p>
+            <p>$<?php echo number_format($valor_inventario ?? 0, 2); ?></p>
           </div>
         </div>
         <div class="card">
           <i data-lucide="package-x"></i>
           <div>
             <h3>Agotados</h3>
-            <p>32 <span class="danger">5 más que ayer</span></p>
+            <p><?php echo number_format($productos_agotados); ?></p>
           </div>
         </div>
       </section>
 
       <section class="table-section" id="pedidos-table">
         <div class="table-header">
-          <h2>Pedidos en Curso</h2>
-          <div class="right-controls">
-            <div class="input-icon table-search">
-              <i data-lucide="search"></i>
-              <input type="text" placeholder="Buscar pedido..." />
-            </div>
-            <div class="custom-select table-select">
-              <select>
-                <option selected>Estado: Todos</option>
-                <option>Estado: Activo</option>
-                <option>Estado: Terminado</option>
-                <option>Estado: Atrasado</option>
-              </select>
-            </div>
-          </div>
+          <h2>Tus Productos Publicados</h2>
+          <a href="subirProductos.php" class="btn-add-product" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px;">
+              <i data-lucide="plus"></i> Añadir Nuevo Producto
+          </a>
         </div>
         <table>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>PRODUCTO</th>
-              <th>VENDEDOR</th>
-              <th>PRECIO</th>
-              <th>FECHA</th>
-              <th>ESTADO Y ACCIONES</th>
+              <th>Producto</th>
+              <th>Categoría</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>22</td>
-              <td>Samsung Galaxy A24 Ultra</td>
-              <td>José Ignacio López Gómez</td>
-              <td>$3,365,900</td>
-              <td>22/12/2023</td>
-              <td>
-                <div class="status-actions-container">
-                  <span class="status active">Activo</span>
-                  <div class="action-icons">
-                    <a href="#" class="action-icon" title="Editar"><i data-lucide="file-pen-line"></i></a>
-                    <a href="#" class="action-icon" title="Configurar"><i data-lucide="settings"></i></a>
-                    <a href="#" class="action-icon" title="Eliminar"><i data-lucide="trash-2"></i></a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>43</td>
-              <td>Portátil HP Intel Celeron 8GB</td>
-              <td>Juan David Rincón</td>
-              <td>$1,340,000</td>
-              <td>14/10/2024</td>
-              <td>
-                <div class="status-actions-container">
-                  <span class="status active">Activo</span>
-                  <div class="action-icons">
-                    <a href="#" class="action-icon" title="Editar"><i data-lucide="file-pen-line"></i></a>
-                    <a href="#" class="action-icon" title="Configurar"><i data-lucide="settings"></i></a>
-                    <a href="#" class="action-icon" title="Eliminar"><i data-lucide="trash-2"></i></a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>84</td>
-              <td>Asador Premium Incanto XXL Deluxe</td>
-              <td>Dana Sofía Vergara Quintero</td>
-              <td>$965,900</td>
-              <td>15/05/2020</td>
-              <td>
-                <div class="status-actions-container">
-                  <span class="status inactive">Terminado</span>
-                  <div class="action-icons">
-                    <a href="#" class="action-icon" title="Editar"><i data-lucide="file-pen-line"></i></a>
-                    <a href="#" class="action-icon" title="Configurar"><i data-lucide="settings"></i></a>
-                    <a href="#" class="action-icon" title="Eliminar"><i data-lucide="trash-2"></i></a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>12</td>
-              <td>Pista Hot Wheels Año 2021</td>
-              <td>Sandra Milena Cuellar Lozano</td>
-              <td>$234,400</td>
-              <td>04/10/2024</td>
-              <td>
-                <div class="status-actions-container">
-                  <span class="status delayed">Atrasado</span>
-                  <div class="action-icons">
-                    <a href="#" class="action-icon" title="Editar"><i data-lucide="file-pen-line"></i></a>
-                    <a href="#" class="action-icon" title="Configurar"><i data-lucide="settings"></i></a>
-                    <a href="#" class="action-icon" title="Eliminar"><i data-lucide="trash-2"></i></a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            </tbody>
+            <?php
+            if ($resultado_productos && $resultado_productos->num_rows > 0) {
+                while ($fila = $resultado_productos->fetch_assoc()) {
+            ?>
+                    <tr data-id="<?php echo htmlspecialchars($fila['id_producto']); ?>">
+                        <td class="product-cell">
+                            <img src="../../../public/uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ? $fila['ruta_imagen'] : 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>" class="product-image">
+                            <span><?php echo htmlspecialchars($fila['nombre_producto']); ?></span>
+                        </td>
+                        <td><?php echo htmlspecialchars($fila['categoria']); ?></td>
+                        <td>$<?php echo number_format($fila['precio'], 2); ?></td>
+                        <td><?php echo htmlspecialchars($fila['stock']); ?> unidades</td>
+                        <td class="table-actions">
+                            <div class="action-icons">
+                                <a href="#" class="action-icon edit-btn" title="Editar"><i data-lucide="file-pen-line"></i></a>
+                                <a href="#" class="action-icon delete-btn" title="Eliminar"><i data-lucide="trash-2"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+            <?php
+                } // Fin del while
+            } else {
+                echo "<tr><td colspan='5' class='text-center'>Aún no has subido ningún producto. ¡Añade uno!</td></tr>";
+            }
+            $stmt_productos->close();
+            $conexion->close();
+            ?>
+          </tbody>
         </table>
-        <div class="pagination-controls">
-            <div class="data-count">
-                Mostrando <span>1</span> a <span>4</span> de <span>11</span> pedidos
-            </div>
-            <div class="pagination">
-                <button class="pagination-button" disabled><i data-lucide="chevron-left"></i> <span>Anterior</span></button>
-                <button class="pagination-button page-number active">1</button>
-                <button class="pagination-button page-number">2</button>
-                <button class="pagination-button page-number">3</button>
-                <button class="pagination-button"><span>Siguiente</span> <i data-lucide="chevron-right"></i></button>
-            </div>
-        </div>
       </section>
     </main>
   </div>
 
-  <script>
-    lucide.createIcons();
-  </script>
+  <script>lucide.createIcons();</script>
   <script src="../../../public/js/vendedor/productos.js"></script>
 </body>
 </html>

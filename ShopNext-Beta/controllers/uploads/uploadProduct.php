@@ -1,84 +1,58 @@
 <?php
-// Inicia la sesión
 session_start();
 
-// 1. Incluye tu archivo de conexión PDO
-require_once __DIR__ . '/../../config/conexion_pdo.php';
-
-// 2. Crea una instancia de la clase y obtén la conexión
-$database = new Database();
-$pdo = $database->getConnection();
-
-// Verifica si la conexión es exitosa
-if (!$pdo) {
-    header("Location: ../../views/vendedor/subirproductos.php?error=db_connection_failed");
-    exit('La conexión a la base de datos falló.');
+if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'vendedor') {
+    header("Location: ../../views/auth/login.php");
+    exit;
 }
 
-// 3. Procede solo si se envió el formulario
-if (isset($_POST["subir_producto"])) {
+$conexion = new mysqli("localhost", "root", "", "shopnexs");
+if ($conexion->connect_error) { die("Conexión fallida: " . $conexion->connect_error); }
 
-    // Recopila los datos del formulario (saneados)
-    $nombre_producto = filter_input(INPUT_POST, 'titulo', FILTER_SANITIZE_STRING); // El campo se llama 'titulo' en HTML
-    $categoria = filter_input(INPUT_POST, 'categoria', FILTER_SANITIZE_STRING);
-    $descripcion = filter_input(INPUT_POST, 'descripcion', FILTER_SANITIZE_STRING);
-    $precio = filter_input(INPUT_POST, 'precio', FILTER_VALIDATE_FLOAT);
-    $id_vendedor = $_SESSION['vendedor_id'] ?? 1; // Usamos 1 como fallback
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id_usuario_session = $_SESSION['id_usuario'];
+    
+    // Obtener id_vendedor (esto ya está corregido)
+    $stmt_vendedor = $conexion->prepare("SELECT id_vendedor FROM vendedor WHERE id_usuario = ?");
+    $stmt_vendedor->bind_param("i", $id_usuario_session);
+    $stmt_vendedor->execute();
+    $vendedor = $stmt_vendedor->get_result()->fetch_assoc();
+    $id_vendedor = $vendedor['id_vendedor'];
+    $stmt_vendedor->close();
 
-    // Validación
-    if (empty($nombre_producto) || empty($categoria) || empty($descripcion) || $precio === false) {
-        header("Location: ../../views/vendedor/subirproductos.php?error=faltan_datos");
-        exit();
+    // Recopilar datos (incluyendo el nuevo campo stock)
+    $nombre_producto = trim($_POST['titulo']);
+    $descripcion = trim($_POST['descripcion']);
+    $precio = floatval($_POST['precio']);
+    $stock = intval($_POST['stock']); // <-- Obtenemos el stock
+    $categoria = trim($_POST['categoria']);
+
+    // Manejo de la imagen (sin cambios)
+    $nombre_imagen = '';
+    if (isset($_FILES['imagen']['name'][0]) && $_FILES['imagen']['error'][0] == 0) {
+        $directorio_destino = "../../../public/uploads/products/";
+        if (!file_exists($directorio_destino)) { mkdir($directorio_destino, 0777, true); }
+        $extension = pathinfo($_FILES['imagen']['name'][0], PATHINFO_EXTENSION);
+        $nombre_imagen = uniqid('prod_') . '.' . $extension;
+        if (!move_uploaded_file($_FILES['imagen']['tmp_name'][0], $directorio_destino . $nombre_imagen)) {
+             header("Location: ../../views/dashboard/vendedor/subirProductos.php?error=upload_failed");
+             exit;
+        }
     }
 
-    try {
-        $pdo->beginTransaction();
+    // Insertar en la base de datos (con el nuevo campo stock)
+    $stmt = $conexion->prepare(
+        "INSERT INTO producto (nombre_producto, descripcion, precio, stock, categoria, id_vendedor, ruta_imagen) VALUES (?, ?, ?, ?, ?, ?, ?)"
+    );
+    // Añadimos una 'i' para el stock (integer)
+    $stmt->bind_param("ssdisis", $nombre_producto, $descripcion, $precio, $stock, $categoria, $id_vendedor, $nombre_imagen);
 
-        // 4. CORRECCIÓN: Usa los nombres de columna correctos de tu tabla
-        $sqlProducto = "INSERT INTO producto (nombre_producto, descripcion, precio, categoria, id_vendedor) VALUES (?, ?, ?, ?, ?)";
-        $stmtProducto = $pdo->prepare($sqlProducto);
-        
-        // Ejecuta la inserción con los datos correctos
-        $stmtProducto->execute([$nombre_producto, $descripcion, $precio, $categoria, $id_vendedor]);
-
-        $idProducto = $pdo->lastInsertId();
-
-        // Procesa las imágenes (esto asume que tienes la tabla 'imagenes_producto')
-        $directorioUploads = __DIR__ . '/../../../public/uploads/products/';
-        if (!file_exists($directorioUploads)) {
-            mkdir($directorioUploads, 0777, true);
-        }
-
-        if (isset($_FILES['imagen']) && !empty($_FILES['imagen']['name'][0])) {
-            // Asegúrate de tener una tabla llamada 'imagenes_producto'
-            $sqlImagen = "INSERT INTO imagenes_producto (producto_id, ruta_imagen) VALUES (?, ?)";
-            $stmtImagen = $pdo->prepare($sqlImagen);
-            
-            $totalImagenes = count($_FILES['imagen']['name']);
-            for ($i = 0; $i < $totalImagenes; $i++) {
-                $nombreArchivo = uniqid('prod_') . '_' . basename($_FILES['imagen']['name'][$i]);
-                $rutaDestino = $directorioUploads . $nombreArchivo;
-                $rutaParaDB = 'uploads/products/' . $nombreArchivo;
-
-                if (move_uploaded_file($_FILES['imagen']['tmp_name'][$i], $rutaDestino)) {
-                    $stmtImagen->execute([$idProducto, $rutaParaDB]);
-                }
-            }
-        }
-
-        $pdo->commit();
-        header("Location: ../../views/vendedor/productos.php?success=producto_subido");
-        exit();
-
-    } catch (Exception $e) {
-        $pdo->rollBack();
-        // Para depurar, puedes mostrar el error real
-        exit('Error al insertar en la base de datos: ' . $e->getMessage()); 
-    } finally {
-        $pdo = null;
+    if ($stmt->execute()) {
+        header("Location: ../../views/dashboard/vendedor/productos.php?status=product_ok");
+    } else {
+        header("Location: ../../views/dashboard/vendedor/subirProductos.php?error=db_error");
     }
-} else {
-    header("Location: ../../views/vendedor/subirproductos.php");
-    exit();
+    $stmt->close();
+    $conexion->close();
 }
 ?>

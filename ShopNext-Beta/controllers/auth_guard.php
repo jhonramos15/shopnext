@@ -15,7 +15,7 @@ if (isset($_SESSION['last_activity'])) {
     if ($tiempo_inactivo > $inactividad) {
         session_unset();
         session_destroy();
-        header("Location: ../../views/auth/login.html?mensaje=sesion_expirada");
+        header("Location: ../../views/auth/login.php?status=sesion_expirada");
         exit;
     }
 }

@@ -1,6 +1,13 @@
 <?php
+// controllers/procesoLogin.php
+
 session_start();
-require_once "../config/conexion.php"; // si tienes una conexión centralizada
+$conexion = new mysqli("localhost", "root", "", "shopnexs");
+
+if ($conexion->connect_error) {
+    header("Location: ../views/auth/login.php?error=conexion");
+    exit;
+}
 
 $correo = $_POST['correo'] ?? '';
 $clave = $_POST['password'] ?? '';
@@ -10,40 +17,51 @@ if (empty($correo) || empty($clave)) {
     exit;
 }
 
-$conexion = new mysqli("localhost", "root", "", "shopnexs");
-if ($conexion->connect_error) {
-    die("Conexión fallida: " . $conexion->connect_error);
-}
-
-$stmt = $conexion->prepare("SELECT id_usuario, contraseña, rol FROM usuario WHERE correo_usuario = ?");
+// 1. Buscamos al usuario por su correo
+$stmt = $conexion->prepare("SELECT id_usuario, contraseña, rol, verificado FROM usuario WHERE correo_usuario = ?");
 $stmt->bind_param("s", $correo);
 $stmt->execute();
-$stmt->store_result();
+$resultado = $stmt->get_result();
 
-if ($stmt->num_rows === 1) {
-    $stmt->bind_result($id_usuario, $hash_password, $rol);
-    $stmt->fetch();
+if ($resultado->num_rows === 1) {
+    $usuario = $resultado->fetch_assoc();
+    
+    // 2. Verificamos la contraseña
+    if (password_verify($clave, $usuario['contraseña'])) {
+        
+        // --- ¡LA CORRECCIÓN CLAVE ESTÁ AQUÍ! ---
+        // 3. Verificamos si la columna 'verificado' es igual a 0
+        if ($usuario['verificado'] == 0) {
+            header("Location: ../views/auth/login.php?error=no_verificado");
+            exit;
+        }
 
-    if (password_verify($clave, $hash_password)) {
-        $_SESSION['id_usuario'] = $id_usuario;
-        $_SESSION['correo'] = $correo;
-        $_SESSION['rol'] = $rol;
+        // 4. Si todo está bien, creamos la sesión
+        $_SESSION['id_usuario'] = $usuario['id_usuario'];
+        $_SESSION['rol'] = $usuario['rol'];
+        $_SESSION['last_activity'] = time();
 
-        if ($rol === 'admin') {
+        // 5. Redirigimos según el rol
+        if ($usuario['rol'] === 'admin') {
             header("Location: ../views/dashboard/adminView.php");
-        } elseif ($rol === 'cliente') {
-            header("Location: ../views/user/indexUser.php");
-        } elseif ($rol === 'vendedor') {
+        } elseif ($usuario['rol'] === 'vendedor') {
             header("Location: ../views/dashboard/vendedorView.php");
         } else {
-            header("Location: ../public/index.html");
+            header("Location: ../views/user/indexUser.php");
         }
         exit;
+
     } else {
+        // Contraseña incorrecta
         header("Location: ../views/auth/login.php?error=clave");
         exit;
     }
 } else {
+    // Usuario no encontrado
     header("Location: ../views/auth/login.php?error=usuario");
     exit;
 }
+
+$stmt->close();
+$conexion->close();
+?>

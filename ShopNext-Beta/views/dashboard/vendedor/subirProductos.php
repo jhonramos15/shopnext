@@ -103,6 +103,13 @@ if (isset($_SESSION['last_activity'])) {
                                 <input type="number" id="precio" name="precio" placeholder="Ponle un precio a tu producto.">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="stock">Stock Disponible <span class="required">*</span></label>
+                            <div class="input-icon">
+                                <i data-lucide="package-check"></i>
+                                <input type="number" id="stock" name="stock" placeholder="¿Cuántas unidades tienes?">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="media-column">
