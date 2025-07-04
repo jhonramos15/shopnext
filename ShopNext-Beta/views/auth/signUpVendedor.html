@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Cuenta Vendedor | ShopNext</title>
+    <link rel="stylesheet" href="../../public/css/signUpVendedor.css">
+    <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-column">
+        <div class="form-header">
+            <a href="../../public/index.html"><img src="../../public/img/logo.svg" alt="ShopNext Logo" class="logo"></a>
+
+            <div class="hamburger-menu">
+                <button id="hamburger-icon" class="hamburger-button">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div id="dropdown-content" class="dropdown-content">
+                    <a href="../../public/index.html">
+                        <i class="fas fa-home"></i> <span>Inicio</span>
+                    </a>
+                    <a href="#">
+                        <i class="fas fa-box-open"></i> <span>Productos</span>
+                    </a>
+                    <a href="../pages/aboutUs.html">
+                        <i class="fas fa-info-circle"></i> <span>Acerca de</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+            
+            <div class="form-content">
+                <h1>Crea tu cuenta</h1>
+                <p class="subtitle">¡Crea tu cuenta para acceder a ShopNext!</p>
+                
+                <form action="#" method="POST">
+                    <div class="form-group">
+                        <input type="text" id="nombre" name="nombre" placeholder=" " required>
+                        <label for="nombre">Tu Nombre</label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="number" id="telefono" name="telefono" placeholder=" " required>
+                        <label for="telefono">Teléfono</label>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder=" " required>
+                        <label for="email">Email</label>
+                    </div>
+
+                    <div class="form-group password-wrapper">
+                        <input type="password" id="contrasena" name="contrasena" placeholder=" " required>
+                        <label for="contrasena">Contraseña</label>
+                        <i class="fas fa-eye-slash toggle-password"></i>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+                </form>
+
+                <div class="divider">
+                    <span>¿Ya tienes una cuenta?</span>
+                </div>
+                
+                <a href="login.php" class="btn btn-secondary">
+                    Iniciar Sesión <i class="fa-solid fa-lock" style="color: #FEFEFE;"></i>
+                </a>
+
+                <div class="contact-link">
+                    <p>¿No puedes crear tu cuenta? <a href="../pages/contact.html">Contáctanos</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="image-column">
+            <img src="../../public/img/vista-frontal-del-carrito-de-compras-de-cyber-monday-con-bolsas.jpg" alt="Shopping cart with bags">
+        </div>
+    </div>
+    <script src="../../public/js/signUpVendedor.js"></script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+/* Estilos generales y de fuente */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+/* Contenedor principal para pantalla completa */
+.container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    background-color: #ffffff;
+}
+
+/* === AJUSTE 1: IMAGEN CON PADDING Y BORDES REDONDEADOS === */
+.image-column {
+    flex-basis: 55%;
+    box-sizing: border-box;
+    padding: 20px; /* Añadimos padding alrededor */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- ESTILOS PARA EL MENÚ HAMBURGUESA --- */
+
+/* Contenedor del header para alinear logo y menú */
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+/* Posicionamiento del menú */
+.hamburger-menu {
+    position: relative; /* Necesario para que el menú dropdown se posicione correctamente */
+}
+
+/* Estilo del botón de la hamburguesa */
+.hamburger-button {
+    background: none;
+    border: none;
+    font-size: 24px; /* Tamaño del ícono */
+    cursor: pointer;
+    color: #121212;
+}
+
+/* Contenedor del menú */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 35px;
+    background-color: white;
+    min-width: 180px; /* Un poco más ancho */
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.1); /* Sombra más suave y pronunciada */
+    z-index: 1;
+    border-radius: 8px; /* Bordes más redondeados */
+    border: 1px solid #f0f0f0; /* Borde sutil */
+    padding: 8px 0; /* Espaciado interno */
+    overflow: hidden; /* Asegura que todo se mantenga dentro de los bordes redondeados */
+}
+
+/* Estilo de los enlaces (<a>) */
+.dropdown-content a {
+    color: #333; /* Texto más oscuro para mejor contraste */
+    padding: 12px 20px;
+    text-decoration: none;
+    display: flex; /* Para alinear el ícono y el texto */
+    align-items: center;
+    transition: background-color 0.2s ease, color 0.2s ease; /* Transición suave */
+}
+
+/* Estilo para los íconos (<i>) */
+.dropdown-content a i {
+    width: 20px; /* Ancho fijo para el ícono */
+    margin-right: 15px; /* Espacio entre el ícono y el texto */
+    color: #121212; /* Íconos en el color principal de la marca */
+    text-align: center;
+}
+
+.dropdown-content a:hover i{
+    color: #8A2BE2;
+}
+/* Estilo para el texto (<span>) */
+.dropdown-content a span {
+    font-weight: 500; /* Un poco más de grosor en la fuente */
+}
+
+/* Efecto al pasar el mouse sobre un enlace */
+.dropdown-content a:hover {
+    background-color: #f5f5f5;
+    color: #8A2BE2; /* Cambia el color del texto a morado */
+}
+
+/* Clase para mostrar el menú (sin cambios) */
+.show {
+    display: block;
+}
+
+.image-column img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 15px; /* Bordes redondeados */
+}
+
+/* Columna del formulario */
+.form-column {
+    flex-basis: 45%;
+    padding: 50px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.logo {
+    width: 120px;
+}
+
+h1 {
+    font-size: 28px;
+    color: #333;
+    margin: 0;
+    font-weight: 700;
+}
+
+.subtitle {
+    color: #666;
+    margin-top: 5px;
+    margin-bottom: 30px;
+}
+
+/* === AJUSTE 2: ETIQUETAS FLOTANTES INTEGRADAS === */
+.form-group {
+    position: relative;
+    margin-bottom: 25px;
+}
+.form-group input {
+    width: 100%;
+    padding: 12px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+.form-group label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #999;
+    background-color: white;
+    padding: 0 5px;
+    transition: all 0.2s ease;
+    pointer-events: none; /* Permite hacer clic a través de la etiqueta */
+}
+/* Cuando el input está seleccionado o tiene texto, la etiqueta sube */
+.form-group input:focus + label,
+.form-group input:not(:placeholder-shown) + label {
+    top: 0;
+    font-size: 12px;
+    color: #8A2BE2;
+    font-weight: 600;
+}
+.form-group input:focus {
+    outline: none;
+    border: solid 2px;
+    border-color: #8A2BE2;
+}
+
+/* Ícono del ojo en el campo de contraseña */
+.password-wrapper .toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #8E06C2;
+    display: none;
+}
+
+/* Botones */
+.btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex; /* Para centrar contenido */
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+.btn-primary {
+    background-color: #8E06C2;
+    color: white;
+    border: none;
+    margin-top: 15px;
+}
+.btn-secondary {
+    background-color: #121212;
+    color: #FEFEFE;
+    border: 1px solid #ccc;
+}
+
+/* === AJUSTE 3: LÍNEA DIVISORIA === */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #aaa;
+    margin: 25px 0;
+}
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #ccc;
+}
+.divider span {
+    padding: 0 10px;
+}
+
+/* === AJUSTE 4 y 5: BOTÓN INICIAR SESIÓN Y ESPACIO DEL ÍCONO === */
+.btn-secondary i {
+    margin-left: 10px; /* Espacio entre el texto y el ícono */
+}
+
+/* Enlace de contacto */
+.contact-link {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+    color: #666;
+}
+.contact-link a {
+    color: #8A2BE2;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+    }
+    .form-column, .image-column {
+        flex-basis: 100%;
+        padding: 30px;
+    }
+    .image-column {
+        display: none; /* Ocultamos la imagen en móviles para dar prioridad al formulario */
+    }
+}

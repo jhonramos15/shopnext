@@ -263,8 +263,7 @@ section {
   }
 }
 
-/* Sign up  */
-
+/* Sign up */
 .sign-up {
   display: flex;
   flex-direction: row;
@@ -315,8 +314,10 @@ section {
   display: none;
 }
 
+/* Estilos para TODOS los botones dentro del formulario */
 .buttoncreate button,
-.button-google button {
+.button-google button,
+.btn-vendedor {
   font-family: 'Poppins', sans-serif;
   font-size: 18px;
   width: 100%;
@@ -324,54 +325,68 @@ section {
   border-radius: 7px;
   border: none;
   margin-bottom: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
+/* Estilos específicos para cada botón */
 .buttoncreate button {
   background-color: #700B97;
   color: white;
 }
 
-.button-google button {
-  background-color: white;
+.buttoncreate button:hover {
+  transition: 0.3s ease;
+  transform: scale(1.1);
+}
+
+/* === REGLAS CORREGIDAS Y MÁS ESPECÍFICAS === */
+.btn-vendedor {
+  background-color: #121212;
+  color: #fefefe;
   border: 1px solid #ccc;
-  color: #121212;
+  font-weight: 300;
+}
+
+.btn-vendedor:hover {
+  transition: 0.3s ease;
+  transform: scale(1.1);
+}
+
+.btn-vendedor img {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
+.divider {
   display: flex;
   align-items: center;
-  justify-content: center;
-}
-
-.form-sign-up img {
-  width: 25px;
-  margin-right: 10px;
-  vertical-align: middle;
-}
-
-.form-sign-up h4 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 14px;
-  color: #888;
   text-align: center;
-  margin: 10px 0 5px;
+  color: #121212;
+  margin: 25px 0;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #121212;
+}
+.divider span {
+  padding: 0 10px;
 }
 
-.form-sign-up a {
+.form-sign-up a:not(.btn-vendedor) {
   font-family: 'Poppins', sans-serif;
   font-size: 14px;
-  color: #787878;
+  color: #8E06C2;
   font-weight: bold;
   display: block;
   text-align: center;
   text-decoration: none;
-}
-
-/* Mensaje de error */
-.error-msg {
-  color: #700B97;
-  font-size: 14px;
-  font-family: 'Poppins', sans-serif;
-  margin-bottom: 10px;
-  display: block;
-  text-align: left;
 }
 
 /* Responsive para móviles */
