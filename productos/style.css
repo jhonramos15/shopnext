@@ -1,0 +1,568 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+/* --- Estilos Generales --- */
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #ffffff;
+    color: #333;
+    margin: 40px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- Contenedor Principal de la Vista del Producto --- */
+.product-view {
+    display: flex;
+    gap: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* --- Galería de Imágenes (Columna Izquierda) --- */
+.image-gallery {
+    display: flex;
+    gap: 20px;
+}
+
+.thumbnails {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.thumbnail-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    background-color: #F5F5F5;
+    padding: 5px;
+}
+
+.thumbnail-img.active {
+    border-color: #8E06C2;
+}
+
+.main-image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #F5F5F5;
+    border-radius: 4px;
+    padding: 20px;
+    height: 500px; /* Altura fija para el contenedor */
+}
+
+.main-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+
+/* --- Detalles del Producto (Columna Derecha) --- */
+.product-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-details h1 {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.product-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0;
+}
+
+.stars .fa-star {
+    color: #FFAD33;
+}
+
+.product-rating span {
+    color: #888;
+}
+
+.stock-status {
+    color: #00B517;
+    font-size: 14px;
+}
+
+.product-price {
+    font-size: 24px;
+    margin: 12px 0;
+}
+
+.product-description {
+    font-size: 14px;
+    line-height: 1.5;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 16px;
+}
+
+.options-section {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.options-section p {
+    font-weight: 500;
+}
+
+.color-options, .size-options {
+    display: flex;
+    gap: 10px;
+}
+
+.color-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.3s;
+}
+
+.color-swatch.active {
+    border-color: #8E06C2;
+}
+
+.size-btn {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.size-btn.active {
+    background-color: #8E06C2;
+    color: white;
+    border-color: #8E06C2;
+}
+
+.actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    align-items: center;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.quantity-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: transparent;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.quantity-input {
+    width: 50px;
+    height: 40px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+/* Ocultar flechas en input number */
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.quantity-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.buy-btn {
+    flex-grow: 1;
+    padding: 12px 24px;
+    background-color: #8E06C2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.wishlist-btn {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.delivery-info {
+    margin-top: 30px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.delivery-option {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+}
+
+.delivery-option:first-child {
+    border-bottom: 1px solid #ccc;
+}
+
+.delivery-option i {
+    font-size: 24px;
+}
+
+.delivery-option h4 {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.delivery-option p {
+    font-size: 12px;
+    color: #555;
+    text-decoration: underline;
+}
+
+/* --- Sección de Artículos Relacionados --- */
+.related-items-section {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 20px;
+}
+
+.related-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.related-header::before {
+    content: '';
+    width: 20px;
+    height: 40px;
+    background-color: #8E06C2;
+    border-radius: 4px;
+}
+
+.related-header h2 {
+     font-size: 16px;
+     font-weight: 600;
+     color: #8E06C2;
+}
+
+.related-items-grid {
+    display: flex;
+    gap: 30px;
+    justify-content: space-between;
+}
+
+.product-card {
+    flex-basis: 270px; /* Ancho base */
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card-img-container {
+    position: relative;
+    background-color: #F5F5F5;
+    border-radius: 4px;
+    padding: 20px;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.product-card-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.discount-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: #8E06C2;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.product-card-actions {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.product-card-actions button {
+    background-color: white;
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 34px;
+    text-align: center;
+}
+
+.product-card h3 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.product-card-price {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.current-price {
+    color: #8E06C2;
+    font-weight: 500;
+}
+
+.original-price {
+    color: #888;
+    text-decoration: line-through;
+}
+
+/* Estilos generales para las secciones de productos */
+section {
+  border-top: 1px solid #eee;
+  padding-top: 60px;
+  margin-top: 60px;
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 1.5rem; /* Añadido para dar espacio */
+}
+
+.badge {
+  color: #a44ae4;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.badge::before {
+  content: '';
+  width: 10px;
+  height: 25px;
+  background-color: #a44ae4;
+  border-radius: 4px;
+  margin-right: 8px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 1rem 0;
+}
+
+.view-all-btn2 {
+  background-color: #8000ff;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  font-weight: bold;
+  border-radius: 8px;
+  font-size: 16px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem; /* Reducido para que no sea tan grande */
+}
+
+.product-card {
+  border: 1px solid #eee;
+  border-radius: 10px;
+  overflow: hidden;
+  text-align: left;
+  position: relative;
+  background-color: transparent;
+}
+
+.product-image-wrapper {
+  background-color: #f9f9f9;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.product-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+}
+
+.add-to-cart-btn {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #000000;
+  color: white;
+  border: none;
+  padding: 10px 0;
+  font-size: 14px;
+  cursor: pointer;
+  display: none;
+  transition: background 0.3s;
+  border-radius: 0 0 10px 10px;
+}
+
+.product-image-wrapper:hover .add-to-cart-btn {
+  display: block;
+}
+
+.product-details {
+  padding: 1rem;
+  background-color: transparent;
+  text-align: left;
+}
+
+.product-title {
+  font-size: 14px;
+  margin: 0.25rem 0;
+}
+
+.price {
+  font-weight: 700;
+  color: #5a00e0;
+}
+
+.old-price {
+  text-decoration: line-through;
+  color: #aaa;
+  margin-left: 6px;
+}
+
+.stars {
+  color: #5a00e0;
+  margin-top: 0.5rem;
+  font-size: 14px;
+}
+
+.rating-count {
+  font-size: 13px;
+  color: #070707;
+}
+
+.icons {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 2;
+}
+
+.icons a i {
+  color: #555;
+  background: white;
+  border-radius: 50%;
+  padding: 8px; /* Aumentado para mejor click */
+  font-size: 14px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.icons a i:hover {
+  background-color: #8000ff;
+  color: white;
+}
+
+/* Estilos para el contenedor del carrusel */
+.slider-wrapper {
+    position: relative;
+    overflow: hidden; /* ¡Muy importante! Oculta los productos que se salen del contenedor */
+    margin: 0 auto;
+    max-width: 1200px; /* Ajusta al ancho de tu diseño */
+}
+
+/* Modificación al product-grid para que sea un carrusel */
+.product-grid {
+    display: flex; /* Cambia de grid a flex para que los elementos estén en una sola línea */
+    gap: 1.5rem; /* Mantiene el espacio entre productos */
+    transition: transform 0.5s ease-in-out; /* Animación suave al deslizar */
+}
+
+/* Asegura que las tarjetas no se encojan */
+.product-grid .product-card {
+    flex-shrink: 0;
+    width: 270px; /* Ancho fijo para cada tarjeta, ajusta si es necesario */
+}
+
+/* Estilos para los botones de flecha (ya los tienes en tu CSS, pero por si acaso) */
+.arrows-wrapper {
+  display: flex;
+  gap: 8px; /* Espacio entre las flechas */
+}
+
+.arrow-btn {
+    width: 46px; /* Ancho del botón */
+    height: 46px; /* Alto del botón */
+    border-radius: 50%; /* Círculo perfecto */
+    background: #F5F5F5; /* Color de fondo gris claro */
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px; /* Tamaño del icono de la flecha */
+    transition: all 0.3s;
+}
+
+.arrow-btn:hover {
+  background: #8000ff; /* Color al pasar el mouse */
+}
