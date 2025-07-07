@@ -174,6 +174,36 @@ $resultado_productos = $stmt_productos->get_result();
                             </div>
                         </td>
                     </tr>
+                      <div id="edit-product-modal" class="modal-overlay" style="display:none;">
+                      <div class="modal-content">
+                          <form id="edit-product-form">
+                              <h2>Editar Producto</h2>
+                              <input type="hidden" id="edit-product-id" name="id_producto">
+
+                              <div class="form-group">
+                                  <label for="edit-nombre">Nombre del Producto</label>
+                                  <input type="text" id="edit-nombre" name="nombre_producto" required>
+                              </div>
+                              <div class="form-group">
+                                  <label for="edit-categoria">Categoría</label>
+                                  <input type="text" id="edit-categoria" name="categoria" required>
+                              </div>
+                              <div class="form-group">
+                                  <label for="edit-precio">Precio</label>
+                                  <input type="number" step="0.01" id="edit-precio" name="precio" required>
+                              </div>
+                              <div class="form-group">
+                                  <label for="edit-stock">Stock</label>
+                                  <input type="number" id="edit-stock" name="stock" required>
+                              </div>
+
+                              <div class="modal-actions">
+                                  <button type="button" id="cancel-edit-btn" class="btn-cancel">Cancelar</button>
+                                  <button type="submit" class="btn-save">Guardar Cambios</button>
+                              </div>
+                          </form>
+                        </div>
+                      </div>
             <?php
                 } // Fin del while
             } else {

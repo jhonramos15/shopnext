@@ -277,6 +277,18 @@ body {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
+.table-section table tbody tr td.product-cell {
+display: flex;
+align-items: center;
+gap: 10px; /* Espacio entre la imagen y el texto */
+}
+
+.table-section table tbody tr td.product-cell img.product-image {
+width: 50px; /* Ancho deseado de la imagen */
+height: auto; /* La altura se ajusta automáticamente para mantener la proporción */
+object-fit: cover; /* Recorta la imagen para que cubra el contenedor sin deformarse */
+border-radius: 5px; /* Bordes redondeados */
+}
 .cards .card i {
   background: #333;
   color: #fff;
@@ -353,6 +365,26 @@ body {
     appearance: none;
     cursor: pointer;
 }
+
+/* ESTILOS PARA EL MODAL DE EDICIÓN */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5); display: flex;
+    justify-content: center; align-items: center; z-index: 1000;
+}
+.modal-content {
+    background: white; padding: 30px; border-radius: 12px;
+    width: 90%; max-width: 500px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+.modal-content h2 { margin-bottom: 20px; }
+.modal-content .form-group { margin-bottom: 15px; }
+.modal-content label { display: block; margin-bottom: 5px; font-weight: 500; }
+.modal-content input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.modal-actions button { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; }
+.btn-save { background-color: #7f56d9; color: white; }
+.btn-cancel { background-color: #f1f1f1; }
+
 .right-controls .custom-select.table-select::after {
     content: '';
     position: absolute;

@@ -1,3 +1,26 @@
+<?php
+// public/index.php
+
+// 1. Conexión a la base de datos
+$conexion = new mysqli("localhost", "root", "", "shopnexs");
+if ($conexion->connect_error) {
+    die("Falló la conexión: " . $conexion->connect_error);
+}
+
+// 2. Consulta para obtener los productos
+$sql_productos = "SELECT 
+                    p.id_producto, 
+                    p.nombre_producto, 
+                    p.precio, 
+                    p.ruta_imagen
+                  FROM producto p
+                  WHERE p.stock > 0 -- Mostramos solo productos con stock disponible
+                  ORDER BY p.id_producto DESC
+                  LIMIT 8";
+
+$resultado_productos = $conexion->query($sql_productos);
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -266,6 +289,36 @@
   </div>
 </section>
 <section></section>
+
+<div class="products-container">
+    <div class="products" id="products">
+        <?php
+        if ($resultado_productos && $resultado_productos->num_rows > 0) {
+            while ($fila = $resultado_productos->fetch_assoc()) {
+        ?>
+                <div class="product">
+                    <div class="product-icons">
+                        <i class="fas fa-heart"></i>
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="product-image-wrapper">
+                        <img src="uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>">
+                        <button class="add-to-cart-btn" data-id="<?php echo $fila['id_producto']; ?>">Añadir al carrito</button>
+                    </div>
+                    <p class="product-title"><?php echo htmlspecialchars($fila['nombre_producto']); ?></p>
+                    <p class="price">$<?php echo number_format($fila['precio'], 0); ?></p>
+                    <p class="rating">★★★★★ (75)</p>
+                </div>
+        <?php
+            } // Fin del bucle
+        } else {
+            echo "<p>No hay productos disponibles en este momento.</p>";
+        }
+        $conexion->close();
+        ?>
+    </div> 
+</div>
+
     <!-- Secciones Destacadas -->
 <div class="categoria-seccion">
   <h3 class="subtitulo">Categorías</h3>

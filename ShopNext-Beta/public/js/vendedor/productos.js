@@ -1,44 +1,96 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const currentPage = window.location.pathname.split('/').pop(); // ejemplo: "clientes.html"
-    const menuLinks = document.querySelectorAll('.menu li a');
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('✅ productos.js cargado');
 
-    menuLinks.forEach(link => {
-      const linkPage = link.getAttribute('href').split('/').pop(); // Extrae solo el nombre del archivo del href
-      // Si el href es exactamente igual al nombre de la página actual, o si es la página de ingresos
-      if (linkPage === currentPage || (currentPage === 'ingresos.html' && linkPage === 'ingresos.html')) { // Ajuste para ingresos.html
-        link.parentElement.classList.add('active'); //
-      } else {
-        link.parentElement.classList.remove('active'); //
-      }
+    // --- ELEMENTOS DEL MODAL ---
+    const editModal = document.getElementById('edit-product-modal');
+    const editForm = document.getElementById('edit-product-form');
+    const cancelBtn = document.getElementById('cancel-edit-btn');
+    const tableBody = document.querySelector('.table-section tbody');
+
+    if (!tableBody) {
+        console.error("No se encontró el cuerpo de la tabla.");
+        return;
+    }
+
+    // --- ESCUCHADOR DE CLICS PARA TODA LA TABLA ---
+    tableBody.addEventListener('click', function(event) {
+        const editButton = event.target.closest('.edit-btn');
+        const deleteButton = event.target.closest('.delete-btn');
+
+        // --- LÓGICA PARA EL BOTÓN DE ELIMINAR ---
+        if (deleteButton) {
+            event.preventDefault();
+            const row = deleteButton.closest('tr');
+            const idProducto = row.dataset.id;
+            
+            // Usamos SweetAlert para una confirmación más elegante
+            if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+                const data = new FormData();
+                data.append('accion', 'eliminar');
+                data.append('id_producto', idProducto);
+
+                // Llamamos al controlador correcto
+                fetch('../../../controllers/uploads/productActionVendedor.php', {
+                    method: 'POST',
+                    body: data
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('¡Éxito! ' + data.success);
+                        row.remove(); // Quitamos la fila de la tabla al instante
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch(error => console.error('Error en fetch:', error));
+            }
+        }
+
+        // --- LÓGICA PARA EL BOTÓN DE EDITAR ---
+        if (editButton) {
+            event.preventDefault();
+            const row = editButton.closest('tr');
+            
+            // Llenamos el formulario del modal con los datos de la fila
+            document.getElementById('edit-product-id').value = row.dataset.id;
+            document.getElementById('edit-nombre').value = row.cells[0].querySelector('span').textContent;
+            document.getElementById('edit-categoria').value = row.cells[1].textContent;
+            document.getElementById('edit-precio').value = parseFloat(row.cells[2].textContent.replace('$', '').replace(/,/g, ''));
+            document.getElementById('edit-stock').value = parseInt(row.cells[3].textContent);
+            
+            editModal.style.display = 'flex';
+        }
     });
 
-    lucide.createIcons(); // Asegura íconos visibles
-
-    // JavaScript para el menú desplegable del perfil
-    const userProfileBtn = document.querySelector('.user'); // Selecciona el div .user para el botón del perfil
-    const profileDropdownMenu = document.getElementById('profileDropdownMenu'); // Asegúrate de añadir un id="profileDropdownMenu" al div del menú desplegable del perfil en tu HTML si lo tienes.
-    const profileArrow = userProfileBtn ? userProfileBtn.querySelector('.profile-arrow') : null; // Asegúrate de tener una flecha con clase .profile-arrow dentro de .user
-
-    if (userProfileBtn) { // Solo si el botón de perfil existe
-        userProfileBtn.addEventListener('click', () => {
-            if (profileDropdownMenu) { // Solo si el menú desplegable existe
-                profileDropdownMenu.classList.toggle('show');
-            }
-            if (profileArrow) { // Solo si la flecha existe
-                profileArrow.classList.toggle('rotate');
-            }
+    // --- FUNCIONALIDAD DEL MODAL ---
+    // Cerrar el modal
+    if(cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            editModal.style.display = 'none';
         });
+    }
 
-        // Cerrar el menú si se hace clic fuera de él
-        window.addEventListener('click', function(event) {
-            if (profileDropdownMenu && userProfileBtn && !userProfileBtn.contains(event.target) && !profileDropdownMenu.contains(event.target)) {
-                if (profileDropdownMenu.classList.contains('show')) {
-                    profileDropdownMenu.classList.remove('show');
-                    if (profileArrow) {
-                        profileArrow.classList.remove('rotate');
-                    }
+    // Enviar el formulario de edición
+    if(editForm) {
+        editForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const data = new FormData(this);
+            data.append('accion', 'editar');
+
+            fetch('../../../controllers/uploads/productActionVendedor.php', {
+                method: 'POST',
+                body: data
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('¡Actualizado! ' + data.success);
+                    location.reload(); // Recargamos la página para ver los cambios
+                } else {
+                    alert('Error: ' + data.error);
                 }
-            }
+            });
         });
     }
 });
