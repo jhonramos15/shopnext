@@ -161,8 +161,8 @@ $resultado_productos = $stmt_productos->get_result();
             ?>
                     <tr data-id="<?php echo htmlspecialchars($fila['id_producto']); ?>">
                         <td class="product-cell">
-                            <img src="../../../public/uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ? $fila['ruta_imagen'] : 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>" class="product-image">
-                            <span><?php echo htmlspecialchars($fila['nombre_producto']); ?></span>
+                              <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>" class="product-image">
+                          <span><?php echo htmlspecialchars($fila['nombre_producto']); ?></span>
                         </td>
                         <td><?php echo htmlspecialchars($fila['categoria']); ?></td>
                         <td>$<?php echo number_format($fila['precio'], 2); ?></td>

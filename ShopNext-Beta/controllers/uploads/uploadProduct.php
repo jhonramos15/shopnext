@@ -1,19 +1,19 @@
 <?php
 session_start();
 
-// Guardián de seguridad (sin cambios)
+// Guardián de seguridad
 if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'vendedor') {
-    header("Location: ../../views/auth/login.php");
-    exit;
+    http_response_code(403); // Prohibido
+    exit('Acceso no autorizado');
 }
 
+// Conexión a la base de datos
 $conexion = new mysqli("localhost", "root", "", "shopnexs");
 if ($conexion->connect_error) { die("Conexión fallida: " . $conexion->connect_error); }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Obtener id_vendedor de forma segura
     $id_usuario_session = $_SESSION['id_usuario'];
-
-    // Obtener el id_vendedor (esto ya está correcto)
     $stmt_vendedor = $conexion->prepare("SELECT id_vendedor FROM vendedor WHERE id_usuario = ?");
     $stmt_vendedor->bind_param("i", $id_usuario_session);
     $stmt_vendedor->execute();
@@ -28,27 +28,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stock = intval($_POST['stock']);
     $categoria = trim($_POST['categoria']);
 
-    // --- MANEJO DE IMAGEN CORREGIDO Y MÁS SEGURO ---
-    $nombre_imagen_para_db = ''; // Variable que guardaremos en la BD
+    // --- MANEJO DE IMAGEN CORREGIDO Y FINAL ---
+    $nombre_imagen_para_db = ''; // Variable que irá a la base de datos
 
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'][0] == 0) {
         
-        // 1. Ruta física y absoluta donde se guardará la imagen en el servidor
-        // dirname(__DIR__, 3) sube 3 niveles desde `controllers/uploads/` hasta la raíz del proyecto
-        $directorio_servidor = dirname(__DIR__, 3) . '/public/uploads/products/';
+        // Ruta física y absoluta donde se guardará la imagen en el servidor
+        $directorio_servidor = $_SERVER['DOCUMENT_ROOT'] . '/shopnext/ShopNext-Beta/public/uploads/products/';
 
-        // 2. Crear el directorio si no existe
         if (!file_exists($directorio_servidor)) {
             mkdir($directorio_servidor, 0777, true);
         }
 
-        // 3. Crear un nombre único para la imagen
+        // Creamos un nombre único para el archivo
         $nombre_unico = uniqid('prod_') . '.' . pathinfo($_FILES['imagen']['name'][0], PATHINFO_EXTENSION);
         $ruta_completa_servidor = $directorio_servidor . $nombre_unico;
 
-        // 4. Mover el archivo a su destino final
+        // Movemos el archivo
         if (move_uploaded_file($_FILES['imagen']['tmp_name'][0], $ruta_completa_servidor)) {
-            // ¡ÉXITO! Guardamos solo el nombre del archivo en la base de datos
+            // ¡ÉXITO! Guardamos SOLO el nombre del archivo en la base de datos
             $nombre_imagen_para_db = $nombre_unico;
         } else {
             header("Location: ../../views/dashboard/vendedor/subirProductos.php?error=upload_failed");
@@ -56,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // --- INSERTAR EN LA BASE DE DATOS ---
+    // Insertar en la base de datos
     $stmt = $conexion->prepare(
         "INSERT INTO producto (nombre_producto, descripcion, precio, stock, categoria, id_vendedor, ruta_imagen) VALUES (?, ?, ?, ?, ?, ?, ?)"
     );

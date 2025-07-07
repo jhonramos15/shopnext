@@ -302,8 +302,8 @@ $resultado_productos = $conexion->query($sql_productos);
                         <i class="fas fa-eye"></i>
                     </div>
                     <div class="product-image-wrapper">
-                        <img src="uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>">
-                        <button class="add-to-cart-btn" data-id="<?php echo $fila['id_producto']; ?>">Añadir al carrito</button>
+                      <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>">
+                      <button class="add-to-cart-btn" data-id="<?php echo $fila['id_producto']; ?>">Añadir al carrito</button>
                     </div>
                     <p class="product-title"><?php echo htmlspecialchars($fila['nombre_producto']); ?></p>
                     <p class="price">$<?php echo number_format($fila['precio'], 0); ?></p>
