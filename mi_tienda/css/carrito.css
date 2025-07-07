@@ -1,0 +1,293 @@
+/* Importar una fuente moderna (opcional, pero recomendado para el estilo) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Estilos generales */
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #1a1a1a;
+  padding: 40px 20px;
+}
+
+/* Contenedor principal del carrito */
+.cart-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Estilo para el encabezado de la tabla (Product, Price, etc.) */
+.cart-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 20px;
+  padding: 15px 25px;
+  font-weight: 500;
+  color: #333;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Estilo para cada producto individual en el carrito */
+.cart-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 20px;
+  align-items: center;
+  padding: 20px 25px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-top: 20px;
+}
+
+.empty-cart {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 18px;
+  color: #777;
+}
+
+/* Detalles del producto (imagen y nombre) */
+.product-details {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.product-image {
+  position: relative;
+}
+
+.product-image img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.delete-product {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  color: #d9534f;
+  background-color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  transition: transform 0.2s ease, color 0.2s;
+}
+
+.delete-product:hover {
+  transform: scale(1.2);
+  color: #c9302c;
+}
+
+.product-name {
+  font-weight: 500;
+}
+
+/* Celdas de precio y subtotal */
+.product-price,
+.product-subtotal {
+  font-weight: 500;
+}
+
+/* Campo de cantidad */
+.product-quantity input {
+  width: 70px;
+  height: 40px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  
+}
+.product-quantity input::-webkit-outer-spin-button,
+.product-quantity input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Botones de acción principales */
+.cart-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+}
+
+/* Contenedor inferior (cupón y resumen) */
+.cart-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.coupon-section {
+  display: flex;
+  gap: 10px;
+  flex-grow: 1;
+}
+
+.coupon-section input {
+  padding: 0 15px;
+  height: 50px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  min-width: 250px;
+  flex-grow: 1;
+}
+
+/* Caja de resumen del carrito */
+.summary-section {
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 25px;
+}
+
+.summary-title {
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+.summary-item:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.summary-item.total-item {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Estilos de botones */
+.btn {
+  height: 50px;
+  padding: 0 30px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: #9333ea; /* Morado */
+  color: white;
+}
+.btn-primary:hover {
+  background-color: #7e22ce;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #333;
+  border: 1px solid #ccc;
+}
+.btn-outline:hover {
+  background-color: #f0f0f0;
+  border-color: #aaa;
+}
+
+.btn-checkout {
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* --- Estilos Responsivos --- */
+@media (max-width: 5px) {
+  .cart-header {
+    display: none; /* Ocultamos el encabezado en pantallas pequeñas */
+  }
+
+  .cart-item {
+    grid-template-columns: 1fr; /* Apilamos todo en una sola columna */
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .product-details {
+    flex-direction: column;
+  }
+
+  .cart-bottom {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .coupon-section, .summary-section {
+    width: 100%;
+    max-width: 450px;
+  }
+}
+
+
+
+
+
+/* --- Estilos para el selector de cantidad --- */
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden; /* Para que los bordes redondeados se apliquen a los hijos */
+  width: fit-content; /* Se ajusta al contenido */
+  margin: 0 auto; /* Centra el selector en su celda */
+}
+
+.quantity-btn {
+  background-color: #f0f0f0;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  color: #9333ea;
+  width: 35px;
+  height: 40px;
+  transition: background-color 0.2s;
+}
+
+.quantity-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.quantity-selector input {
+  width: 50px; /* Ancho ajustado para el input */
+  height: 40px;
+  text-align: center;
+  border: none; /* Quitamos el borde del input */
+  border-left: 1px solid #cccccc; /* Añadimos separadores */
+  border-right: 1px solid #ccc;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Oculta las flechas por defecto en navegadores WebKit (Chrome, Safari) */
+.quantity-selector input::-webkit-outer-spin-button,
+.quantity-selector input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+
+
+

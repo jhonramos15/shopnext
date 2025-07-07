@@ -23,16 +23,17 @@ switch ($action) {
         echo json_encode($datos);
         break;
 
-    // ➕ Agregar un producto al carrito
+    // ➕ Agregar un producto al carrito (SECCIÓN MODIFICADA)
     case 'agregar':
         // Obtiene los datos enviados por POST (producto, precio, cantidad)
         $producto = $_POST['producto'];
         $precio = $_POST['precio'];
         $cantidad = $_POST['cantidad'];
+        $imagen = $_POST['imagen']; // VARIABLE NUEVA
         // Prepara la llamada al procedimiento almacenado
-        $stmt = $conexion->prepare("CALL sp_agregarProducto(?, ?, ?)");
-        // Asocia los parámetros a la consulta (s = string, d = double, i = integer)
-        $stmt->bind_param("sdi", $producto, $precio, $cantidad);
+        $stmt = $conexion->prepare("CALL sp_agregarProducto(?, ?, ?, ?)"); // PROCEDIMIENTO ACTUALIZADO
+        // Asocia los parámetros a la consulta (s = string, d = double, i = integer, s = string)
+       $stmt->bind_param("siis", $producto, $precio, $cantidad, $imagen); // BINDING ACTUALIZADO A ENTERO
         $stmt->execute();
         // Devuelve una respuesta JSON de éxito
         echo json_encode(["status" => "ok"]);

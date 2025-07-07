@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/productos.css">
+    <link rel="stylesheet" href="/mi_tienda/css/productos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Enlaza la librería Font Awesome para usar íconos -->
     <title>productos</title>
@@ -54,7 +54,7 @@
           </div>
 
           <p class="product-title">Portatil ASUS A14</p> <!-- Nombre producto -->
-          <p class="price">$120 <span class="old-price">$160</span></p> <!-- Precio actual y anterior -->
+          <p class="price">$2300.000 <span class="old-price">$4.500.000</span></p> <!-- Precio actual y anterior -->
           <p class="rating">★★★★★ (88)</p> <!-- Calificación del producto -->
         </div>
 
@@ -70,7 +70,7 @@
             <button class="add-to-cart-btn">Añadir al carrito</button>
           </div>
           <p class="product-title">AK-900 Wired Keyboard</p>
-          <p class="price">$960 <span class="old-price">$1160</span></p>
+          <p class="price">$650.000 <span class="old-price">$780.000</span></p>
           <p class="rating">★★★★★ (75)</p>
         </div>
 
@@ -86,7 +86,7 @@
             <button class="add-to-cart-btn">Añadir al carrito</button>
           </div>
           <p class="product-title">IPS LCD Gaming Monitor</p>
-          <p class="price">$370 <span class="old-price">$400</span></p>
+          <p class="price">$870.000 <span class="old-price">$1.100.000</span></p>
           <p class="rating">★★★★★ (99)</p>
         </div>
 
@@ -102,7 +102,7 @@
             <button class="add-to-cart-btn">Añadir al carrito</button>
           </div>
           <p class="product-title">S-Series Comfort Chair</p>
-          <p class="price">$375 <span class="old-price">$400</span></p>
+          <p class="price">$670.000 <span class="old-price">$850.000</span></p>
           <p class="rating">★★★★★ (99)</p>
         </div>
 
@@ -118,7 +118,7 @@
             <button class="add-to-cart-btn">Añadir al carrito</button>
           </div>
           <p class="product-title">Gaming Headset X7</p>
-          <p class="price">$120 <span class="old-price">$150</span></p>
+          <p class="price">$480.000 <span class="old-price">$600.000</span></p>
           <p class="rating">★★★★☆ (64)</p>
         </div>
 
@@ -134,7 +134,7 @@
             <button class="add-to-cart-btn">Añadir al carrito</button>
           </div>
           <p class="product-title">Wireless Mouse Pro</p>
-          <p class="price">$85 <span class="old-price">$100</span></p>
+          <p class="price">$220000 <span class="old-price">$550000</span></p>
           <p class="rating">★★★★★ (92)</p>
         </div>
 
@@ -148,28 +148,8 @@
 
   </section>
 
-  <!-- Script que maneja el evento "añadir al carrito" -->
-  <script>
-    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const producto = btn.closest('.product'); // Obtiene el contenedor del producto
-            const nombre = producto.querySelector('.product-title').textContent.trim(); // Nombre del producto
-            const precio = parseFloat(producto.querySelector('.price').textContent.replace('$','')); // Precio numérico
-
-            console.log("Producto:", nombre, "Precio:", precio);  // Muestra en consola el producto
-
-            // Llama a la API del carrito con método POST
-            fetch('php/carrito_api.php?action=agregar', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `producto=${encodeURIComponent(nombre)}&precio=${precio}&cantidad=1`
-            }).then(res => res.text()).then(data => {
-                console.log("Respuesta del servidor:", data); // Muestra la respuesta del servidor
-                alert("Producto agregado al carrito"); // Mensaje para el usuario
-            });
-        });
-    });
-  </script>
+<script src="javascript/productos.js" defer></script>
 
 </body>
 </html>
+
