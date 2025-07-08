@@ -1,22 +1,158 @@
-/* Importar una fuente moderna (opcional, pero recomendado para el estilo) */
+
+/* --- Fuentes y Estilos Globales --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* Estilos generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
 body {
-  margin: 0;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
+  
   background-color: #f9f9f9;
   color: #1a1a1a;
-  padding: 40px 20px;
 }
 
-/* Contenedor principal del carrito */
+/* --- Estilos del Header --- */
+
+/* Barra Superior Negra */
+#header-black {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #121212;
+    height: 50px;
+    color: #fefefe;
+    gap: 20px;
+    padding: 0 20px;
+}
+
+#header-black p {
+    font-weight: 400;
+    padding-right: 20px;
+}
+
+#header-black h2 {
+    border-bottom: 1px solid #fefefe;
+    font-size: 19px;
+    font-weight: 600;
+}
+
+#header-black #languages {
+   background-color: #121212;
+    color: #fefefe;
+    border: none;
+    width: 80px;
+    height: 30px;
+    border-radius: 10px;
+    margin-left: 20px; /* Ajustado para mejor espaciado */
+}
+
+/* Header Principal */
+
+  .logo  {
+    width: 125px;
+}
+
+#header-principal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 100px;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: #fff;
+}
+
+#header-principal nav a {
+    text-decoration: none;
+    color: #8E06C2;
+    font-weight: 400;
+    margin: 0 20px;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+#header-principal nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #8E06C2;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+}
+
+#header-principal nav a:hover::after {
+    transform: scaleX(1);
+}
+
+/* Acciones del Header: Buscador e iconos */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.buscador {
+    display: flex;
+    align-items: center;
+}
+
+.buscador input {
+    background-color: #F5F5F5;
+    border: 1px solid #F5F5F5;
+    border-radius: 5px 0 0 5px;
+    width: 200px;
+    height: 38px;
+    padding-left: 10px;
+    outline: none;
+}
+
+.buscador button {
+    width: 40px;
+    height: 38px;
+    border: none;
+    background-color: #F5F5F5;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+.header-icon {
+    position: relative;
+    text-decoration: none;
+    color: #121212;
+    font-size: 24px;
+}
+
+#cart-header-counter {
+    position: absolute;
+    top: -8px;
+    right: -12px;
+    font-size: 14px;
+    background-color: #DB4444;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 7px;
+    font-weight: bold;
+    width: 20px;
+}
+
+
+
+/* --- Estilos del Contenido del Carrito --- */
 .cart-container {
   max-width: 1100px;
-  margin: 0 auto;
+  margin: 40px auto;
+  padding: 0 20px;
 }
 
-/* Estilo para el encabezado de la tabla (Product, Price, etc.) */
+/* Encabezado de la tabla (Product, Price, etc.) */
 .cart-header {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -27,7 +163,7 @@ body {
   border-bottom: 1px solid #e0e0e0;
 }
 
-/* Estilo para cada producto individual en el carrito */
+/* Cada producto individual */
 .cart-item {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -47,7 +183,6 @@ body {
   color: #777;
 }
 
-/* Detalles del producto (imagen y nombre) */
 .product-details {
   display: flex;
   align-items: center;
@@ -82,42 +217,56 @@ body {
   color: #c9302c;
 }
 
-.product-name {
+.product-name, .product-price, .product-subtotal {
   font-weight: 500;
 }
 
-/* Celdas de precio y subtotal */
-.product-price,
-.product-subtotal {
-  font-weight: 500;
-}
-
-/* Campo de cantidad */
-.product-quantity input {
-  width: 70px;
-  height: 40px;
-  text-align: center;
+/* Selector de cantidad */
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #ccc;
   border-radius: 6px;
-  font-family: 'Inter', sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  
+  overflow: hidden;
+  width: fit-content;
+  margin: 0 auto;
 }
-.product-quantity input::-webkit-outer-spin-button,
-.product-quantity input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
+
+.quantity-btn {
+  background-color: #f0f0f0;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  color: #9333ea;
+  width: 35px;
+  height: 40px;
+  transition: background-color 0.2s;
+}
+
+.quantity-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.quantity-selector input {
+  width: 50px;
+  height: 40px;
+  text-align: center;
+  border: none;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  font-size: 16px;
   margin: 0;
 }
 
-/* Botones de acción principales */
+/* Acciones y resumen del carrito */
 .cart-actions {
   display: flex;
   justify-content: space-between;
   margin-top: 25px;
 }
 
-/* Contenedor inferior (cupón y resumen) */
 .cart-bottom {
   display: flex;
   justify-content: space-between;
@@ -142,7 +291,6 @@ body {
   flex-grow: 1;
 }
 
-/* Caja de resumen del carrito */
 .summary-section {
   width: 100%;
   max-width: 400px;
@@ -160,8 +308,8 @@ body {
 .summary-item {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 15px;
   padding-bottom: 15px;
+  margin-bottom: 15px;
   border-bottom: 1px solid #e0e0e0;
 }
 .summary-item:last-of-type {
@@ -174,7 +322,7 @@ body {
   font-weight: 600;
 }
 
-/* Estilos de botones */
+/* Botones */
 .btn {
   height: 50px;
   padding: 0 30px;
@@ -187,7 +335,7 @@ body {
 }
 
 .btn-primary {
-  background-color: #9333ea; /* Morado */
+  background-color: #9333ea;
   color: white;
 }
 .btn-primary:hover {
@@ -201,7 +349,6 @@ body {
 }
 .btn-outline:hover {
   background-color: #f0f0f0;
-  border-color: #aaa;
 }
 
 .btn-checkout {
@@ -209,84 +356,87 @@ body {
   margin-top: 20px;
 }
 
-/* --- Estilos Responsivos --- */
-@media (max-width: 5px) {
-  .cart-header {
-    display: none; /* Ocultamos el encabezado en pantallas pequeñas */
-  }
+/* footer*/
 
-  .cart-item {
-    grid-template-columns: 1fr; /* Apilamos todo en una sola columna */
-    gap: 15px;
-    text-align: center;
-  }
-  
-  .product-details {
-    flex-direction: column;
-  }
-
-  .cart-bottom {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .coupon-section, .summary-section {
-    width: 100%;
-    max-width: 450px;
-  }
+main, .contenido {
+  flex: 1;
 }
 
-
-
-
-
-/* --- Estilos para el selector de cantidad --- */
-.quantity-selector {
+footer {
+  margin-top: 10px;
+  padding: 40px 20px; 
+  font-family: 'Poppins', sans-serif;
+  background-color: #121212;
+  color: white;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  overflow: hidden; /* Para que los bordes redondeados se apliquen a los hijos */
-  width: fit-content; /* Se ajusta al contenido */
-  margin: 0 auto; /* Centra el selector en su celda */
+  position: relative;
 }
 
-.quantity-btn {
-  background-color: #f0f0f0;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: bold;
-  color: #9333ea;
-  width: 35px;
-  height: 40px;
-  transition: background-color 0.2s;
+.footer-contact {
+  margin-top: 800px;
+  padding: 40px 20px; 
+  font-family: 'Poppins', sans-serif;
+  background-color: #121212;
+  color: white;
+  display: flex;
+  position: relative;
 }
 
-.quantity-btn:hover {
-  background-color: #e0e0e0;
+.footer-section img.footer-logo {
+  font-family: 'Poppins' 'sans-serif';
+  max-width: 150px; 
+  height: auto;
+  display: block;
+  margin: 0 auto; 
+  background: none;
 }
 
-.quantity-selector input {
-  width: 50px; /* Ancho ajustado para el input */
-  height: 40px;
-  text-align: center;
-  border: none; /* Quitamos el borde del input */
-  border-left: 1px solid #cccccc; /* Añadimos separadores */
-  border-right: 1px solid #ccc;
-  font-family: 'Inter', sans-serif;
-  font-size: 16px;
-  font-weight: 500;
+.footer-section {
+  font-family: 'Poppins' sans-serif;
+  flex: 1;
+  padding: 20px;
+  margin: 10px;
+  background-color: #121212;
+  border-radius: 8px; 
 }
 
-/* Oculta las flechas por defecto en navegadores WebKit (Chrome, Safari) */
-.quantity-selector input::-webkit-outer-spin-button,
-.quantity-selector input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.footer-section h3 {
+  font-family: 'Poppins' sans-serif;
+  margin-bottom: 10px;
+  background: none;
 }
 
+.footer-section ul {
+  font-family: 'Poppins' sans-serif;
+  list-style: none;
+  padding: 0;
+  background: none;
+}
+
+.footer-section ul li {
+  margin-bottom: 10px;
+  font-family: 'Poppins' sans-serif;
+  background: none;
+}
+
+.footer-section a {
+  font-family: 'Poppins' sans-serif;
+  text-decoration: none;
+  color: #f1f1f1;
+  background: none;
+}
+
+.footer-section img{
+  background: #f1f1f1;
+  border: 15px;
+  border-radius: 5px;
+}
+
+.footer-section a:hover {
+  font-family: 'Poppins' sans-serif;
+  text-decoration: underline;
+  background: none;
+}
 
 
 

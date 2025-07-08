@@ -3,12 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <link rel="stylesheet" href="../css/carrito.css">
   <title>Carrito de Compras</title>
 </head>
 
 <body>
+
+  <header>
+      <div id="header-black">
+          <p>Rebajas de Verano en Todos los Trajes de Baño y Envío Exprés Gratuito: ¡50 % de Descuento!</p>
+          <h2 style="text-decoration: underline; cursor: pointer;">¡Compra Ahora!</h2>
+          <select id="languages">
+              <option value="English">English</option>
+              <option value="Español">Español</option>
+          </select>
+      </div>
+
+      <div id="header-principal">
+          <a href="../index.html">
+              <img src="../img/logo.png" alt="Logo ShopNext" class="logo">
+          </a>
+
+          <nav id="nav">
+              <a href="../index.html">Inicio</a>
+              <a href="#">Registrate</a>
+              <a href="#">Acerca de</a>
+              <a href="#">Contacto</a>
+          </nav>
+
+          <div class="header-actions">
+              <div class="buscador">
+                  <input type="text" placeholder="¿Qué estás buscando?">
+                  <button type="submit">
+                      <i class="fa-solid fa-magnifying-glass"></i>
+                  </button>
+              </div>
+
+              <a href="wishlist.html" class="header-icon">
+                  <i class="fa-solid fa-heart"></i>
+              </a>
+
+                <a href="carrito.html" class="header-icon">
+                  <i class="fa-solid fa-cart-shopping"></i>
+                  <span id="cart-header-counter">0</span>
+              </a>
+
+              <a href="#" class="header-icon">
+                  <i class="fa-solid fa-user"></i>
+              </a>
+          </div>
+      </div>
+  </header>
+
+
   <div class="cart-container">
     <div class="cart-header">
       <div class="header-product">Product</div>
@@ -21,7 +69,7 @@
       </div>
 
     <div class="cart-actions">
-      <button class="btn btn-outline" onclick="returnToShop()">Return To Shop</button>
+      <button class="btn btn-outline" onclick="window.location.href='../index.html'">Return To Shop</button>
       <button class="btn btn-outline" onclick="updateCart()">Update Cart</button>
     </div>
 
@@ -50,11 +98,48 @@
     </div>
   </div>
 
-</section>
+
+
+    <footer>
+      <div class="footer-section">
+        <img src="../img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo"> <!-- Agregar el logo correspondiente-->
+      </div>
+    
+      <div class="footer-section">
+        <h3>Información</h3>
+        <ul>
+          <li><a href="../views/pages/aboutUs.html">Acerca de</a></li>
+          <li><a href="../views/pages/contact.html">Contacto</a></li>
+          <li><a href="../views/auth/signUp.html">Regístrate</a></li>
+        </ul>
+      </div>
+    
+      <div class="footer-section">
+        <h3>Soporte</h3>
+        <ul>
+          <li><a>soporteshopnexts@gmail.com</a></li>
+          <li><a>Calle 133 # 123 - 34 Piso 12</a></li>
+          <li><a>+57 343 948 9283</a></li>
+        </ul>
+      </div>
+    
+      <div class="footer-section">
+        <h3>Contacto</h3>
+        <ul>
+          <li><a>Redes Sociales</a></li>
+  
+          <img src="../img/Icon-Twitter.png" alt="Icon Twitter">
+          <img src="../img/icon-instagram.png" alt="Icon Instagram">
+          <img src="../img/Icon-Linkedin.png" alt="Icon LinkedIn">
+        </ul>
+      </div>
+    </footer>
+
+
 
 <script src="../javascript/carrito.js" defer></script>
 
 
-
+  
 </body>
 </html>

@@ -59,5 +59,15 @@ switch ($action) {
         $stmt->execute();
         echo json_encode(["status" => "ok"]);
         break;
+
+    // 🔢 Contar productos del carrito
+    case 'contar':
+        // Llama al procedimiento almacenado que cuenta los productos
+        $resultado = $conexion->query("CALL sp_contarCarrito()");
+        // Convierte el resultado en un arreglo asociativo
+        $fila = $resultado->fetch_assoc();
+        // Devuelve el total como JSON
+        echo json_encode($fila);
+        break;
 }
 ?>

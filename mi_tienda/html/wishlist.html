@@ -25,7 +25,7 @@
 
         <div id="header-principal">
             <a href="index.html">
-                <img src="img/logo.png" alt="Logo ShopNext">
+                <img src="../img/logo.png" alt="Logo ShopNext" class="logo">
             </a>
 
             <div id="nav">
@@ -35,36 +35,39 @@
                 <a href="../views/pages/contact.html">Contacto</a>
             </div>
 
-            <div style="display: flex; align-items: center;">
-                <div class="buscador">
-                    <input type="text" placeholder="¿Qué estás buscando?">
-                    <button type="submit">
-                        <i class="fa-solid fa-magnifying-glass" style="color: #121212;"></i>
-                    </button>
-                </div>
+                <div class="header-actions">
+              <div class="buscador">
+                  <input type="text" placeholder="¿Qué estás buscando?">
+                  <button type="submit">
+                      <i class="fa-solid fa-magnifying-glass"></i>
+                  </button>
+              </div>
 
-                <div class="heart">
-    <a href="wishlist.html" style="position: relative; text-decoration: none; color: #121212;">
-        <i class="fa-solid fa-heart" style="color: #121212;"></i>
-        <span id="wishlist-header-counter" style="position: absolute; top: -8px; right: -12px; font-size: 12px; background-color: #DB4444; color: white; border-radius: 50%; padding: 2px 6px; font-weight: bold;">0</span>
-    </a>
-</div>
-                <div class="cart">
-                    <button type="submit">
-                        <i class="fa-solid fa-cart-shopping" style="color: #121212;"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
+              <a href="wishlist.html" class="header-icon">
+                  <i class="fa-solid fa-heart"></i>
+                  <span id="wishlist-header-counter">0</span>
+              </a>
+
+              <a href="carrito.html" class="header-icon">
+                  <i class="fa-solid fa-cart-shopping"></i>
+              </a>
+
+              <a href="#" class="header-icon">
+                  <i class="fa-solid fa-user"></i>
+              </a>
+          </div>
+      </div>
+  </header>
+
+
+   
 
     <main class="container">
-
         <section class="wishlist-section">
             <div class="section-header">
-    <h2 id="wishlist-title">Wishlist (4)</h2>
-    <button class="btn-outline">Move All To Bag</button>
-</div>
+            <h2 id="wishlist-title">Wishlist (4)</h2>
+            <button class="btn-outline">Move All To Bag</button>
+            </div>
 
             <div class="products-grid">
                 <div class="product-card">
@@ -142,12 +145,12 @@
                         <button class="icon-btn"><i class="fa-regular fa-eye"></i></button>
                     </div>
                     <div class="product-image">
-                        <img src="https://i.imgur.com/gKge3Vn.png" alt="ASUS FHD Gaming Laptop">
+                        <img src="../img/portatil.png" alt="ASUS FHD Gaming Laptop">
                         <button class="add-to-cart-btn"><i class="fa-solid fa-shopping-cart"></i> Add To Cart</button>
                     </div>
                     <div class="product-info">
                         <p class="product-title">ASUS FHD Gaming Laptop</p>
-                        <p class="product-price">$960 <span class="old-price">$1160</span></p>
+                        <p class="product-price">$1.750.000 <span class="old-price">$2.000.000</span></p>
                         <div class="product-rating">
                             <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
                             <span>(65)</span>
@@ -160,12 +163,12 @@
                         <button class="icon-btn"><i class="fa-regular fa-eye"></i></button>
                     </div>
                     <div class="product-image">
-                        <img src="https://i.imgur.com/G4V2k2W.png" alt="IPS LCD Gaming Monitor">
+                        <img src="../img/pantallaheart.png" alt="IPS LCD Gaming Monitor">
                         <button class="add-to-cart-btn"><i class="fa-solid fa-shopping-cart"></i> Add To Cart</button>
                     </div>
                     <div class="product-info">
                         <p class="product-title">IPS LCD Gaming Monitor</p>
-                        <p class="product-price">$1160</p>
+                        <p class="product-price">$1.880.000 <span class="old-price">2.300.000</span></p>
                         <div class="product-rating">
                             <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                             <span>(65)</span>
@@ -178,12 +181,12 @@
                         <button class="icon-btn"><i class="fa-regular fa-eye"></i></button>
                     </div>
                     <div class="product-image">
-                        <img src="https://i.imgur.com/5u085iY.png" alt="HAVIT HV-G92 Gamepad">
+                        <img src="../img/mando.png" alt="HAVIT HV-G92 Gamepad">
                         <button class="add-to-cart-btn"><i class="fa-solid fa-shopping-cart"></i> Add To Cart</button>
                     </div>
                     <div class="product-info">
                         <p class="product-title">HAVIT HV-G92 Gamepad</p>
-                        <p class="product-price">$560</p>
+                         <p class="product-price">$880.000 <span class="old-price">980.000</span></p>
                         <div class="product-rating">
                             <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                             <span>(65)</span>
@@ -196,12 +199,12 @@
                         <button class="icon-btn"><i class="fa-regular fa-eye"></i></button>
                     </div>
                     <div class="product-image">
-                        <img src="https://i.imgur.com/tLxT0VW.png" alt="AK-900 Wired Keyboard">
+                        <img src="../img/tecladoheart.png" alt="AK-900 Wired Keyboard">
                         <button class="add-to-cart-btn"><i class="fa-solid fa-shopping-cart"></i> Add To Cart</button>
                     </div>
                     <div class="product-info">
                         <p class="product-title">AK-900 Wired Keyboard</p>
-                        <p class="product-price">$200</p>
+                        <p class="product-price">$780.000 <span class="old-price">980.000</span></p>
                         <div class="product-rating">
                             <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                             <span>(65)</span>
@@ -213,53 +216,44 @@
 
     </main>
 
+    
     <footer>
-        <div class="footer-section">
-            <img src="img/logo-positivo.png" alt="ShopNexts Logo" class="footer-logo">
-        </div>
-
-        <div class="footer-section">
-            <input type="text" placeholder="Envía un correo">
-            <button type="submit">
-                <i class="fa-solid fa-paper-plane" style="color: #0c0c0c;"></i>
-            </button>
-        </div>
-
-        <div class="footer-section">
-            <h3>Información</h3>
-            <ul>
-                <li><a href="/html/about-us.html">Acerca de</a></li>
-                <li><a href="/html/contact.html">Contacto</a></li>
-                <li><a href="/html/sign-up.html">Regístrate</a></li>
-            </ul>
-        </div>
-
-        <div class="footer-section">
-            <h3>Soporte</h3>
-            <ul>
-                <li>soporteshopnexts@gmail.com</li>
-                <li>Calle 133 # 123 - 34 Piso 12</li>
-                <li>+57 343 948 9283</li>
-            </ul>
-        </div>
-
-        <div class="footer-section">
-            <h3>Contacto</h3>
-            <ul>
-                <li>Redes Sociales</li>
-                <li>
-                    <img src="../img/Icon-Twitter.png" alt="Icon Twitter">
-                    <img src="../img/icon-instagram.png" alt="Icon Instagram">
-                    <img src="../img/Icon-Linkedin.png" alt="Icon LinkedIn">
-                </li>
-            </ul>
-        </div>
+      <div class="footer-section">
+        <img src="../img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo"> <!-- Agregar el logo correspondiente-->
+      </div>
+    
+      <div class="footer-section">
+        <h3>Información</h3>
+        <ul>
+          <li><a href="../views/pages/aboutUs.html">Acerca de</a></li>
+          <li><a href="../views/pages/contact.html">Contacto</a></li>
+          <li><a href="../views/auth/signUp.html">Regístrate</a></li>
+        </ul>
+      </div>
+    
+      <div class="footer-section">
+        <h3>Soporte</h3>
+        <ul>
+          <li><a>soporteshopnexts@gmail.com</a></li>
+          <li><a>Calle 133 # 123 - 34 Piso 12</a></li>
+          <li><a>+57 343 948 9283</a></li>
+        </ul>
+      </div>
+    
+      <div class="footer-section">
+        <h3>Contacto</h3>
+        <ul>
+          <li><a>Redes Sociales</a></li>
+  
+          <img src="../img/Icon-Twitter.png" alt="Icon Twitter">
+          <img src="../img/icon-instagram.png" alt="Icon Instagram">
+          <img src="../img/Icon-Linkedin.png" alt="Icon LinkedIn">
+        </ul>
+      </div>
     </footer>
 
 
-    <script src="../javascript/wishlist.js"></script>
-</body>
-</html>
 
+    <script src="../javascript/wishlist.js"></script>
 </body>
 </html>

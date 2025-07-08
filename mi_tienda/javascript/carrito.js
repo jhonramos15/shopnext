@@ -17,6 +17,20 @@ function formatearPrecio(valor) {
     return '$ ' + new Intl.NumberFormat('es-ES', opciones).format(numero);
 }
 
+// Función para actualizar el contador del carrito en el header
+function actualizarContadorCarrito() {
+    fetch('../php/carrito_api.php?action=contar')
+        .then(res => res.json())
+        .then(data => {
+            const contadorHeader = document.getElementById('cart-header-counter');
+            if (contadorHeader) {
+                contadorHeader.textContent = data.total;
+            }
+        })
+        .catch(error => console.error("Error al actualizar contador del carrito:", error));
+}
+
+
 // Función que carga los productos en el carrito desde la API
 function cargarCarrito() {
     fetch('../php/carrito_api.php?action=listar')
@@ -30,6 +44,7 @@ function cargarCarrito() {
                 contenedor.innerHTML = '<p class="empty-cart">Your cart is empty.</p>';
                 document.getElementById('subtotal').textContent = formatearPrecio(0);
                 document.getElementById('total').textContent = formatearPrecio(0);
+                actualizarContadorCarrito(); // Actualizar contador a 0
                 return;
             }
 
@@ -65,6 +80,7 @@ function cargarCarrito() {
 
             document.getElementById('subtotal').textContent = formatearPrecio(totalGeneral);
             document.getElementById('total').textContent = formatearPrecio(totalGeneral);
+            actualizarContadorCarrito();
         });
 }
 
@@ -123,4 +139,6 @@ function updateCart() {
 }
 
 // Carga el carrito cuando la página se abre por primera vez
-window.onload = cargarCarrito;
+window.onload = () => {
+    cargarCarrito();
+};
