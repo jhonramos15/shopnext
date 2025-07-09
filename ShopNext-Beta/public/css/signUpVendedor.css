@@ -25,6 +25,8 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-shrink: 1; /* Permite que la columna se encoja si no hay espacio */
+    min-width: 300px; /* Ancho mínimo antes de que se rompa */
 }
 
 /* --- ESTILOS PARA EL MENÚ HAMBURGUESA --- */
@@ -32,9 +34,11 @@ body, html {
 /* Contenedor del header para alinear logo y menú */
 .form-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Mantiene logo a la izq. y menú a la der. */
     align-items: center;
-    margin-bottom: 30px;
+    gap: 15px; /* Añade un espacio por si se juntan */
+    flex-wrap: wrap; 
+    margin-bottom: 10px;
 }
 
 /* Posicionamiento del menú */
@@ -120,9 +124,12 @@ body, html {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    flex-shrink: 1; /* Permite que esta columna también se encoja */
+    min-width: 400px; /* Asegura que el formulario tenga un ancho mínimo decente */
 }
 
 .logo {
+    flex-shrink: 0; /* Evita que el logo se encoja */
     width: 120px;
 }
 
@@ -239,9 +246,14 @@ h1 {
 /* Enlace de contacto */
 .contact-link {
     text-align: center;
-    margin-top: 25px;
+    margin-top: 15px;
     font-size: 14px;
     color: #666;
+    /* propiedades para centrar y alinear */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px; /* Espacio entre el texto y el enlace */
 }
 .contact-link a {
     color: #8A2BE2;
@@ -249,17 +261,48 @@ h1 {
     text-decoration: none;
 }
 
-/* Responsive para móviles */
-@media (max-width: 768px) {
+/* Para Laptops y Tablets (pantallas de hasta 1024px) */
+@media (max-width: 1200px) {
     .container {
-        flex-direction: column;
-        height: auto;
+        flex-direction: column; /* Apila las columnas una encima de la otra */
+        height: auto;          /* La altura se ajusta al contenido */
+        min-height: 100vh;     /* Asegura que ocupe al menos toda la pantalla */
     }
+
     .form-column, .image-column {
-        flex-basis: 100%;
-        padding: 30px;
+        flex-basis: auto; /* El tamaño de las columnas se vuelve flexible */
+        width: 100%;      /* Ocupan todo el ancho disponible */
+        min-width: unset; /* Reseteamos el ancho mínimo */
     }
+    
+    .form-column {
+        padding: 40px;
+    }
+
     .image-column {
-        display: none; /* Ocultamos la imagen en móviles para dar prioridad al formulario */
+        /* Para laptops pequeñas, puedes decidir si ocultas la imagen o no */
+        /* Opción 1: Ocultar la imagen para dar prioridad al formulario */
+        display: none;
+        
+        /* Opción 2: Mostrar la imagen pero con una altura fija (descomenta si prefieres esto) */
+        /*
+        height: 400px;
+        padding: 20px;
+        */
+    }
+}
+
+/* Para Móviles (pantallas de hasta 600px) */
+@media (max-width: 600px) {
+    .form-column {
+        padding: 30px 20px; /* Reducimos el padding en pantallas muy pequeñas */
+    }
+
+    h1 {
+        font-size: 24px; /* Hacemos el título un poco más pequeño */
+    }
+
+    .image-column {
+        display: none; /* Definitivamente ocultamos la imagen en móviles */
     }
 }

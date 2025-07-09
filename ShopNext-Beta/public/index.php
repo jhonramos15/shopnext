@@ -7,7 +7,7 @@ if ($conexion->connect_error) {
     die("Falló la conexión: " . $conexion->connect_error);
 }
 
-// 2. Consulta para obtener los productos
+// 2. Consulta para obtener los productos (ahora funcionará)
 $sql_productos = "SELECT 
                     p.id_producto, 
                     p.nombre_producto, 
