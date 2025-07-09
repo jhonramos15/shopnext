@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="billing-details">
+            <h1>Billing Details</h1>
+            <form id="checkout-form">
+                <div class="form-group">
+                    <label for="first-name">First Name*</label>
+                    <input type="text" id="first-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="company-name">Company Name</label>
+                    <input type="text" id="company-name">
+                </div>
+                <div class="form-group">
+                    <label for="street-address">Street Address*</label>
+                    <input type="text" id="street-address" required>
+                </div>
+                <div class="form-group">
+                    <label for="apartment">Apartment, floor, etc. (optional)</label>
+                    <input type="text" id="apartment">
+                </div>
+                <div class="form-group">
+                    <label for="town-city">Town/City*</label>
+                    <input type="text" id="town-city" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone-number">Phone Number*</label>
+                    <input type="tel" id="phone-number" required>
+                </div>
+                <div class="form-group">
+                    <label for="email-address">Email Address*</label>
+                    <input type="email" id="email-address" required>
+                </div>
+                <div class="save-info">
+                    <input type="checkbox" id="save-info">
+                    <label for="save-info">Save this information for faster check-out next time</label>
+                </div>
+            </form>
+        </div>
+
+        <div class="order-summary">
+            <div class="order-item">
+                <div class="item-info">
+                    <img src="https://i.imgur.com/8SAk1wI.png" alt="LCD Monitor">
+                    <span>LCD Monitor</span>
+                </div>
+                <span>$650</span>
+            </div>
+            <div class="order-item">
+                <div class="item-info">
+                    <img src="https://i.imgur.com/N7iA336.png" alt="HI Gamepad">
+                    <span>HI Gamepad</span>
+                </div>
+                <span>$1100</span>
+            </div>
+            
+            <div class="order-total">
+                <div>
+                    <span>Subtotal:</span>
+                    <span>$1750</span>
+                </div>
+                <div>
+                    <span>Shipping:</span>
+                    <span>Free</span>
+                </div>
+                <div class="total">
+                    <span>Total:</span>
+                    <span>$1750</span>
+                </div>
+            </div>
+
+            <div class="payment-method">
+                <div>
+                    <input type="radio" id="bank" name="payment" value="bank" checked>
+                    <label for="bank">Bank</label>
+                    <span class="bank-icons">
+                        <img src="/img/descarga (4).png" alt="Bkash">
+                        <img src="/img/Visa Logo PNG.png" alt="Visa">
+                        <img src="/img/Mastercard.png" alt="Mastercard">
+                        <img src="/img/New logo PayPal  PayPal + FuseProject (LA).png" alt="PayPal">
+                    </span>
+                </div>
+                <div>
+                    <input type="radio" id="cash" name="payment" value="cash">
+                    <label for="cash">Cash on delivery</label>
+                </div>
+            </div>
+
+            <div class="coupon-section">
+                <input type="text" id="coupon-code" placeholder="Coupon Code">
+                <button type="button" class="apply-coupon-btn">Apply Coupon</button>
+            </div>
+
+            <button type="submit" form="checkout-form" class="place-order-btn">Place Order</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
