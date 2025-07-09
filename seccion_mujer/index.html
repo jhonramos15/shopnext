@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="icon" href="../../../public/img/icon_principal.ico" type="image/x-icon">
+    <title>Moda Femenina | ShopNext</title>
+</head>
+<body>
+<header>
+  <div class="header-top">
+    <p>Nueva Colección de Verano</p>
+    <h2>¡Descúbrela Ahora!</h2>
+    <select>
+      <option value="es">Español</option>
+      <option value="en">English</option>
+    </select>
+  </div>
+
+  <div class="header-main">
+    <div class="logo-menu">
+      <div class="logo">
+        <a href="#"><img src="../../../public/img/logo.svg" alt="ShopNext"></a>
+      </div>
+      <button class="hamburger" onclick="toggleMenu()">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <nav class="nav-links" id="navMenu">
+      <a href="#">Novedades</a>
+      <a href="#">Vestidos</a>
+      <a href="#">Blusas</a>
+      <a href="#">Ofertas</a>
+    </nav>
+
+    <div class="header-icons">
+      <div class="buscador">
+        <input type="text" placeholder="Buscar vestidos, jeans...">
+        <button><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+      <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
+      <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
+      <a href="#" class="login-btn">Iniciar Sesión</a>
+    </div>
+  </div>
+</header>
+
+<section class="seccion-moda-femenina">
+  <div class="contenido-moda">
+    <h2>DESCUBRE TU ESTILO</h2>
+    <p>Las últimas tendencias para la mujer moderna.</p>
+  </div>
+</section>
+
+<section class="seccion-marcas">
+  <h2>NUESTRAS MARCAS</h2>
+  <div class="contenedor-marcas">
+    <div class="marca"><img src="/img/Adidas t-shirt logo.png" alt="Zara"></div>
+    <div class="marca"><img src="/img/mango-logo.png" alt="Mango"></div>
+    <div class="marca"><img src="/img/hm-logo.png" alt="H&M"></div>
+    <div class="marca"><img src="/img/stradivarius-logo.png" alt="Stradivarius"></div>
+    <div class="marca"><img src="/img/bershka-logo.png" alt="Bershka"></div>
+    <div class="marca"><img src="/img/massimo-dutti-logo.png" alt="Massimo Dutti"></div>
+  </div>
+</section>
+
+<section class="section-productos">
+  <h2>Nuestra Colección</h2>
+  <div class="product-grid">
+
+    <div class="product">
+      <div class="discount">-20%</div>
+      <div class="icons"><i class="fas fa-heart"></i><i class="fas fa-eye"></i></div>
+      <div class="product-image-wrapper">
+        <img src="/img/vestido-floral.png" alt="Vestido Floral">
+        <button class="add-to-cart-btn">Añadir al carrito</button>
+      </div>
+      <p>Vestido Midi Estampado Floral</p>
+      <p class="price">$159.900 <span class="old-price">$199.900</span></p>
+      <p class="rating">★★★★★ (45)</p>
+    </div>
+
+    <div class="product">
+      <div class="icons"><i class="fas fa-heart"></i><i class="fas fa-eye"></i></div>
+      <div class="product-image-wrapper">
+        <img src="/img/Cactus jack x Barcelona soccer jersey.png" alt="Blusa Satinada">
+        <button class="add-to-cart-btn">Añadir al carrito</button>
+      </div>
+      <p>Blusa Satinada con Cuello Halter</p>
+      <p class="price">$89.900</p>
+      <p class="rating">★★★★★ (78)</p>
+    </div>
+
+    <div class="product">
+       <div class="discount">-30%</div>
+      <div class="icons"><i class="fas fa-heart"></i><i class="fas fa-eye"></i></div>
+      <div class="product-image-wrapper">
+        <img src="/img/jeans-wide-leg.png" alt="Jeans Wide Leg">
+        <button class="add-to-cart-btn">Añadir al carrito</button>
+      </div>
+      <p>Jeans Wide Leg de Tiro Alto</p>
+      <p class="price">$125.900 <span class="old-price">$179.900</span></p>
+      <p class="rating">★★★★☆ (102)</p>
+    </div>
+
+    <div class="product">
+      <div class="icons"><i class="fas fa-heart"></i><i class="fas fa-eye"></i></div>
+      <div class="product-image-wrapper">
+        <img src="/img/blazer-oversized.png" alt="Blazer Oversized">
+        <button class="add-to-cart-btn">Añadir al carrito</button>
+      </div>
+      <p>Blazer Oversized en Lino</p>
+      <p class="price">$249.900</p>
+      <p class="rating">★★★★★ (50)</p>
+    </div>
+
+    <div class="product">
+      <div class="icons"><i class="fas fa-heart"></i><i class="fas fa-eye"></i></div>
+      <div class="product-image-wrapper">
+        <img src="/img/falda-satin.png" alt="Falda de Satén">
+        <button class="add-to-cart-btn">Añadir al carrito</button>
+      </div>
+      <p>Falda Midi de Satén</p>
+      <p class="price">$119.900</p>
+      <p class="rating">★★★★★ (91)</p>
+    </div>
+
+    <div class="product">
+       <div class="discount">-25%</div>
+      <div class="icons"><i class="fas fa-heart"></i><i class="fas fa-eye"></i></div>
+      <div class="product-image-wrapper">
+        <img src="/img/vestido-lencero.png" alt="Vestido Lencero">
+        <button class="add-to-cart-btn">Añadir al carrito</button>
+      </div>
+      <p>Vestido Lencero de Tirantes</p>
+      <p class="price">$149.900 <span class="old-price">$199.900</span></p>
+      <p class="rating">★★★★☆ (64)</p>
+    </div>
+
+    <div class="product">
+      <div class="icons"><i class="fas fa-heart"></i><i class="fas fa-eye"></i></div>
+      <div class="product-image-wrapper">
+        <img src="/img/vestido-punto.png" alt="Vestido de Punto">
+        <button class="add-to-cart-btn">Añadir al carrito</button>
+      </div>
+      <p>Vestido de Punto Canalé</p>
+      <p class="price">$189.900</p>
+      <p class="rating">★★★★★ (88)</p>
+    </div>
+
+    <div class="product">
+      <div class="discount">-40%</div>
+      <div class="icons"><i class="fas fa-heart"></i><i class="fas fa-eye"></i></div>
+      <div class="product-image-wrapper">
+        <img src="/img/falda-corta-tablas.png" alt="Falda Corta de Tablas">
+        <button class="add-to-cart-btn">Añadir al carrito</button>
+      </div>
+      <p>Falda Corta con Tablas</p>
+      <p class="price">$77.900 <span class="old-price">$129.900</span></p>
+      <p class="rating">★★★★☆ (115)</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer-contact">
+    </footer>
+<script src="../../../public/js/menuHamburguer.js"></script>
+</body>
+</html>
