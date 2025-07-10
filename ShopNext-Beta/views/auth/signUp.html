@@ -2,138 +2,67 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Regístrate | ShopNext</title>
-    <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>Crear Cuenta | ShopNext</title>
     <link rel="stylesheet" href="../../public/css/signUp.css">
+    <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-<header>
-  <!-- Header Negro -->
-  <div class="header-top">
-    <p>Rebajas de Verano: ¡50 % de Descuento!</p>
-    <h2>¡Compra Ahora!</h2>
-    <select>
-      <option value="es">Español</option>
-      <option value="en">English</option>
-    </select>
-  </div>
+    <div class="container reverse">
+        <div class="form-column">
+            <div class="form-header">
+                <a href="../../public/index.php"><img src="../../public/img/logo.svg" alt="ShopNext Logo" class="logo"></a>
+                <div class="hamburger-menu">
+                    <button id="hamburger-icon" class="hamburger-button"><i class="fas fa-bars"></i></button>
+                    <div id="dropdown-content" class="dropdown-content">
+                        <a href="../../public/index.php"><i class="fas fa-home"></i> <span>Inicio</span></a>
+                        <a href="#"><i class="fas fa-box-open"></i> <span>Productos</span></a>
+                        <a href="../pages/aboutUs.html"><i class="fas fa-info-circle"></i> <span>Acerca de</span></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-content">
+                <h1>Crea una Cuenta</h1>
+                <p class="subtitle">Ingresa tus detalles para empezar</p>
+                
+              <form action="/ShopNext/ShopNext-Beta/controllers/registroController.php" method="POST">
+                <input type="hidden" name="tipo" value="cliente">
+                <div class="form-group">
+                  <input type="text" id="nombre" name="nombre" placeholder=" " required>
+                  <label for="nombre">Nombre</label>
+                </div>
+                <div class="form-group">
+                  <input type="email" id="correo" name="correo" placeholder=" " required>
+                  <label for="email">Email</label>
+                </div>
+                <div class="form-group password-wrapper">
+                  <input type="password" id="contrasena" name="clave" placeholder=" " required>
+                  <label for="contrasena">Contraseña</label>
+                  <i class="fas fa-eye-slash toggle-password"></i>
+                </div>
+                <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+              </form>
 
-  <!-- Header Principal -->
-  <div class="header-main">
-    <!-- Logo Principal -->
-    <div class="logo-menu">
-      <div class="logo">
-        <a href="../../public/index.html"><img src="../../public/img/logo.svg" alt="ShopNext"></a>
-      </div>
-      <!-- Menú Hamburguesa -->
-      <button class="hamburger" onclick="toggleMenu()">
-        <i class="fa-solid fa-bars"></i>
-      </button>
-    </div>
-
-    <!-- Nav Menú -->
-    <nav class="nav-links" id="navMenu">
-      <a href="../../public/index.html">Inicio</a>
-      <a href="signUp.html">Regístrate</a>
-      <a href="../pages/contact.html">Contacto</a>
-      <a href="../pages/aboutUs.html">Acerca de</a>
-    </nav>
-
-    <!-- Buscador -->
-    <div class="icons">
-      <div class="buscador">
-        <input type="text" placeholder="¿Qué estás buscando?">
-        <button><i class="fa-solid fa-magnifying-glass"></i></button>
-      </div>
-      <!-- Favoritos -->
-      <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
-      <!-- Carrito -->
-      <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
-      <!-- Iniciar Sesión -->
-      <a href="login.php" class="login-btn">Iniciar Sesión</a>
-    </div>
-  </div>
-</header>
-<section class="main-section">
-  <div class="sign-up">
-    
-    <!-- Imagen -->
-    <div class="img-sign-up">
-      <img src="../../public/img/foto-login.png" alt="Sign-Up">
-    </div>
-    
-    <!-- Formulario -->
-    <div class="form-sign-up">
-      <h2>Crea una Cuenta</h2>
-      <h3>Ingresa los detalles abajo</h3>
-
-      <form id="formSignUp" action="/ShopNext/ShopNext-Beta/controllers/registroController.php" method="POST">
-        <input type="hidden" name="tipo" value="cliente">
-        <i class="fa-solid fa-user" style="color: #0c0c0c;"></i>
-        <input type="text" placeholder="Nombre" id="nombre" name="nombre"><br><br>
-
-        <i class="fa-solid fa-envelope" style="color: #0c0c0c;"></i>
-        <input type="email" placeholder="Email" id="correo" name="correo"><br><br>
-
-        <i class="fa-solid fa-lock" style="color: #0c0c0c;"></i>
-        <input type="password" placeholder="Contraseña" id="clave" name="clave"><br><br>
-
-        <div class="buttoncreate">
-          <button type="submit">Crear Cuenta</button>
+                <a href="signUpVendedor.html" class="btn-vendedor">
+                    <i class="fas fa-user-tie"></i>
+                    <span>Crear Cuenta Vendedor</span>
+                </a>
+                <div class="divider">
+                    <span>¿Ya tienes una cuenta?</span>
+                </div>
+                <a href="login.php" class="btn btn-secondary">
+                    Iniciar Sesión
+                </a>
+            </div>
         </div>
-
-        <div class="buttonVendedor">
-            <a href="signUpVendedor.html" class="btn-vendedor">
-                <img src="../../public/img/usuario.png" alt="Usuario">
-                <span>Crear Cuenta Vendedor</span>
-            </a>
+        <div class="image-column">
+            <img src="../../public/img/foto-login.png" alt="Sign Up Image">
         </div>
-
-        <div class="divider">
-            <span>¿Ya tienes una cuenta?</span>
-        </div>
-        <a href="login.php">Iniciar Sesión</a>
-      </form>
     </div>
-
-  </div>
-</section>
-
-<footer class="footer-contact">
-  <div class="footer-section">
-    <img src="../../public/img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
-  </div>
-  <div class="footer-section">
-    <h3>Información</h3>
-    <ul>
-      <li><a href="aboutUs.html">Acerca de</a></li>
-      <li><a href="contact.html">Contacto</a></li>
-      <li><a href="../auth/signUp.html">Regístrate</a></li>
-    </ul>
-  </div>
-  <div class="footer-section">
-    <h3>Soporte</h3>
-    <ul>
-      <li><a>soporteshopnexts@gmail.com</a></li>
-      <li><a>Calle 133 # 123 - 34 Piso 12</a></li>
-      <li><a>+57 343 948 9283</a></li>
-    </ul>
-  </div>
-  <div class="footer-section">
-    <h3>Contacto</h3>
-    <ul class="social-icons">
-      <li><a href="#"><img src="../../public/img/Icon-Twitter.png" alt="Twitter"></a></li>
-      <li><a href="#"><img src="../../public/img/icon-instagram.png" alt="Instagram"></a></li>
-      <li><a href="#"><img src="../../public/img/Icon-Linkedin.png" alt="LinkedIn"></a></li>
-    </ul>
-  </div>
-</footer>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="../../public/js/menuHamburguer.js"></script>
-<script src="../../public/js/signUp.js"></script>
-<script src="../../public/js/alertas.js"></script>
+    <script src="../../public/js/signUp.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../../public/js/alertas.js"></script>
 </body>
 </html>

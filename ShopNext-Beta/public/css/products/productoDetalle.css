@@ -9,22 +9,9 @@
   font-family: 'Poppins', sans-serif;
 }
 
-body, html {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  font-family: 'Inter', Arial, sans-serif;
-  overflow-x: hidden;
-}
-
 /* División entre cada sección  */
 section {
   border-top: 1px solid #eee;
-}
-
-.forgot section {
-  border-top: none;
 }
 
 /* Parte superior del header (alerta y selector de idioma) */
@@ -276,192 +263,183 @@ section {
   }
 }
 
-/* Contenedor general */
-/* Contenedor principal a pantalla completa */
-.container {
+/* --- Contenedor Principal --- */
+.product-view {
     display: flex;
-    width: 100vw;
-    min-height: 100vh;
-    background-color: #ffffff;
+    gap: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-/* Columna del formulario */
-.form-column {
-    flex: 0 0 45%; /* La columna ocupa el 45% del ancho */
-    padding: 40px 50px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+/* --- Galería de Imágenes --- */
+.image-gallery { display: flex; gap: 20px; }
+.thumbnails { display: flex; flex-direction: column; gap: 10px; }
+.thumbnail-img {
+    width: 80px; height: 80px; object-fit: cover; cursor: pointer;
+    border: 2px solid #e0e0e0; border-radius: 4px; padding: 5px;
+}
+.thumbnail-img.active { border-color: #DB4444; } /* Color rojo para el borde activo */
+.main-image-container {
+    background-color: #F5F5F5; border-radius: 4px;
+    padding: 20px; height: 500px; width: 500px; /* Tamaño fijo */
+    display: flex; align-items: center; justify-content: center;
+}
+.main-image { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+/* --- Detalles del Producto (Columna Derecha) --- */
+.product-details { flex: 1; display: flex; flex-direction: column; }
+.product-details h1 { font-size: 24px; font-weight: 600; margin: 0; }
+
+.product-rating { display: flex; align-items: center; gap: 8px; margin: 16px 0; }
+
+/* === AJUSTE 1: ESTRELLAS DE CALIFICACIÓN === */
+.stars .fa-star {
+    color: #FFAD33; /* Color naranja/amarillo para las estrellas */
+}
+.product-rating span { color: #808080; font-size: 14px; }
+.stock-status { color: #00B517; font-size: 14px; font-weight: 500; }
+
+.product-price { font-size: 24px; margin: 8px 0 16px; color: #222; }
+.product-description { font-size: 14px; line-height: 1.6; border-bottom: 1px solid #ddd; padding-bottom: 20px; }
+
+/* Acciones de compra */
+.actions { display: flex; gap: 16px; margin-top: 24px; align-items: center; }
+.buy-btn {
+    flex-grow: 1; padding: 12px 24px; background-color: #8E06C2; /* Rojo */
+    color: white; border: none; border-radius: 4px; cursor: pointer;
+    font-size: 16px; text-decoration: none; text-align: center;
 }
 
-.form-header {
-    margin-bottom: 30px;
+/* === AJUSTE 2: BOTÓN DE FAVORITOS (CORAZÓN) === */
+.wishlist-btn {
+    padding: 10px; border: 1px solid #ccc; border-radius: 4px;
+    background-color: transparent; cursor: pointer; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
 }
+.wishlist-btn .fa-heart { color: #333; }
 
-.logo {
-    width: 120px;
-}
 
-.form-content h1 {
-    font-size: 28px;
-    color: #333;
-    font-weight: 700;
-}
-
-.form-content .subtitle {
-    color: #666;
-    margin-top: 5px;
-    margin-bottom: 35px;
-}
-
-/* Estilos de etiquetas flotantes (como en tus otros formularios) */
-.form-group {
-    position: relative;
-    margin-bottom: 25px;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px 10px;
+/* === AJUSTE 3: RECUADROS DE ENVÍO === */
+.delivery-info {
+    margin-top: 40px;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    font-size: 16px;
+    border-radius: 4px;
+    overflow: hidden; /* Para que los bordes internos no se salgan */
 }
-
-.form-group label {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    color: #999;
-    background-color: white;
-    padding: 0 5px;
-    transition: all 0.2s ease;
-    pointer-events: none;
-}
-
-.form-group input:focus + label,
-.form-group input:not(:placeholder-shown) + label {
-    top: 0;
-    font-size: 12px;
-    color: #8E06C2;
-    font-weight: 600;
-}
-
-.form-group input:focus {
-    outline: none;
-    border-color: #8E06C2;
-    border-width: 2px;
-}
-
-/* Botones */
-.btn, .btn-primary, .btn-secondary {
-    width: 100%;
-    padding: 14px;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    box-sizing: border-box;
-    transition: all 0.2s ease;
-}
-
-.btn-primary {
-    background-color: #8E06C2;
-    color: white;
-    border: none;
-    margin-top: 10px;
-}
-
-.btn-primary:hover {
-    background-color: #5e0482;
-    transform: translateY(-2px);
-}
-
-.btn-secondary {
-    background-color: #121212;
-    color: #FEFEFE;
-    border: 1px solid #ddd;
-}
-
-.btn-secondary:hover {
-    background-color: #333;
-}
-
-/* Divisor */
-.divider {
+.delivery-option {
     display: flex;
     align-items: center;
-    text-align: center;
-    color: #aaa;
-    margin: 30px 0;
+    gap: 16px;
+    padding: 16px;
 }
-
-.divider::before, .divider::after {
-    content: '';
-    flex: 1;
+.delivery-option:first-child {
     border-bottom: 1px solid #ccc;
 }
-
-.divider span {
-    padding: 0 10px;
-}
-
-/* Columna de la imagen */
-.image-column {
-    flex: 1;
-    min-width: 55%;
-}
-
-.image-column img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Clave para que la imagen cubra todo el alto */
-    display: block;
-}
-
-/* Diseño Responsivo */
-@media (max-width: 900px) {
-    .container {
-        flex-direction: column;
-    }
-
-    .image-column {
-        display: none; /* Ocultamos la imagen en pantallas pequeñas */
-    }
-
-    .form-column {
-        flex: 1;
-        width: 100%;
-        max-width: 500px;
-        margin: 0 auto;
-        padding: 40px 25px;
-    }
-}
-
-/* Responsive */
-@media screen and (max-width: 768px) {
-  .forgot {
-    flex-direction: column;
-    padding: 40px 20px;
+.delivery-option i {
+    font-size: 24px;
+    color: #333;
+    width: 30px; /* Ancho para alinear */
     text-align: center;
-  }
-
-  .send-email {
-    align-items: center;
-  }
-
-  .forgot h4 {
-    text-align: center;
-  }
 }
+.delivery-option div h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 4px;
+}
+.delivery-option div p {
+    font-size: 12px;
+    color: #555;
+    margin: 0;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.quantity-selector {
+    display: flex; /* Para alinear los elementos horizontalmente */
+    border: 1px solid #808080; /* Borde gris, como en la imagen */
+    border-radius: 4px;
+    overflow: hidden; /* Importante para que los bordes se vean bien */
+    width: fit-content; /* El contenedor se ajusta al contenido */
+}
+
+.quantity-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: transparent;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.quantity-btn:hover {
+    background-color: #f0f0f0; /* Un gris claro al pasar el mouse */
+}
+
+.quantity-input {
+    width: 80px; /* Ancho para el número */
+    height: 40px;
+    text-align: center;
+    border: none;
+    /* Líneas divisorias a los lados */
+    border-left: 1px solid #808080;
+    border-right: 1px solid #808080;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Quitamos el contorno azul que aparece al hacer clic */
+.quantity-input:focus {
+    outline: none;
+}
+
+/* Contenedor principal de los dos recuadros */
+.delivery-info {
+    margin-top: 40px; /* Espacio arriba para separarlo de los botones */
+    border: 1px solid #d1d1d1; /* Borde gris más sutil */
+    border-radius: 4px;
+    overflow: hidden; /* Importante para que los bordes se vean bien */
+}
+
+/* Estilo para cada opción individual (Envío y Devolución) */
+.delivery-option {
+    display: flex;
+    align-items: center; /* Centra verticalmente el ícono con el texto */
+    gap: 16px; /* Espacio entre el ícono y el bloque de texto */
+    padding: 16px;
+}
+
+/* Línea divisoria entre las dos opciones */
+.delivery-option:first-child {
+    border-bottom: 1px solid #d1d1d1;
+}
+
+/* Estilo para los íconos (camión y flecha) */
+.delivery-option i {
+    font-size: 24px;
+    color: #333;
+    width: 30px;
+    text-align: center;
+}
+
+/* Estilos para el texto */
+.delivery-option div h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 4px; /* Espacio debajo del título */
+}
+
+.delivery-option div p {
+    font-size: 12px;
+    color: #555;
+    margin: 0;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 
 /* footer*/
 

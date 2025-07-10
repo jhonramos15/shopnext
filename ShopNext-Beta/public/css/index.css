@@ -962,6 +962,11 @@ section {
     margin: 4px;
 }
 
+a.product-link {
+    text-decoration: none;
+    color: inherit;
+}
+
 .arrow-btn:hover {
   background: #8000ff;
   color: white;

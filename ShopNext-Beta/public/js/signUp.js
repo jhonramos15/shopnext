@@ -1,36 +1,47 @@
-form.addEventListener("submit", (event) => {
-  document.querySelectorAll(".error-msg").forEach(el => el.remove());
+// public/js/signUpVendedor.js
 
-  const nombre = document.getElementById("nombre").value.trim();
-  const correo = document.getElementById("correo").value.trim();
-  const clave = document.getElementById("clave").value.trim();
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // --- LÓGICA PARA EL MENÚ HAMBURGUESA ---
+    const hamburgerButton = document.getElementById('hamburger-icon');
+    const dropdownContent = document.getElementById('dropdown-content');
 
-  let hasError = false;
+    if (hamburgerButton && dropdownContent) {
+        hamburgerButton.addEventListener('click', function(event) {
+            event.stopPropagation(); // Evita que el clic se propague al 'window'
+            dropdownContent.classList.toggle('show');
+        });
+    }
 
-  const mostrarError = (input, mensaje) => {
-    const p = document.createElement("p");
-    p.textContent = mensaje;
-    p.classList.add("error-msg");
-    p.style.color = "red";
-    p.style.marginTop = "5px";
-    input.insertAdjacentElement("afterend", p);
-  };
+    // Cierra el menú si se hace clic en cualquier otro lugar de la página
+    window.addEventListener('click', function() {
+        if (dropdownContent && dropdownContent.classList.contains('show')) {
+            dropdownContent.classList.remove('show');
+        }
+    });
 
-  if (!nombre) {
-    mostrarError(document.getElementById("nombre"), "El nombre es obligatorio.");
-    hasError = true;
-  }
+    // --- LÓGICA PARA MOSTRAR/OCULTAR CONTRASEÑA ---
+    const passwordInput = document.getElementById('contrasena');
+    const togglePasswordIcon = document.querySelector('.toggle-password');
 
-  if (!correo) {
-    mostrarError(document.getElementById("correo"), "El correo es obligatorio.");
-    hasError = true;
-  }
+    if (passwordInput && togglePasswordIcon) {
+        // 1. Muestra el ojo solo cuando hay texto
+        passwordInput.addEventListener('input', function() {
+            if (passwordInput.value.length > 0) {
+                togglePasswordIcon.style.display = 'block';
+            } else {
+                togglePasswordIcon.style.display = 'none';
+            }
+        });
 
-  if (!clave) {
-    mostrarError(document.getElementById("clave"), "La contraseña es obligatoria.");
-    hasError = true;
-  }
-
-  // ⚠️ Solo prevenimos el envío si hay errores
-  if (hasError) event.preventDefault();
+        // 2. Cambia la visibilidad de la contraseña al hacer clic en el ojo
+        togglePasswordIcon.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Cambia el ícono del ojo
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    }
 });

@@ -30,7 +30,7 @@ $token = $_GET['token'] ?? '';
   <div class="header-main">
     <div class="logo-menu">
       <div class="logo">
-        <a href="../../public/index.html"><img src="../../public/img/logo.svg" alt="ShopNext"></a>
+        <a href="../../public/index.php"><img src="../../public/img/logo.svg" alt="ShopNext"></a>
       </div>
       <button class="hamburger" onclick="toggleMenu()">
         <i class="fa-solid fa-bars"></i>
@@ -38,7 +38,7 @@ $token = $_GET['token'] ?? '';
     </div>
 
     <nav class="nav-links" id="navMenu">
-      <a href="../../public/index.html">Inicio</a>
+      <a href="../../public/index.php">Inicio</a>
       <a href="../auth/signUp.html">Regístrate</a>
       <a href="../pages/contact.html">Contacto</a>
       <a href="../pages/aboutUs.html">Acerca de</a>

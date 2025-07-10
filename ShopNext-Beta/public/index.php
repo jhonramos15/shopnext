@@ -50,7 +50,7 @@ $resultado_productos = $conexion->query($sql_productos);
     <!-- Logo Principal -->
     <div class="logo-menu">
       <div class="logo">
-        <a href="index.html"><img src="img/logo.svg" alt="ShopNext"></a>
+        <a href="index.php"><img src="img/logo.svg" alt="ShopNext"></a>
       </div>
       <!-- Menú Hamburguesa -->
       <button class="hamburger" onclick="toggleMenu()">
@@ -60,7 +60,7 @@ $resultado_productos = $conexion->query($sql_productos);
 
     <!-- Nav Menú -->
     <nav class="nav-links" id="navMenu">
-      <a href="index.html">Inicio</a>
+      <a href="index.php">Inicio</a>
       <a href="../views/auth/signUp.html">Regístrate</a>
       <a href="../views/pages/contact.html">Contacto</a>
       <a href="../views/pages/aboutUs.html">Acerca de</a>
@@ -175,13 +175,7 @@ $resultado_productos = $conexion->query($sql_productos);
   <div class="flash-sales">
     <div class="flash-header">
       <div class="title-container">
-        <h2><span class="flash">Ventas</span> <span class="sales">Relámpago</span></h2>
-        <div class="countdown" id="countdown">
-          <div><span id="days">00</span><span>:</span></div>
-          <div><span id="hours">00</span><span>:</span></div>
-          <div><span id="minutes">00</span><span>:</span></div>
-          <div><span id="seconds">00</span></div>
-        </div>
+        <h2><span class="flash">Últimos</span> <span class="sales">Productos</span></h2>
       </div>
       <!-- Botones de Flash Sales -->
       <div class="scroll-controls">
@@ -194,101 +188,6 @@ $resultado_productos = $conexion->query($sql_productos);
       </div>
     </div>
   </div>
-  <!-- Productos del Flash Sales -->
-  <div class="products-container">
-    <div class="products" id="products">
-      <div class="product">
-        <div class="discount">-40%</div>
-          <div class="product-icons">
-            <i class="fas fa-heart"></i>
-            <i class="fas fa-eye"></i>
-          </div>
-          <div class="product-image-wrapper">
-            <img src="img/flash-sales/asus .png" alt="Gamepad">
-            <button class="add-to-cart-btn">Añadir al carrito</button>
-          </div>
-          <p>Portatil ASUS A14</p>
-          <p class="price">$120 <span class="old-price">$160</span></p>
-          <p class="rating">★★★★★ (88)</p>
-      </div>
-      <div class="product">
-        <div class="discount">-35%</div>
-        <div class="product-icons">
-          <i class="fas fa-heart"></i>
-          <i class="fas fa-eye"></i>
-        </div>
-        <div class="product-image-wrapper">
-          <img src="img/flash-sales/keyboard.png" alt="AK-900 Keyboard">
-          <button class="add-to-cart-btn">Añadir al carrito</button>
-        </div>
-        <p>AK-900 Wired Keyboard</p>
-        <p class="price">$960 <span class="old-price">$1160</span></p>
-        <p class="rating">★★★★★ (75)</p>
-      </div>
-      <div class="product">
-        <div class="discount">-30%</div>
-        <div class="product-icons">
-          <i class="fas fa-heart"></i>
-          <i class="fas fa-eye"></i>
-        </div>
-        <div class="product-image-wrapper">
-          <img src="img/flash-sales/monitor.png" alt="IPS Monitor">
-          <button class="add-to-cart-btn">Añadir al carrito</button>
-        </div>
-        <p>IPS LCD Gaming Monitor</p>
-        <p class="price">$370 <span class="old-price">$400</span></p>
-        <p class="rating">★★★★★ (99)</p>
-      </div>
-      <div class="product">
-        <div class="discount">-40%</div>
-        <div class="product-icons">
-          <i class="fas fa-heart"></i>
-          <i class="fas fa-eye"></i>
-        </div>
-        <div class="product-image-wrapper">
-          <img src="img/flash-sales/chair.png" alt="Comfort Chair">
-          <button class="add-to-cart-btn">Añadir al carrito</button>
-        </div>
-        <p>S-Series Comfort Chair</p>
-        <p class="price">$375 <span class="old-price">$400</span></p>
-        <p class="rating">★★★★★ (99)</p>
-      </div>
-      <div class="product">
-        <div class="discount">-20%</div>
-        <div class="product-icons">
-          <i class="fas fa-heart"></i>
-          <i class="fas fa-eye"></i>
-        </div>
-        <div class="product-image-wrapper">
-          <img src="img/flash-sales/headset.png" alt="Gaming Headset">
-          <button class="add-to-cart-btn">Añadir al carrito</button>
-        </div>
-        <p>Gaming Headset X7</p>
-        <p class="price">$120 <span class="old-price">$150</span></p>
-        <p class="rating">★★★★☆ (64)</p>
-      </div>
-      <div class="product">
-        <div class="discount">-15%</div>
-          <div class="product-icons">
-            <i class="fas fa-heart"></i>
-            <i class="fas fa-eye"></i>
-          </div>
-          <div class="product-image-wrapper">
-            <img src="img/flash-sales/mouse.png" alt="Wireless Mouse">
-            <button class="add-to-cart-btn">Añadir al carrito</button>
-          </div>
-          <p>Wireless Mouse Pro</p>
-          <p class="price">$85 <span class="old-price">$100</span></p>
-          <p class="rating">★★★★★ (92)</p>
-      </div>
-    </div>
-  </div>
-  <!-- Botón de Ver Todo-->
-  <div class="view-all">
-    <button>Ver Todo</button>
-  </div>
-</section>
-<section></section>
 
 <div class="products-container">
     <div class="products" id="products">
@@ -296,6 +195,7 @@ $resultado_productos = $conexion->query($sql_productos);
         if ($resultado_productos && $resultado_productos->num_rows > 0) {
             while ($fila = $resultado_productos->fetch_assoc()) {
         ?>
+            <a href="../views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>" class="product-link">
                 <div class="product">
                     <div class="product-icons">
                         <i class="fas fa-heart"></i>
@@ -309,6 +209,7 @@ $resultado_productos = $conexion->query($sql_productos);
                     <p class="price">$<?php echo number_format($fila['precio'], 0); ?></p>
                     <p class="rating">★★★★★ (75)</p>
                 </div>
+              </a>
         <?php
             } // Fin del bucle
         } else {
@@ -318,6 +219,7 @@ $resultado_productos = $conexion->query($sql_productos);
         ?>
     </div> 
 </div>
+<section></section>
 
     <!-- Secciones Destacadas -->
 <div class="categoria-seccion">

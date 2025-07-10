@@ -214,11 +214,20 @@ h1 {
     color: white;
     border: none;
     margin-top: 15px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
 }
 .btn-secondary {
     background-color: #121212;
     color: #FEFEFE;
     border: 1px solid #ccc;
+}
+
+.btn-secondary:hover {
+    transform: scale(1.05);
 }
 
 /* === AJUSTE 3: LÍNEA DIVISORIA === */

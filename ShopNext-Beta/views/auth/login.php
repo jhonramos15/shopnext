@@ -28,7 +28,7 @@ if (isset($_SESSION['id_usuario'])) {
     <div class="container">
         <div class="form-column">
             <div class="form-header">
-                <a href="../../public/index.html"><img src="../../public/img/logo.svg" alt="ShopNext Logo" class="logo"></a>
+                <a href="../../public/index.php"><img src="../../public/img/logo.svg" alt="ShopNext Logo" class="logo"></a>
                 <div class="hamburger-menu">
                     <button id="hamburger-icon" class="hamburger-button">
                         <i class="fas fa-bars"></i>
@@ -67,7 +67,14 @@ if (isset($_SESSION['id_usuario'])) {
                 <a href="signUp.html" class="btn btn-secondary">
                     Crear una cuenta
                 </a>
-            </div>
+                
+                <div class="divider">
+                    <span>¿Olvidaste tu contraseña?</span>
+                </div>
+                <a href="forgotPassword.html" class="btn btn-secondary">
+                    Recuperar Contraseña
+                </a>
+                </div>
         </div>
 
         <div class="image-column">
@@ -75,9 +82,7 @@ if (isset($_SESSION['id_usuario'])) {
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script src="../../public/js/alertas.js"></script> 
-
     <script src="../../public/js/signUpVendedor.js"></script> 
 </body>
 </html>

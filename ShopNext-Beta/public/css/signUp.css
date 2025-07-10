@@ -1,495 +1,202 @@
-/* Fuente principal del sitio */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+/* public/css/signUp.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
-/* Reseteo de márgenes y paddings, y se aplica la fuente */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+body, html {
+    margin: 0; padding: 0; width: 100%; height: 100%;
+    font-family: 'Inter', Arial, sans-serif; overflow-x: hidden;
 }
-
-/* División entre cada sección  */
-section {
-  border-top: 1px solid #eee;
+.container {
+    display: flex; width: 100%; min-height: 100vh; background-color: #ffffff;
 }
-
-/* Parte superior del header (alerta y selector de idioma) */
-.header-top {
-  background: #121212;
-  color: #fff;
-  padding: 10px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+.container.reverse { 
+  flex-direction: row-reverse; 
+}
+.form-column {
+    flex: 1 1 45%; min-width: 320px; padding: 40px 50px;
+    box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;
+}
+.image-column {
+    flex: 1 1 55%; min-width: 300px; box-sizing: border-box; padding: 20px;
+    display: flex; justify-content: center; align-items: center;
+}
+.image-column img {
+    width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 15px;
+}
+.form-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 30px; gap: 15px;
+}
+.logo { 
+  flex-shrink: 0; width: 120px; 
+}
+.hamburger-menu { 
   position: relative;
 }
-
-/* Estilo para el selector de idioma */
-.header-top select {
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  background: #121212;
-  color: #fff;
-  border-radius: 6px;
-  padding: 4px;
-  border: none;
-}
-
-/* Tamaño del texto en el párrafo y título */
-.header-top p,
-.header-top h2 {
-  font-size: 14px;
-}
-
-/* Título con subrayado */
-.header-top h2 {
-  border-bottom: 1px solid #fff;
-  font-weight: 600;
-}
-
-/* Contenedor principal del header */
-.header-main {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 20px 30px;
-  background-color: #fff;
-  gap: 15px;
-}
-
-/* Agrupa el logo y el botón del menú */
-.header-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* Tamaño del logo */
-.logo img {
-  width: 160px;
-  display: block;
-}
-
-/* Botón del menú hamburguesa (móvil) */
-.hamburger {
-  display: none;
-  font-size: 24px;
+.hamburger-button { 
   background: none;
-  border: none;
+  border: none; 
+  font-size: 24px; 
   cursor: pointer;
+  color: #121212; 
 }
-
-/* Menú de navegación (horizontal en escritorio) */
-.nav-links {
-  display: flex;
-  gap: 25px;
+.dropdown-content { 
+  display: none; 
+  position: absolute; 
+  right: 0; top: 35px; 
+  background-color: white; 
+  min-width: 180px; 
+  box-shadow: 0px 10px 25px rgba(0,0,0,0.1); 
+  z-index: 1; 
+  border-radius: 8px; 
+  border: 1px solid #f0f0f0; 
+  padding: 8px 0; 
+  overflow: hidden; 
 }
-
-/* Estilo para los enlaces del menú */
-.nav-links a {
+.dropdown-content a { 
+  color: #333;
+  padding: 12px 20px;
   text-decoration: none;
-  color: #8E06C2;
-  font-weight: 400;
-  position: relative;
-}
-
-/* Línea inferior animada al pasar el mouse */
-.nav-links a::after {
-  content: "";
-  position: absolute;
-  bottom: -3px;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background: #8E06C2;
-  transform: translateX(-50%);
-  transition: width 0.3s;
-}
-
-.nav-links a:hover::after {
-  width: 100%;
-}
-
-/* Contenedor de buscador, íconos y login */
-.icons {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: center; 
+  transition: background-color 0.2s ease, color 0.2s ease; 
+}
+.dropdown-content a i { 
+  width: 20px; 
+  margin-right: 15px;
+  color: #121212; 
+  text-align: center; 
+}
+.dropdown-content a:hover i { 
+  color: #8A2BE2; 
+}
+.dropdown-content a span { 
+  font-weight: 500; 
+}
+.dropdown-content a:hover { 
+  background-color: #f5f5f5; 
+  color: #8A2BE2; }
+.show { 
+  display: block; 
 }
 
-/* Contenedor del buscador */
-.buscador {
-  display: flex;
-  align-items: center;
-  overflow: hidden;
+/* Estilos para campos de formulario */
+.form-group { 
+  position: relative; 
+  margin-bottom: 25px; }
+.form-group input { 
+  width: 100%; 
+  padding: 12px 10px; 
+  border: 1px solid #ccc; 
+  border-radius: 5px; box-sizing: border-box; 
+  font-size: 16px; 
+}
+.form-group label { 
+  position: absolute; 
+  top: 50%; 
+  left: 10px; 
+  transform: translateY(-50%); 
+  color: #999; 
+  background-color: white; 
+  padding: 0 5px; 
+  transition: all 0.2s ease; 
+  pointer-events: none; 
+}
+.form-group input:focus + label, .form-group input:not(:placeholder-shown) + label { 
+  top: 0; 
+  font-size: 12px; 
+  color: #8A2BE2; 
+  font-weight: 600; 
+}
+.form-group input:focus { 
+  outline: none; 
+  border: 2px solid #8A2BE2; 
+}
+.password-wrapper .toggle-password { 
+  position: absolute; 
+  top: 50%; 
+  right: 15px; 
+  transform: translateY(-50%); 
+  cursor: pointer; 
+  color: #8E06C2; 
+  display: none; 
 }
 
-/* Input del buscador */
-.buscador input {
-  border: 1px solid #ccc;
-  padding: 6px 10px;
-  width: 100%;
-  background: #f5f5f5;
-  border-radius: 5px 0 0 5px;
+/* Estilos para TODOS los botones */
+.btn-primary, .btn-secondary, .btn-vendedor {
+    width: 100%; padding: 14px; border-radius: 5px; font-size: 16px; font-weight: bold;
+    cursor: pointer; text-decoration: none; display: flex; justify-content: center;
+    align-items: center; box-sizing: border-box; margin-top: 15px; gap: 10px;
+    transition: all 0.2s ease;
 }
 
-/* Botón del buscador */
-.buscador button {
-  padding: 6px 10px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  background: #f5f5f5;
-  border-radius: 0 5px 5px 0;
-  position: relative;
-  right: 1px;
+.btn-primary { 
+  background-color: #8E06C2; 
+  color: white; 
+  border: none; 
+  transition: all 0.3s ease;
 }
 
-/* Íconos como favoritos y carrito */
-.icon-btn {
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
+.btn-primary:hover {
+  background-color: #5e0482;
+  transform: scale(1.05);
 }
 
-/* Botón de iniciar sesión */
-.login-btn {
-  text-decoration: none;
-  font-weight: 500;
-  color: #121212;
+.btn-vendedor { 
+  background-color: transparent; 
+  color: #8E06C2; 
+  border: 1px solid #8E06C2;
+  transition: all 0.3s ease;
 }
 
-/* Estilos responsive para laptops */
-@media (max-width: 1024px) {
-  .header-main {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .hamburger {
-    display: block;
-  }
-
-  .nav-links {
-    display: none;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 15px;
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .nav-links.active {
-    display: flex;
-  }
-
-  .icons {
-    flex-wrap: nowrap;
-    overflow: auto;
-    justify-content: center;
-    width: 100%;
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  .buscador {
-    width: 100%;
-    max-width: 260px;
-    justify-content: center;
-  }
-
-  .logo-menu {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-  }
+.btn-vendedor:hover { 
+  background-color: #8E06C2;
+  color: #FEFEFE;
+  transform: scale(1.05);
 }
 
-/* Estilos responsive para móviles */
-@media (max-width: 600px) {
-  .header-main {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .logo-menu {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-  }
-
-  .nav-links {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .nav-links.active {
-    display: flex;
-  }
-
-  .icons {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-  }
-
-  .buscador {
-    flex: 1 1 100px;
-    max-width: 160px;
-    justify-content: center;
-  }
-
-  .icon-btn,
-  .login-btn {
-    flex-shrink: 0;
-  }
-
-  .login-btn {
-    margin-top: 0;
-  }
+.btn-secondary { 
+  background-color: #121212; 
+  color: #FEFEFE; 
+  border: 1px solid #121212;
+  transition: all 0.3s ease;
 }
 
-/* Sign up */
-.sign-up {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 60px;
-  padding: 40px;
-  flex-wrap: wrap;
+.btn-secondary:hover {
+  transform: scale(1.05);
 }
 
-.img-sign-up img {
-  width: 100%;
-  max-width: 700px;
-  border-radius: 8px;
-  align-items: center;
+.btn-secondary i { 
+  margin-left: 10px; 
 }
 
-.form-sign-up {
-  max-width: 400px;
-  width: 100%;
+.divider { 
+  display: flex; 
+  align-items: center; 
+  text-align: center; 
+  color: #aaa; 
+  margin: 25px 0; }
+.divider::before, .divider::after { 
+  content: ''; 
+  flex: 1; 
+  border-bottom: 1px solid #ccc; 
 }
-
-.sign-up h2 {
-  font-family: 'Inter', sans-serif;
-  font-size: 32px;
-  margin-bottom: 10px;
-}
-
-.sign-up h3 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 18px;
-  margin-bottom: 20px;
-  color: #777;
-}
-
-.form-sign-up input {
-  font-family: 'Poppins', sans-serif;
-  font-size: 16px;
-  width: 100%;
-  border: none;
-  border-bottom: 1px solid #898989;
-  padding: 10px;
-  margin-bottom: 20px;
-  background: transparent;
-}
-
-.form-sign-up i {
-  display: none;
-}
-
-/* Estilos para TODOS los botones dentro del formulario */
-.buttoncreate button,
-.button-google button,
-.btn-vendedor {
-  font-family: 'Poppins', sans-serif;
-  font-size: 18px;
-  width: 100%;
-  height: 50px;
-  border-radius: 7px;
-  border: none;
-  margin-bottom: 15px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-/* Estilos específicos para cada botón */
-.buttoncreate button {
-  background-color: #700B97;
-  color: white;
-}
-
-.buttoncreate button:hover {
-  transition: 0.3s ease;
-  transform: scale(1.1);
-}
-
-/* === REGLAS CORREGIDAS Y MÁS ESPECÍFICAS === */
-.btn-vendedor {
-  background-color: #121212;
-  color: #fefefe;
-  border: 1px solid #ccc;
-  font-weight: 300;
-}
-
-.btn-vendedor:hover {
-  transition: 0.3s ease;
-  transform: scale(1.1);
-}
-
-.btn-vendedor img {
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
-}
-
-.divider {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  color: #121212;
-  margin: 25px 0;
-}
-.divider::before, .divider::after {
-  content: '';
-  flex: 1;
-  border-bottom: 1px solid #121212;
-}
-.divider span {
-  padding: 0 10px;
-}
-
-.form-sign-up a:not(.btn-vendedor) {
-  font-family: 'Poppins', sans-serif;
-  font-size: 14px;
-  color: #8E06C2;
-  font-weight: bold;
-  display: block;
-  text-align: center;
-  text-decoration: none;
-}
-
-/* Responsive para móviles */
-@media screen and (max-width: 768px) {
-  .sign-up {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .img-sign-up img {
-    width: 100%;
-  }
-
-  .form-sign-up {
-    max-width: 100%;
-    padding: 0 20px;
-  }
-}
-
-
-/* footer*/
-
-footer,
-.footer-contact {
-  margin-top: 0;
-  padding: 40px 20px;
-  font-family: 'Poppins', sans-serif;
-  background-color: #121212;
-  color: white;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  gap: 20px;
-}
-
-.footer-section {
-  flex: 1 1 200px;
-  max-width: 250px;
-  padding: 20px;
-  background-color: #121212;
-}
-
-.footer-section h3 {
-  margin-bottom: 10px;
-}
-
-.footer-section ul {
-  list-style: none;
-  padding: 0;
-}
-
-.footer-section ul li {
-  margin-bottom: 10px;
-}
-
-.footer-section a {
-  text-decoration: none;
-  color: #f1f1f1;
-}
-
-.footer-section a:hover {
-  text-decoration: underline;
-}
-
-/* Logo */
-.footer-logo {
-  max-width: 150px;
-  height: auto;
-  display: block;
-  margin: 0 auto 10px auto;
-}
-
-/* Íconos sociales */
-.social-icons {
-  display: flex;
-  gap: 10px;
-}
-
-.social-icons li {
-  list-style: none;
-}
-
-.social-icons img {
-  width: 28px;
-  height: 28px;
-  background: white;
-  border-radius: 50%;
-  padding: 5px;
+.divider span { 
+  padding: 0 10px; 
 }
 
 /* Responsive */
-@media (max-width: 768px) {
-  .footer-contact {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+@media (max-width: 1024px) {
+  .container, .container.reverse { 
+    flex-direction: column; 
+    height: auto; 
   }
-
-  .footer-section {
-    max-width: 100%;
+  .image-column { 
+    display: none; 
   }
-
-  .social-icons {
-    justify-content: center;
+  .form-column { 
+    width: 100%; 
+    max-width: 600px; 
+    margin: 0 auto; 
+    padding: 40px 25px; 
   }
 }
