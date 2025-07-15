@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-07-2025 a las 03:56:04
+-- Tiempo de generación: 15-07-2025 a las 23:12:13
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -48,7 +48,7 @@ CREATE TABLE `carrito` (
 --
 
 INSERT INTO `carrito` (`id_carrito`, `id_cliente`, `fecha_creacion`) VALUES
-(1, 48, '2025-07-10 03:11:53');
+(1, 48, '2025-07-15 10:25:04');
 
 -- --------------------------------------------------------
 
@@ -115,7 +115,13 @@ INSERT INTO `detalle_pedido` (`id_detalle`, `id_pedido`, `id_producto`, `cantida
 (2, 4, 12, 1, 200000.00),
 (3, 4, 11, 1, 10000.00),
 (4, 4, 15, 3, 23456789.00),
-(5, 5, 15, 1, 23456789.00);
+(5, 5, 15, 1, 23456789.00),
+(6, 6, 15, 1, 23456789.00),
+(7, 7, 15, 1, 23456789.00),
+(8, 8, 13, 2, 100000.00),
+(9, 8, 16, 2, 2000000.00),
+(10, 8, 15, 2, 23456789.00),
+(11, 8, 14, 1, 10000.00);
 
 -- --------------------------------------------------------
 
@@ -165,7 +171,24 @@ CREATE TABLE `pedido` (
 
 INSERT INTO `pedido` (`id_pedido`, `id_cliente`, `id_vendedor`, `fecha`, `estado`) VALUES
 (4, 48, 6, '2025-07-14', 'pendiente'),
-(5, 48, 6, '2025-07-14', 'pendiente');
+(5, 48, 6, '2025-07-14', 'pendiente'),
+(6, 48, 6, '2025-07-15', 'pendiente'),
+(7, 48, 6, '2025-07-15', 'pendiente'),
+(8, 48, 6, '2025-07-15', 'pendiente');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pedidos`
+--
+
+CREATE TABLE `pedidos` (
+  `id_pedido` int(11) NOT NULL,
+  `id_cliente` int(11) NOT NULL,
+  `fecha` datetime NOT NULL DEFAULT current_timestamp(),
+  `total` decimal(10,2) NOT NULL,
+  `estado_pago` varchar(50) NOT NULL DEFAULT 'Pagado'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -191,9 +214,10 @@ CREATE TABLE `producto` (
 INSERT INTO `producto` (`id_producto`, `nombre_producto`, `descripcion`, `precio`, `stock`, `categoria`, `id_vendedor`, `ruta_imagen`) VALUES
 (11, 'Comida Animal', 'Comida', 10000.00, 200, 'Otra', 6, 'prod_686de925a2795.png'),
 (12, 'Zapatos', 'OK', 200000.00, 200, 'Deporte', 6, 'prod_686f0e31509ed.png'),
-(13, 'Monitor', 'Monitor', 100000.00, 20, 'Videojuegos', 6, 'prod_686f53accdc0e.png'),
-(14, 'Curology', 'Curology', 10000.00, 13, 'Otro', 6, 'prod_687006e76b79f.png'),
-(15, 'Bolso Gucci', 'Bolso', 23456789.00, 121, 'Ropa Femenina', 6, 'prod_6870070bcfaed.png');
+(13, 'Monitor', 'Monitor', 100000.00, 18, 'Videojuegos', 6, 'prod_686f53accdc0e.png'),
+(14, 'Curology', 'Curology', 10000.00, 12, 'Otro', 6, 'prod_687006e76b79f.png'),
+(15, 'Bolso Gucci', 'Bolso', 23456789.00, 117, 'Ropa Femenina', 6, 'prod_6870070bcfaed.png'),
+(16, 'GTA VI', 'JUegazo', 2000000.00, 0, 'Videojuegos', 6, 'prod_68767b14395a0.webp');
 
 -- --------------------------------------------------------
 
@@ -350,6 +374,13 @@ ALTER TABLE `pedido`
   ADD KEY `id_vendedor` (`id_vendedor`);
 
 --
+-- Indices de la tabla `pedidos`
+--
+ALTER TABLE `pedidos`
+  ADD PRIMARY KEY (`id_pedido`),
+  ADD KEY `id_cliente` (`id_cliente`);
+
+--
 -- Indices de la tabla `producto`
 --
 ALTER TABLE `producto`
@@ -398,7 +429,7 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `detalle_pedido`
 --
 ALTER TABLE `detalle_pedido`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `envio`
@@ -416,13 +447,19 @@ ALTER TABLE `pago`
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT de la tabla `pedidos`
+--
+ALTER TABLE `pedidos`
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `producto_carrito`
@@ -483,6 +520,12 @@ ALTER TABLE `pago`
 ALTER TABLE `pedido`
   ADD CONSTRAINT `pedido_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`),
   ADD CONSTRAINT `pedido_ibfk_2` FOREIGN KEY (`id_vendedor`) REFERENCES `vendedor` (`id_vendedor`);
+
+--
+-- Filtros para la tabla `pedidos`
+--
+ALTER TABLE `pedidos`
+  ADD CONSTRAINT `pedidos_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `producto`
