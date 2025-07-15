@@ -83,7 +83,7 @@ $resultado_productos = $stmt->get_result();
         <button><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
       <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
-      <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
+      <a href="../views/user/cart/carrito.php"><button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button></a>
       <a href="../views/auth/login.php" class="login-btn">Iniciar Sesión</a>
     </div>
   </div>

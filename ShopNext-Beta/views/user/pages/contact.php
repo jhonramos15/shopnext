@@ -17,65 +17,56 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
     <title>ShopNext | Inicio</title>
 </head>
 <body>
-  
-  <!-- Alerta Descuento -->
-  <header>
-    <div id="header-black">
-      <p>Rebajas de Verano en Todos los Trajes de Baño y Envío Exprés Gratuito: ¡50 % de Descuento!</p>
-      <h2>¡Compra Ahora!</h2>
-      <select id="languages">
-        <option value="Español:">Español:</option>
-        <option value="English">English</option>
-      </select>
+<header>
+  <!-- Header Negro -->
+  <div class="header-top">
+    <p>Rebajas de Verano: ¡50 % de Descuento!</p>
+    <h2>¡Compra Ahora!</h2>
+    <select>
+      <option value="es">Español</option>
+      <option value="en">English</option>
+    </select>
+  </div>
+
+  <!-- Header Principal -->
+  <div class="header-main">
+    <!-- Logo Principal -->
+    <div class="logo-menu">
+      <div class="logo">
+        <a href="../../../public/index.php"><img src="../../../public/img/logo.svg" alt="ShopNext"></a>
+      </div>
+      <!-- Menú Hamburguesa -->
+      <button class="hamburger" onclick="toggleMenu()">
+        <i class="fa-solid fa-bars"></i>
+      </button>
     </div>
 
-      <!-- Header Principal -->
-      <div id="header-principal">
-        <a href="../indexUser.php">
-          <img src="../../../public/img/logo.png" alt="Logo ShopNext">
-        </a>
-        <div id="nav">
-          <a href="../indexUser.php">Inicio</a>
-          <a href="#">Productos</a>
-          <a href="contact.php">Contacto</a>
-        </div>
+    <!-- Nav Menú -->
+    <nav class="nav-links" id="navMenu">
+      <a href="#">Productos</a>
+      <a href="../pages/contact.php">Contacto</a>
+    </nav>
 
-      <!-- Contenedor de íconos a la derecha -->
-      <div class="iconos-derecha">
-        <!-- Contenedor de la barra de búsqueda -->
-        <div class="buscador">
-          <input type="text" placeholder="¿Qué estás buscando?">
-          <button type="submit">
-            <i class="fa-solid fa-magnifying-glass" style="color: #121212;"></i>
-          </button>
-        </div>
-
-        <!-- Botón de Corazón -->
-          <div class="heart">
-            <button type="submit">
-              <i class="fa-solid fa-heart" style="color: #121212;"></i>
-            </button>
+    <!-- Buscador -->
+    <div class="icons">
+      <div class="buscador">
+        <input type="text" placeholder="¿Qué estás buscando?">
+        <button><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+      <!-- Favoritos -->
+      <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
+      <!-- Ícono de usuario -->
+        <div class="user-menu-container">
+          <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
+          <div class="dropdown-content" id="dropdownMenu">
+            <a href="../pages/account.php">Perfil</a>
+            <a href="#">Pedidos 🚧</a>
+            <a href="../../controllers/logout.php">Cerrar sesión</a>
           </div>
-
-        <!-- Botón de Carrito -->
-          <div class="cart">
-            <button type="submit">
-              <i class="fa-solid fa-cart-shopping" style="color: #121212;"></i>
-            </button>
-          </div>
-
-        <!-- Ícono de usuario -->
-          <div class="user-menu-container">
-            <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
-            <div class="dropdown-content" id="dropdownMenu">
-              <a href="../../pages/account.php">Perfil</a>
-              <a href="#">Pedidos 🚧</a>
-              <a href="../../../controllers/logout.php">Cerrar sesión</a>
-            </div>
-          </div>
+        </div>   
     </div>
-
-  </header>
+  </div>
+</header>
 
   
   <section class="main-section"></section>

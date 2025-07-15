@@ -75,7 +75,7 @@ section {
   display: block;
 }
 
-/* Botón del menú hamburguesa (móvil) */
+/* Botón del menú hamburguesa */
 .hamburger {
   display: none;
   font-size: 24px;
@@ -162,6 +162,39 @@ section {
   text-decoration: none;
   font-weight: 500;
   color: #121212;
+}
+
+/* Menú desplegable usuario */
+.user-menu-container {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background-color: white;
+  min-width: 150px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+  z-index: 1000;
+  border-radius: 8px;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.show {
+  display: block;
 }
 
 /* Estilos responsive para laptops */
@@ -261,6 +294,62 @@ section {
   .login-btn {
     margin-top: 0;
   }
+}
+
+/* --- Estilos para la Tabla de Pedidos --- */
+.table-section table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+.table-section th, .table-section td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.table-section th {
+    font-weight: 600;
+    color: #555;
+    font-size: 14px;
+}
+
+/* Estilo para la celda del producto con imagen y texto */
+.product-cell {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.product-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+/* Estilos para los badges de estado */
+.status {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+.status.paid { /* Asumiendo que 'Pagado' es un estado */
+    background-color: #e6f7ec;
+    color: #00b517;
+}
+/* ... (puedes añadir más estilos para otros estados) ... */
+
+.action-icons a {
+    color: #555;
+    margin-right: 10px;
+}
+.action-icons a:hover {
+    color: #8E06C2; /* Tu color principal */
 }
 
 /* footer*/

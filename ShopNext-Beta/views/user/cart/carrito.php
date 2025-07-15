@@ -1,7 +1,7 @@
 <?php
 // views/user/cart/carrito.php
 session_start();
-// ¡Guardián! Protegemos la página.
+// Guardian de rutas
 require_once __DIR__ . '/../../../controllers/authGuardCliente.php'; 
 
 // Conexión a la BD
@@ -80,10 +80,8 @@ if ($id_carrito > 0) {
 
     <!-- Nav Menú -->
     <nav class="nav-links" id="navMenu">
-      <a href="../../../public/index.php">Inicio</a>
-      <a href="../../auth/signUp.html">Regístrate</a>
-      <a href="../../pages/contact.html">Contacto</a>
-      <a href="../../pages/aboutUs.html">Acerca de</a>
+      <a href="#">Productos</a>
+      <a href="../pages/contact.php">Contacto</a>
     </nav>
 
     <!-- Buscador -->
@@ -94,8 +92,15 @@ if ($id_carrito > 0) {
       </div>
       <!-- Favoritos -->
       <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
-      <!-- Carrito -->
-      <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
+      <!-- Ícono de usuario -->
+        <div class="user-menu-container">
+          <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
+          <div class="dropdown-content" id="dropdownMenu">
+            <a href="../pages/account.php">Perfil</a>
+            <a href="#">Pedidos 🚧</a>
+            <a href="../../controllers/logout.php">Cerrar sesión</a>
+          </div>
+        </div>   
     </div>
   </div>
 </header>
@@ -196,6 +201,7 @@ if ($id_carrito > 0) {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../../../public/js/alertas.js"></script>
 <script src="../../../public/js/cart/carritoVista.js"></script>
+<script src="../../../public/js/dropdown.js"></script>
 
 </body>
 </html>

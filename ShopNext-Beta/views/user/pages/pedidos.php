@@ -1,32 +1,48 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../../controllers/authGuardCliente.php';
 
+// Usamos la ruta absoluta que ya confirmamos que funciona.
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shopnext/ShopNext-Beta/controllers/authGuardCliente.php';
+
+// Conexión a la BD
 $conexion = new mysqli("localhost", "root", "", "shopnexs");
-$id_usuario = $_SESSION['id_usuario'];
+if ($conexion->connect_error) { die("Conexión fallida: " . $conexion->connect_error); }
+
+// --- OBTENCIÓN SEGURA DEL ID DEL CLIENTE ---
+$id_usuario_session = $_SESSION['id_usuario'];
+$id_cliente = null; // Inicializamos como null por seguridad
+
 $stmt_cliente = $conexion->prepare("SELECT id_cliente FROM cliente WHERE id_usuario = ?");
-$stmt_cliente->bind_param("i", $id_usuario);
+$stmt_cliente->bind_param("i", $id_usuario_session);
 $stmt_cliente->execute();
-$id_cliente = $stmt_cliente->get_result()->fetch_assoc()['id_cliente'];
+$resultado_cliente = $stmt_cliente->get_result();
 
-// Consulta para obtener todos los pedidos del cliente
-$sql_pedidos = "SELECT 
-                    p.id_pedido, 
-                    p.fecha, 
-                    p.estado, 
-                    v.nombre as nombre_vendedor, 
-                    SUM(dp.cantidad * dp.precio_unitario) as total
-                FROM pedido p
-                JOIN vendedor v ON p.id_vendedor = v.id_vendedor
-                JOIN detalle_pedido dp ON p.id_pedido = dp.id_pedido
-                WHERE p.id_cliente = ?
-                GROUP BY p.id_pedido, v.nombre
-                ORDER BY p.fecha DESC";
+// ¡AQUÍ ESTÁ LA CORRECCIÓN CLAVE!
+// Solo continuamos si encontramos un perfil de cliente.
+if ($resultado_cliente->num_rows > 0) {
+    $cliente = $resultado_cliente->fetch_assoc();
+    $id_cliente = $cliente['id_cliente'];
+}
+$stmt_cliente->close();
 
-$stmt = $conexion->prepare($sql_pedidos);
-$stmt->bind_param("i", $id_cliente);
-$stmt->execute();
-$pedidos = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+// --- OBTENCIÓN DE PEDIDOS (SOLO SI TENEMOS UN CLIENTE) ---
+$resultado_pedidos = null; // Inicializamos la variable de pedidos
+
+if ($id_cliente !== null) {
+    $sql_pedidos = "SELECT 
+                        pe.id_pedido, 
+                        pe.fecha, 
+                        pe.total, 
+                        pe.estado_pago
+                    FROM pedidos pe
+                    WHERE pe.id_cliente = ?
+                    ORDER BY pe.fecha DESC";
+
+    $stmt_pedidos = $conexion->prepare($sql_pedidos);
+    $stmt_pedidos->bind_param("i", $id_cliente);
+    $stmt_pedidos->execute();
+    $resultado_pedidos = $stmt_pedidos->get_result();
+}
 ?>
 
 <!DOCTYPE html>
@@ -55,7 +71,7 @@ $pedidos = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <!-- Logo Principal -->
     <div class="logo-menu">
       <div class="logo">
-        <a href="../../public/index.php"><img src="../../public/img/logo.svg" alt="ShopNext"></a>
+        <a href="../../public/index.php"><img src="../../../public/img/logo.svg" alt="ShopNext"></a>
       </div>
       <!-- Menú Hamburguesa -->
       <button class="hamburger" onclick="toggleMenu()">
@@ -81,47 +97,85 @@ $pedidos = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
       <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
       <!-- Carrito -->
       <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
-      <!-- Iniciar Sesión -->
-      <a href="../auth/login.php" class="login-btn">Iniciar Sesión</a>
+      <!-- Ícono de usuario -->
+        <div class="user-menu-container">
+          <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
+          <div class="dropdown-content" id="dropdownMenu">
+            <a href="../pages/account.php">Perfil</a>
+            <a href="#">Pedidos 🚧</a>
+            <a href="../../controllers/logout.php">Cerrar sesión</a>
+          </div>
+        </div>    
     </div>
   </div>
 </header>
-    <div class="container">
-        <h1>Mis Pedidos</h1>
-        <?php if (isset($_GET['status']) && $_GET['status'] == 'compra_exitosa'): ?>
-            <div class="alerta-exito">¡Tu compra se ha realizado con éxito!</div>
-        <?php endif; ?>
+</section>
+    <div class="dashboard">
+        <aside class="sidebar">
+            </aside>
 
-        <?php if (count($pedidos) > 0): ?>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID Pedido</th>
-                        <th>Fecha</th>
-                        <th>Vendido por</th>
-                        <th>Total</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($pedidos as $pedido): ?>
+        <main class="main">
+            <header class="header">
+                <h1>Gestión de Pedidos</h1>
+                </header>
+
+            <section class="cards">
+
+
+            <section class="table-section">
+                <div class="table-header">
+                    <h2>Historial de Pedidos</h2>
+                    </div>
+                <table>
+                    <thead>
                         <tr>
-                            <td><?php echo htmlspecialchars($pedido['id_pedido']); ?></td>
-                            <td><?php echo htmlspecialchars($pedido['fecha']); ?></td>
-                            <td><?php echo htmlspecialchars($pedido['nombre_vendedor']); ?></td>
-                            <td>$<?php echo number_format($pedido['total']); ?></td>
-                            <td><?php echo htmlspecialchars(ucfirst($pedido['estado'])); ?></td>
+                            <th>Producto</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <p>Aún no has realizado ningún pedido.</p>
-        <?php endif; ?>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if ($resultado_pedidos && $resultado_pedidos->num_rows > 0) {
+                            while ($fila = $resultado_pedidos->fetch_assoc()) {
+                        ?>
+                                <tr>
+                                    <td class="product-cell">
+                                        <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>" class="product-image">
+                                        <span><?php echo htmlspecialchars($fila['nombre_producto']); ?></span>
+                                    </td>
+                                    <td><?php echo htmlspecialchars($fila['nombre_cliente']); ?></td>
+                                    <td><?php echo date("d/m/Y", strtotime($fila['fecha'])); ?></td>
+                                    <td>$<?php echo number_format($fila['total'], 0); ?></td>
+                                    <td>
+                                        <span class="status paid"><?php echo htmlspecialchars($fila['estado_pago']); ?></span>
+                                    </td>
+                                    <td class="table-actions">
+                                        <div class="action-icons">
+                                            <a href="#" class="action-icon" title="Ver Detalles"><i data-lucide="eye"></i></a>
+                                            <a href="#" class="action-icon" title="Imprimir Factura"><i data-lucide="printer"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                        <?php
+                            } // Fin del while
+                        } else {
+                            echo "<tr><td colspan='6' class='text-center'>Aún no tienes pedidos para tus productos.</td></tr>";
+                        }
+                        $stmt_pedidos->close();
+                        $conexion->close();
+                        ?>
+                    </tbody>
+                </table>
+                </section>
+        </main>
     </div>
     <footer class="footer-contact">
       <div class="footer-section">
-          <img src="../img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
+          <img src="../../../public/img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
       </div>
 
       <div class="footer-section">
@@ -146,11 +200,12 @@ $pedidos = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
           <h3>Contacto</h3>
           <ul>
               <li><a>Redes Sociales</a></li>
-              <img src="../img/Icon-Twitter.png" alt="Icon Twitter">
-              <img src="../img/icon-instagram.png" alt="Icon Instagram">
-              <img src="../img/Icon-Linkedin.png" alt="Icon LinkedIn">
+              <img src="../../../public/img/Icon-Twitter.png" alt="Icon Twitter">
+              <img src="../../../public/img/icon-instagram.png" alt="Icon Instagram">
+              <img src="../../../public/img/Icon-Linkedin.png" alt="Icon LinkedIn">
             </ul>
           </div>
     </footer>
+<script src="../../../public/js/dropdown.js"></script>
 </body>
 </html>
