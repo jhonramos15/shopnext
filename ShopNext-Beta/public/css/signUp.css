@@ -184,6 +184,19 @@ body, html {
   padding: 0 10px; 
 }
 
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+.form-row .form-group {
+    flex: 1; /* Hace que ambos campos ocupen el mismo espacio */
+}
+/* Estilo para el select, para que se vea bien */
+.form-group select {
+    width: 100%; padding: 14px 15px; border: 1px solid #dee2e6;
+    border-radius: 8px; font-size: 16px; background-color: white; color: #555;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .container, .container.reverse { 

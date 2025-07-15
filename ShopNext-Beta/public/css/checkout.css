@@ -1,0 +1,145 @@
+/* CSS General */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    gap: 40px;
+    width: 100%;
+    max-width: 1200px;
+    flex-wrap: wrap;
+}
+
+/* Columna Izquierda - Detalles de Facturación */
+.billing-details {
+    flex: 1.5;
+    min-width: 320px;
+}
+
+.billing-details h1 {
+    font-size: 26px;
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 8px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ced4da;
+    background-color: #fff;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #8E06C2;
+    box-shadow: 0 0 0 3px rgba(142, 6, 194, 0.15);
+}
+
+.save-info {
+    display: flex;
+    align-items: center;
+    margin-top: 25px;
+}
+
+.save-info input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    accent-color: #8E06C2;
+}
+
+/* Columna Derecha - Resumen del Pedido */
+.order-summary {
+    flex: 1;
+    min-width: 320px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.order-item .item-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.order-item img {
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.order-total {
+    border-top: 1px solid #e9ecef;
+    padding-top: 20px;
+    margin: 20px 0;
+}
+
+.order-total div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.order-total .total {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.payment-method { margin-top: 30px; }
+.payment-method div { margin-bottom: 15px; display: flex; align-items: center; }
+.payment-method input[type="radio"] { margin-right: 10px; accent-color: #8E06C2; }
+
+.coupon-section { display: flex; margin-top: 30px; gap: 10px; }
+.coupon-section input { flex-grow: 1; padding: 12px; border: 1px solid #ced4da; border-radius: 5px; font-size: 16px; }
+
+.apply-coupon-btn, .place-order-btn {
+    padding: 12px 25px;
+    background-color: #8E06C2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+.place-order-btn { width: 100%; margin-top: 25px; padding: 15px; }
+.apply-coupon-btn:hover, .place-order-btn:hover { background-color: #700B97; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container { flex-direction: column-reverse; gap: 30px; }
+    body { padding: 20px; }
+}

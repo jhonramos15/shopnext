@@ -1,9 +1,23 @@
 <?php
+// views/pages/account.php
 session_start();
-if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
-    header("Location: login.html");
-    exit;
-}
+require_once __DIR__ . '/../../controllers/authGuardCliente.php'; // Guardián de seguridad
+
+// Conexión y obtención de los datos actuales del cliente
+$conexion = new mysqli("localhost", "root", "", "shopnexs");
+$id_usuario_actual = $_SESSION['id_usuario'];
+
+$stmt = $conexion->prepare(
+    "SELECT u.correo_usuario, c.nombre, c.telefono, c.genero, c.fecha_nacimiento, c.foto_perfil 
+     FROM usuario u 
+     JOIN cliente c ON u.id_usuario = c.id_usuario 
+     WHERE u.id_usuario = ?"
+);
+$stmt->bind_param("i", $id_usuario_actual);
+$stmt->execute();
+$usuario = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+$conexion->close();
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +60,7 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
 
     <!-- Nav Menú -->
     <nav class="nav-links" id="navMenu">
-      <a href="indexUser.php">Inicio</a>
+      <a href="../user/indexUser.php">Inicio</a>
       <a href="../../views/auth/signUp.html">Regístrate</a>
       <a href="../../views/pages/contact.html">Contacto</a>
       <a href="../../views/pages/aboutUs.html">Acerca de</a>
@@ -65,7 +79,7 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
           <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
           <div class="dropdown-content" id="dropdownMenu">
             <a href="../pages/account.php">Perfil</a>
-            <a href="#">Pedidos 🚧</a>
+            <a href="../user/pages/pedidos.php">Pedidos</a>
             <a href="../../controllers/logout.php">Cerrar sesión</a>
           </div>
         </div>      
@@ -74,57 +88,83 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
 </header>
 </section>
 
-<section class="profile-container">
-  <div id="aAccount"><a href="../user/indexUser.php">Inicio / Mi Cuenta</a></div>
-  <form id="formEditarPerfil" class="profile-form" method="POST" action="../../controllers/actualizarPerfilCliente.php">
+    <main class="account-container">
+        <aside class="account-sidebar">
+            <div class="profile-picture-container">
+                <img src="/shopnext/ShopNext-Beta/public/uploads/avatars/<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Foto de Perfil" id="profile-pic">
+            </div>
+            <ul>
+                <li class="active"><a href="#">Mi Cuenta</a></li>
+                <li><a href="#">Mis Pedidos</a></li>
+                <li><a href="#">Mis Reseñas</a></li>
+                <li><a href="../../controllers/logout.php" style="color: #DB4444;">Cerrar Sesión</a></li>
+            </ul>
+        </aside>
+
+        <section class="account-content">
+<form id="profile-form" action="/shopnext/ShopNext-Beta/controllers/updatePerfil.php" method="POST" enctype="multipart/form-data">
     <h2>Editar Perfil</h2>
-
-    <div class="form-group">
-      <input type="text" placeholder="Tu Nombre" id="nombre" name="nombre">
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" disabled>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="correo" value="<?php echo htmlspecialchars($usuario['correo_usuario']); ?>" disabled>
+        </div>
     </div>
 
-    <div class="form-group">
-      <input type="email" placeholder="Correo Electrónico" id="email" name="email">
+    <div class="form-row">
+        <div class="form-group">
+            <label for="telefono">Teléfono</label>
+            <input type="tel" id="telefono" name="telefono" value="<?php echo htmlspecialchars($usuario['telefono']); ?>" disabled>
+        </div>
+        <div class="form-group">
+            <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+            <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php echo htmlspecialchars($usuario['fecha_nacimiento']); ?>" disabled>
+        </div>
     </div>
-
-    <div class="form-group">
-      <input type="text" placeholder="Dirección" id="address" name="address">
+    <div class="form-row">
+         <div class="form-group">
+            <label for="genero">Género</label>
+            <select id="genero" name="genero" disabled>
+                </select>
+        </div>
+        <div class="form-group">
+            <label for="profile-pic-upload">Foto de Perfil</label>
+            <input type="file" id="profile-pic-upload" name="foto_perfil" accept="image/*" disabled>
+        </div>
     </div>
-
-    <h3>Cambiar Contraseña</h3>
-
-    <div class="form-group">
-      <input type="password" placeholder="Contraseña Actual" name="old_password">
+    
+    <div class="password-section">
+        <h3>Cambiar Contraseña</h3>
+        <div class="form-row">
+            <div class="form-group">
+                <input type="password" id="current_password" name="current_password" placeholder="Contraseña Actual" disabled>
+            </div>
+            <div class="form-group">
+                <input type="password" id="new_password" name="new_password" placeholder="Nueva Contraseña" disabled>
+            </div>
+            <div class="form-group">
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirmar Contraseña" disabled>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-      <input type="password" placeholder="Nueva Contraseña" name="new_password">
+    
+    <div class="form-actions">
+        <button type="button" id="edit-profile-btn" class="btn-edit">Editar Perfil</button>
+        <button type="button" id="cancel-edit-btn" class="btn-cancel" style="display: none;">Cancelar</button>
+        <button type="submit" class="btn-save" style="display: none;">Guardar Cambios</button>
     </div>
-    <div class="form-group">
-      <input type="password" placeholder="Confirmar Nueva Contraseña" name="confirm_password">
-    </div>
-
-    <div class="button-group">
-      <a href="../user/indexUser.php" class="cancel-btn">Cancelar</a>
-      <button type="submit" class="save-btn">Guardar Cambios</button>
-    </div>
-
-    <div class="forgot-password">
-      <a href="../auth/forgotPassword.html">¿Olvidaste la Contraseña?</a>
-    </div>
-  </form>
-</section>
-
+</form>
+        </section>
+    </main>
 
         <footer>
       <div class="footer-section">
-        <img src="img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo"> <!-- Agregar el logo correspondiente-->
-      </div>
-  
-      <div class="send-message">
-        <input type="text" placeholder="Envía un correo">
-        <button type="submit">
-          <i class="fa-solid fa-paper-plane" style="color: #0c0c0c;"></i>
-        </button>
+        <img src="../../public/img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo"> <!-- Agregar el logo correspondiente-->
       </div>
     
       <div class="footer-section">
@@ -150,9 +190,9 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
         <ul>
           <li><a>Redes Sociales</a></li>
   
-          <img src="../img/Icon-Twitter.png" alt="Icon Twitter">
-          <img src="../img/icon-instagram.png" alt="Icon Instagram">
-          <img src="../img/Icon-Linkedin.png" alt="Icon LinkedIn">
+          <img src="../../public/img/Icon-Twitter.png" alt="Icon Twitter">
+          <img src="../../public/img/icon-instagram.png" alt="Icon Instagram">
+          <img src="../../public/img/Icon-Linkedin.png" alt="Icon LinkedIn">
         </ul>
       </div>
     </footer>

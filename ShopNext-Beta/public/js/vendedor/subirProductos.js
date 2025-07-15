@@ -41,4 +41,32 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    const uploadBox = document.querySelector('.image-upload-box');
+    const fileInput = document.getElementById('imagen');
+    const uploadText = uploadBox.querySelector('.upload-content p');
+
+    // 1. Cuando se hace clic en el área de subida, se activa el input oculto.
+    if (uploadBox) {
+        uploadBox.addEventListener('click', () => {
+            fileInput.click();
+        });
+    }
+
+    // 2. Cuando se selecciona un archivo, actualizamos el texto para mostrar el nombre.
+    if (fileInput) {
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                // Si se selecciona un archivo, muestra su nombre.
+                uploadText.innerHTML = `<span>Archivo seleccionado:</span> ${fileInput.files[0].name}`;
+            } else {
+                // Si se cancela la selección, vuelve al texto original.
+                uploadText.innerHTML = `<span>Seleccionar archivo</span> o arrástralo aquí.`;
+            }
+        });
+    }
+
+    // 3. Renderizar los íconos de Lucide (ya lo tenías, es correcto).
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
 });

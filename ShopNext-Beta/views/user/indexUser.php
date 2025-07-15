@@ -1,9 +1,27 @@
 <?php
 session_start();
-if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
-    header("Location: login.html");
-    exit;
+
+// Guardián para proteger la página
+require_once __DIR__ . '/../../controllers/authGuardCliente.php';
+
+// --- CONEXIÓN Y CONSULTA PARA MOSTRAR PRODUCTOS ---
+$conexion = new mysqli("localhost", "root", "", "shopnexs");
+if ($conexion->connect_error) {
+    die("Falló la conexión: " . $conexion->connect_error);
 }
+
+// Consulta para obtener los productos (la misma que usamos en el index principal)
+$sql_productos = "SELECT 
+                    p.id_producto, 
+                    p.nombre_producto, 
+                    p.precio, 
+                    p.ruta_imagen
+                  FROM producto p
+                  WHERE p.stock > 0
+                  ORDER BY p.id_producto DESC
+                  LIMIT 8";
+
+$resultado_productos = $conexion->query($sql_productos);
 ?>
 
 <!DOCTYPE html>
@@ -46,9 +64,8 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
     <!-- Nav Menú -->
     <nav class="nav-links" id="navMenu">
       <a href="indexUser.php">Inicio</a>
-      <a href="../../views/auth/signUp.html">Regístrate</a>
+      <a href="../../views/auth/signUp.html">Productos</a>
       <a href="../../views/pages/contact.html">Contacto</a>
-      <a href="../../views/pages/aboutUs.html">Acerca de</a>
     </nav>
 
     <!-- Buscador -->
@@ -58,7 +75,9 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
         <button><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
       <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
-      <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
+      <a href="/shopnext/ShopNext-Beta/views/user/cart/carrito.php" class="header-icon">
+        <i class="fa-solid fa-cart-shopping" style="color: #121212;"></i>
+      </a>
       <!-- Ícono de usuario -->
         <div class="user-menu-container">
           <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
@@ -89,11 +108,36 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
     <div class="swiper-slide">
       <img src="../../public/img/carousel/apple1.jpg" alt="Banner 3">
     </div>
-  </div>
 
-    <!-- Botones Swiper -->
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
+    <!-- Slide 4 -->
+    <div class="swiper-slide">
+      <img src="../../public/img/carousel/samsunggalaxynote8.jpg" alt="Banner 4">
+    </div>
+
+        <!-- Slide 5 -->
+    <div class="swiper-slide">
+      <img src="../../public/img/carousel/puma.jpg" alt="Banner 5">
+    </div>
+
+        <!-- Slide 6 -->    
+    <div class="swiper-slide">
+      <img src="../../public/img/carousel/chair_ikea.png" alt="Banner 6">
+    </div>
+
+        <!-- Slide 7 -->    
+    <div class="swiper-slide">
+      <img src="../../public/img/carousel/iphone16.jpg" alt="Banner 7">
+    </div>
+  
+        <!-- Slide 8 -->    
+    <div class="swiper-slide">
+      <img src="../../public/img/carousel/amd.jpg" alt="Banner 8">
+    </div>
+  </div>      
+
+  <!-- Botones Swiper -->
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
 
   <!-- Paginación -->
   <div class="swiper-pagination"></div>
@@ -103,159 +147,78 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
   <p class="etiqueta">Productos por Sección</p>
   <h2 class="titulo">Todas nuestras secciones</h2>
 
-  <div class="contenedor-categorias">
+<div class="contenedor-categorias">
     <div class="categoria">
-      <a href="../../views/pages/products/computersections.html"></a><i class="fa-solid fa-person-dress"></i></a>
+      <a href="../pages/products/category.php?name=Ropa Femenina"><i class="fa-solid fa-person-dress"></i></a>
       <p>Ropa Femenina</p>
     </div>
     <div class="categoria">
-      <a href="../../views/pages/products/computersections.html"></a><i class="fa-solid fa-person"></i></a>
+      <a href="../pages/products/category.php?name=Ropa Masculina"><i class="fa-solid fa-person"></i></a>
       <p>Ropa Masculina</p>
     </div>
     <div class="categoria">
-      <a href="../../views/pages/products/computersections.html"><i class="fa-solid fa-computer"></i></a>
+      <a href="../pages/products/category.php?name=Computadores"><i class="fa-solid fa-computer"></i></a>
       <p>Computadores</p>
     </div>
     <div class="categoria">
-      <a href="../../views/pages/products/computersections.html"></a><i class="fas fa-gamepad"></i></a>
+      <a href="../pages/products/category.php?name=Videojuegos"><i class="fas fa-gamepad"></i></a>
       <p>Videojuegos</p>
     </div>
     <div class="categoria">
-      <a href="../../views/pages/products/computersections.html"></a><i class="fa-solid fa-baseball-bat-ball"></i></a>
+      <a href="../pages/products/category.php?name=Deportes"><i class="fa-solid fa-baseball-bat-ball"></i></a>
       <p>Deportes</p>
     </div>
     <div class="categoria">
-      <a href="../../views/pages/products/homesections.html"></a><i class="fa-solid fa-star-of-life"></i></a>
+      <a href="../pages/products/category.php?name=Hogar & Belleza"><i class="fa-solid fa-star-of-life"></i></a>
       <p>Hogar & Belleza</p>
     </div>
     <div class="categoria">
-      <a href="../../views/pages/products/phonesections.html"></a><i class="fa-solid fa-mobile-button"></i></a>
+      <a href="../pages/products/category.php?name=Celulares"><i class="fa-solid fa-mobile-button"></i></a>
       <p>Celulares</p>
     </div>
     <div class="categoria">
-      <a href="../../views/pages/products/phonesections.html"></a><i class="fa-solid fa-border-all"></i></a>
+      <a href="#"><i class="fa-solid fa-border-all"></i></a>
       <p>Todos</p>
     </div>             
   </div>
 </section>
-<!-- Flash Sales (Ventas Relámpago) -->
-<section>
-  <div class="flash-sales">
-    <div class="flash-header">
-      <div class="title-container">
-        <h2><span class="flash">Ventas</span> <span class="sales">Relámpago</span></h2>
-        <div class="countdown" id="countdown">
-          <div><span id="days">00</span><span>:</span></div>
-          <div><span id="hours">00</span><span>:</span></div>
-          <div><span id="minutes">00</span><span>:</span></div>
-          <div><span id="seconds">00</span></div>
-        </div>
-      </div>
-      <!-- Botones de Flash Sales -->
-      <div class="scroll-controls">
-        <button class="scroll-btn" id="scrollLeftBtn">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="scroll-btn" id="scrollRightBtn">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-  <!-- Productos del Flash Sales -->
-  <div class="products-container">
-    <div class="products" id="products">
-      <div class="product">
-        <div class="discount">-40%</div>
-          <div class="product-icons">
-            <i class="fas fa-heart"></i>
-            <i class="fas fa-eye"></i>
-          </div>
-          <div class="product-image-wrapper">
-            <img src="../../public/img/flash-sales/asus .png" alt="Gamepad">
-            <button class="add-to-cart-btn">Añadir al carrito</button>
-          </div>
-          <p>Portatil ASUS A14</p>
-          <p class="price">$120 <span class="old-price">$160</span></p>
-          <p class="rating">★★★★★ (88)</p>
-      </div>
-      <div class="product">
-        <div class="discount">-35%</div>
-        <div class="product-icons">
-          <i class="fas fa-heart"></i>
-          <i class="fas fa-eye"></i>
-        </div>
-        <div class="product-image-wrapper">
-          <img src="../../public/img/flash-sales/keyboard.png" alt="AK-900 Keyboard">
-          <button class="add-to-cart-btn">Añadir al carrito</button>
-        </div>
-        <p>AK-900 Wired Keyboard</p>
-        <p class="price">$960 <span class="old-price">$1160</span></p>
-        <p class="rating">★★★★★ (75)</p>
-      </div>
-      <div class="product">
-        <div class="discount">-30%</div>
-        <div class="product-icons">
-          <i class="fas fa-heart"></i>
-          <i class="fas fa-eye"></i>
-        </div>
-        <div class="product-image-wrapper">
-          <img src="../../public/img/flash-sales/monitor.png" alt="IPS Monitor">
-          <button class="add-to-cart-btn">Añadir al carrito</button>
-        </div>
-        <p>IPS LCD Gaming Monitor</p>
-        <p class="price">$370 <span class="old-price">$400</span></p>
-        <p class="rating">★★★★★ (99)</p>
-      </div>
-      <div class="product">
-        <div class="discount">-40%</div>
-        <div class="product-icons">
-          <i class="fas fa-heart"></i>
-          <i class="fas fa-eye"></i>
-        </div>
-        <div class="product-image-wrapper">
-          <img src="../../public/img/flash-sales/chair.png" alt="Comfort Chair">
-          <button class="add-to-cart-btn">Añadir al carrito</button>
-        </div>
-        <p>S-Series Comfort Chair</p>
-        <p class="price">$375 <span class="old-price">$400</span></p>
-        <p class="rating">★★★★★ (99)</p>
-      </div>
-      <div class="product">
-        <div class="discount">-20%</div>
-        <div class="product-icons">
-          <i class="fas fa-heart"></i>
-          <i class="fas fa-eye"></i>
-        </div>
-        <div class="product-image-wrapper">
-          <img src="../../public/img/flash-sales/headset.png" alt="Gaming Headset">
-          <button class="add-to-cart-btn">Añadir al carrito</button>
-        </div>
-        <p>Gaming Headset X7</p>
-        <p class="price">$120 <span class="old-price">$150</span></p>
-        <p class="rating">★★★★☆ (64)</p>
-      </div>
-      <div class="product">
-        <div class="discount">-15%</div>
-          <div class="product-icons">
-            <i class="fas fa-heart"></i>
-            <i class="fas fa-eye"></i>
-          </div>
-          <div class="product-image-wrapper">
-            <img src="../../public/img/flash-sales/mouse.png" alt="Wireless Mouse">
-            <button class="add-to-cart-btn">Añadir al carrito</button>
-          </div>
-          <p>Wireless Mouse Pro</p>
-          <p class="price">$85 <span class="old-price">$100</span></p>
-          <p class="rating">★★★★★ (92)</p>
-      </div>
-    </div>
-  </div>
-  <!-- Botón de Ver Todo-->
-  <div class="view-all">
-    <button>Ver Todo</button>
-  </div>
-</section>
+    <main>
+        <section class="flash-sales">
+            <div class="title-container">
+                <h2><span class="flash">Flash</span> <span class="sales">Sales</span></h2>
+            </div>
+            <div class="products-container" id="products-container">
+                <div class="products" id="products">
+                    <?php
+                    if ($resultado_productos && $resultado_productos->num_rows > 0) {
+                        while ($fila = $resultado_productos->fetch_assoc()) {
+                    ?>
+              <div class="product">
+                <div class="product-image-wrapper">
+                  <a href="/shopnext/ShopNext-Beta/views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>">
+                    <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>">
+                  </a>
+                  <form class="add-to-cart-form">
+                    <input type="hidden" name="id_producto" value="<?php echo $fila['id_producto']; ?>">
+                    <button type="submit" class="add-to-cart-btn">Añadir al carrito</button>
+                  </form>
+                </div>
+                <a href="/shopnext/ShopNext-Beta/views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>" class="product-link">
+                  <p class="product-title"><?php echo htmlspecialchars($fila['nombre_producto']); ?></p>
+                </a>
+                <p class="price">$<?php echo number_format($fila['precio'], 0); ?></p>
+                <p class="rating">★★★★★ (75)</p>
+              </div>
+                    <?php
+                        }
+                    } else {
+                        echo "<p>No hay productos disponibles.</p>";
+                    }
+                    $conexion->close();
+                    ?>
+                </div> 
+            </div>
+      </section>
 <section></section>
     <!-- Secciones Destacadas -->
 <div class="categoria-seccion">
@@ -698,7 +661,13 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
 </footer>
 <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="../../public/js/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="../../public/js/alertas.js"></script>
 <script src="../../public/js/menuHamburguer.js"></script>
+<script src="../../public/js/cart/carrito.js"></script>
+<script src="../../public/js/dropdown.js"></script>
+<script src="../../public/js/index.js"></script> 
+<script src="../../public/js/carruselUser.js"></script> 
 </body>
 </html>

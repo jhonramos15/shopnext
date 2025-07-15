@@ -94,3 +94,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+    // --- Lógica para el menú desplegable del perfil ---
+    const userProfileBtn = document.getElementById('userProfileBtn');
+    const profileDropdownMenu = document.getElementById('profileDropdownMenu');
+    const userProfileContainer = document.querySelector('.user-profile-container');
+
+    if (userProfileBtn) {
+        userProfileBtn.addEventListener('click', function(event) {
+            event.stopPropagation();
+            profileDropdownMenu.classList.toggle('show');
+            userProfileContainer.classList.toggle('open');
+        });
+    }
+
+    window.addEventListener('click', function(event) {
+        if (profileDropdownMenu && profileDropdownMenu.classList.contains('show')) {
+            profileDropdownMenu.classList.remove('show');
+            userProfileContainer.classList.remove('open');
+        }
+    });
+
+    

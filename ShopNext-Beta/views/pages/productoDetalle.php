@@ -131,7 +131,7 @@ $conexion->close();
                         <input type="text" class="quantity-input" id="quantity" value="1" readonly>
                         <button class="quantity-btn" id="increase-qty">+</button>
                     </div>
-                    <a href="../views/auth/checkout.php?producto_id=<?php echo $producto['id_producto']; ?>" class="buy-btn">Comprar Ahora</a>
+                    <a href="../user/cart/carrito.php?producto_id=<?php echo $producto['id_producto']; ?>" class="buy-btn">Comprar Ahora</a>
                 </div>
                 <div class="delivery-info">
                     <div class="delivery-option">

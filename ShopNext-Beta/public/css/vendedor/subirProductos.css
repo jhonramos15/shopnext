@@ -87,9 +87,13 @@ body {
 /* --- PÁGINA: NUEVO PRODUCTO --- */
 .form-container {
     background-color: #fff;
-    padding: 25px 30px;
-    border-radius: 16px;
+    padding: 30px 40px;
+    border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.form-group {
+    margin-bottom: 22px;
 }
 
 .new-product-section {
@@ -98,10 +102,6 @@ body {
     gap: 40px;
 }
 
-.form-group {
-    /* >> VALOR INCREMENTADO SIGNIFICATIVAMENTE << */
-    margin-bottom: 55px; 
-}
 
 /* Se elimina el margen del último campo para que no cree espacio extra al final */
 .details-column .form-group:last-child {
@@ -126,17 +126,17 @@ body {
     margin-top: 6px;
 }
 
-.form-group input[type="text"],
-.form-group input[type="number"],
-.form-group textarea {
+.form-group input,
+.form-group textarea,
+.form-group select {
     width: 100%;
-    padding: 12px;
+    padding: 12px 15px;
     border: 1px solid #d1d5db;
     border-radius: 8px;
     font-size: 0.95em;
+    font-family: 'Inter', sans-serif;
     color: #111827;
     background-color: #ffffff;
-    box-sizing: border-box;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -144,10 +144,6 @@ input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
-}
-
-input[type=number] {
-    -moz-appearance: textfield;
 }
 
 .form-group input:focus,
@@ -192,6 +188,40 @@ input[type=number] {
     border-radius: 12px;
     padding: 15px;
     background-color: #fcfcfd;
+}
+
+/* Caja para subir imágenes */
+.image-upload-box {
+    border: 2px dashed #e5e7eb;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    background-color: #fcfcfd;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+.image-upload-box:hover {
+    border-color: #7f56d9;
+}
+.image-upload-box .upload-content i {
+    color: #7f56d9;
+    margin-bottom: 15px;
+}
+.image-upload-box .upload-content p {
+    font-size: 1em;
+    color: #4b5563;
+}
+.image-upload-box .upload-content p span {
+    font-weight: 600;
+    color: #7f56d9;
+}
+.image-upload-box .upload-content small {
+    color: #6b7280;
+    font-size: 0.8em;
+}
+.image-upload-box input[type="file"] {
+    /* Ocultamos el input de archivo por defecto */
+    display: none;
 }
 
 .image-preview-main {
@@ -248,14 +278,15 @@ input[type=number] {
     font-size: 0.95em;
     font-weight: 600;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     transition: background-color 0.2s ease, transform 0.2s ease;
 }
-
 .submit-button:hover {
     background-color: #6a49b6;
     transform: translateY(-2px);
 }
-
 /* --- RESPONSIVE --- */
 @media (max-width: 992px) {
     .new-product-section {
@@ -337,7 +368,6 @@ body { font-family: 'Inter', sans-serif; background: #f9fafb; color: #111827; li
 .form-hint, .category-add { font-size: 0.8em; color: #6b7280; margin-top: 6px; }
 .form-group input[type="text"], .form-group input[type="number"], .form-group textarea { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.95em; color: #111827; background-color: #ffffff; box-sizing: border-box; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
 input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-input[type=number] { -moz-appearance: textfield; }
 .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #7f56d9; box-shadow: 0 0 0 3px rgba(127, 86, 217, 0.15); }
 .input-icon { position: relative; display: flex; align-items: center; }
 .input-icon i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; pointer-events: none; }

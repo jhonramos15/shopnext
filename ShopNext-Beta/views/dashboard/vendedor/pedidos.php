@@ -1,31 +1,29 @@
 <?php
+// views/dashboard/vendedor/pedidos.php
 session_start();
+// Guardián de seguridad (similar al de otros archivos de vendedor)
 
-// Verificar si el usuario está logueado y tiene el rol correcto
-if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'vendedor') {
-    header("Location: ../auth/login.html");
-    exit;
-}
+$conexion = new mysqli("localhost", "root", "", "shopnexs");
+$id_usuario_session = $_SESSION['id_usuario'];
 
-// Tiempo máximo de inactividad (5 minutos)
-$inactividad = 300;
+// Obtener el id_vendedor del usuario actual
+$stmt_vendedor = $conexion->prepare("SELECT id_vendedor FROM vendedor WHERE id_usuario = ?");
+$stmt_vendedor->bind_param("i", $id_usuario_session);
+$stmt_vendedor->execute();
+$id_vendedor = $stmt_vendedor->get_result()->fetch_assoc()['id_vendedor'];
 
-// Verificar si existe el tiempo de última actividad
-if (isset($_SESSION['last_activity'])) {
-    $tiempo_inactivo = time() - $_SESSION['last_activity'];
+$sql_pedidos_vendedor = "SELECT p.id_pedido, p.fecha, p.estado, c.nombre as nombre_cliente, SUM(dp.cantidad * dp.precio_unitario) as total
+                         FROM pedido p
+                         JOIN cliente c ON p.id_cliente = c.id_cliente
+                         JOIN detalle_pedido dp ON p.id_pedido = dp.id_pedido
+                         WHERE p.id_vendedor = ?
+                         GROUP BY p.id_pedido
+                         ORDER BY p.fecha DESC";
 
-    if ($tiempo_inactivo > $inactividad) {
-        // Cierra la sesión si pasó el tiempo
-        session_unset();
-        session_destroy();
-        header("Location: ../auth/login.php?mensaje=sesion_expirada");
-        exit;
-    } else {
-        $_SESSION['last_activity'] = time(); // ✅ Refresca el tiempo de actividad
-    }
-} else {
-    $_SESSION['last_activity'] = time(); // ✅ Inicializa el tiempo de actividad si no existía
-}
+$stmt = $conexion->prepare($sql_pedidos_vendedor);
+$stmt->bind_param("i", $id_vendedor);
+$stmt->execute();
+$pedidos = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -123,91 +121,29 @@ if (isset($_SESSION['last_activity'])) {
             </div>
           </div>
         </div>
-        <table>
-          <thead>
+<table>
+    <tbody>
+        <?php foreach ($pedidos as $pedido): ?>
             <tr>
-              <th>ID Pedido</th>
-              <th>Cliente</th>
-              <th>Fecha</th>
-              <th>Total</th>
-              <th>Estado del Pago</th>
-              <th>Estado del Envío</th>
-              <th>Acciones</th>
+                <td><?php echo $pedido['id_pedido']; ?></td>
+                <td><?php echo $pedido['nombre_cliente']; ?></td>
+                <td>$<?php echo number_format($pedido['total']); ?></td>
+                <td>
+                    <form action="/shopnext/ShopNext-Beta/controllers/vendedor/actualizarPedido.php" method="POST">
+                        <input type="hidden" name="id_pedido" value="<?php echo $pedido['id_pedido']; ?>">
+                        <select name="estado">
+                            <option value="pendiente" <?php echo $pedido['estado'] == 'pendiente' ? 'selected' : ''; ?>>Pendiente</option>
+                            <option value="en curso" <?php echo $pedido['estado'] == 'en curso' ? 'selected' : ''; ?>>En Curso</option>
+                            <option value="finalizado" <?php echo $pedido['estado'] == 'finalizado' ? 'selected' : ''; ?>>Finalizado</option>
+                            <option value="cancelado" <?php echo $pedido['estado'] == 'cancelado' ? 'selected' : ''; ?>>Cancelado</option>
+                        </select>
+                        <button type="submit">Actualizar</button>
+                    </form>
+                </td>
             </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#8A342</td>
-              <td>Carlos Ramírez</td>
-              <td>2025-06-30</td>
-              <td>$1,289.99</td>
-              <td><span class="status paid">Pagado</span></td>
-              <td><span class="status delivered">Entregado</span></td>
-              <td>
-                <div class="action-icons">
-                    <a href="#" class="action-icon" title="Ver Detalles"><i data-lucide="eye"></i></a>
-                    <a href="#" class="action-icon" title="Imprimir Factura"><i data-lucide="printer"></i></a>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>#7B9F1</td>
-              <td>Ana Sofía Rojas</td>
-              <td>2025-06-29</td>
-              <td>$89.50</td>
-              <td><span class="status paid">Pagado</span></td>
-              <td><span class="status shipped">Enviado</span></td>
-               <td>
-                <div class="action-icons">
-                    <a href="#" class="action-icon" title="Ver Detalles"><i data-lucide="eye"></i></a>
-                    <a href="#" class="action-icon" title="Imprimir Factura"><i data-lucide="printer"></i></a>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>#6C5D8</td>
-              <td>Luisa Fernanda M.</td>
-              <td>2025-06-29</td>
-              <td>$275.00</td>
-              <td><span class="status pending">Pendiente</span></td>
-              <td><span class="status processing">En preparación</span></td>
-               <td>
-                <div class="action-icons">
-                    <a href="#" class="action-icon" title="Ver Detalles"><i data-lucide="eye"></i></a>
-                    <a href="#" class="action-icon" title="Imprimir Factura"><i data-lucide="printer"></i></a>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>#5E4A2</td>
-              <td>Jorge Mendoza</td>
-              <td>2025-06-28</td>
-              <td>$45.00</td>
-              <td><span class="status paid">Pagado</span></td>
-              <td><span class="status delivered">Entregado</span></td>
-               <td>
-                <div class="action-icons">
-                    <a href="#" class="action-icon" title="Ver Detalles"><i data-lucide="eye"></i></a>
-                    <a href="#" class="action-icon" title="Imprimir Factura"><i data-lucide="printer"></i></a>
-                </div>
-              </td>
-            </tr>
-             <tr>
-              <td>#4D1B7</td>
-              <td>Mariana Paredes</td>
-              <td>2025-06-27</td>
-              <td>$550.00</td>
-              <td><span class="status paid">Pagado</span></td>
-              <td><span class="status cancelled">Cancelado</span></td>
-               <td>
-                <div class="action-icons">
-                    <a href="#" class="action-icon" title="Ver Detalles"><i data-lucide="eye"></i></a>
-                    <a href="#" class="action-icon" title="Imprimir Factura"><i data-lucide="printer"></i></a>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <?php endforeach; ?>
+    </tbody>
+</table>
         <div class="pagination-controls">
             <div class="data-count">
                 Mostrando <span>1</span> a <span>5</span> de <span>1,287</span> pedidos

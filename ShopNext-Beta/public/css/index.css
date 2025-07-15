@@ -967,6 +967,11 @@ a.product-link {
     color: inherit;
 }
 
+.product-link {
+    text-decoration: none;
+    color: inherit;
+}
+
 .arrow-btn:hover {
   background: #8000ff;
   color: white;

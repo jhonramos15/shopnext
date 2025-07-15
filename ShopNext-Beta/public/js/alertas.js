@@ -26,6 +26,9 @@ const mensajes = {
     datos_invalidos: ['error', 'Datos inválidos', 'Nombre o dirección muy cortos'],
     pass_incorrecta: ['error', 'Contraseña incorrecta', 'La contraseña actual no coincide'],
     pass_no_coincide: ['error', 'Error', 'Las nuevas contraseñas no coinciden'],
+    campos_vacios_perfil: ['warning', 'Campos Incompletos', 'Por favor, asegúrate de llenar todos los campos principales.'],
+    pass_igual_actual: ['info', 'Contraseña Idéntica', 'La nueva contraseña no puede ser igual a la actual.'],
+    pass_campos_incompletos: ['warning', 'Campos de Contraseña Incompletos', 'Para cambiar tu contraseña, debes rellenar los tres campos.'],
 
     // Olvidé contraseña
     correo_enviado: ['success', 'Correo enviado', 'Revisa tu bandeja de entrada.'],
@@ -43,8 +46,12 @@ const mensajes = {
     verificado_ok: ['success', '¡Cuenta Verificada!', 'Tu cuenta ha sido verificada. ya puedes iniciar sesión.'],
     token_invalido: ['error', 'Error', 'El enlace de verificación no es válido o ya ha expirado.'],
     no_verificado: ['warning', 'Cuenta no verificada', 'Revisa tu correo y completa la verificación para poder entrar.'],
-    update_failed: ['error', 'Error del Servidor', 'No pudimos actualizar tu estado. Por favor, intenta de nuevo.']
-    
+    update_failed: ['error', 'Error del Servidor', 'No pudimos actualizar tu estado. Por favor, intenta de nuevo.'],
+
+    // Carrito
+    login_required: ['info', 'Inicia Sesión', 'Necesitas iniciar sesión como cliente para poder comprar.'],
+    added_to_cart: ['success', '¡Producto Añadido!', 'El producto ha sido añadido a tu carrito de compras.']
+
   };
 
   const key = status || error;

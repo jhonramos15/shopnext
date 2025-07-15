@@ -19,15 +19,19 @@ if ($conexion->connect_error) {
     exit;
 }
 
-// 1. Recopilación de datos del formulario
+// 1. Recopilación de TODOS los datos del formulario
 $nombre = trim($_POST['nombre'] ?? '');
+$telefono = trim($_POST['telefono'] ?? '');
+$direccion = trim($_POST['direccion'] ?? '');
+$genero = $_POST['genero'] ?? '';
+$fecha_nacimiento = $_POST['fecha_nacimiento'] ?? '';
 $correo = trim($_POST['correo'] ?? '');
 $clave = $_POST['clave'] ?? '';
-$tipo = $_POST['tipo'] ?? 'cliente';
+$tipo = 'cliente';
 $fecha_registro = date('Y-m-d');
 
-// 2. Validación de campos
-if (empty($nombre) || empty($correo) || empty($clave)) {
+// 2. Validación más completa
+if (empty($nombre) || empty($correo) || empty($clave) || empty($telefono) || empty($direccion)) {
     header("Location: /ShopNext/ShopNext-Beta/views/auth/signUp.html?error=vacio");
     exit;
 }
@@ -62,18 +66,31 @@ if (!$stmt_usuario->execute()) {
 $id_usuario = $conexion->insert_id;
 $stmt_usuario->close();
 
-// 5. Insertar en la tabla de perfil correspondiente (ej. cliente)
-if ($tipo === "cliente") {
-    $stmt_perfil = $conexion->prepare("INSERT INTO cliente (nombre, id_usuario) VALUES (?, ?)");
-    $stmt_perfil->bind_param("si", $nombre, $id_usuario);
-    $stmt_perfil->execute();
-    $stmt_perfil->close();
+// 5. Insertar en la tabla `cliente` con TODOS los datos
+$stmt_cliente = $conexion->prepare("INSERT INTO cliente (nombre, direccion, telefono, genero, fecha_nacimiento, id_usuario) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt_cliente->bind_param("sssssi", $nombre, $direccion, $telefono, $genero, $fecha_nacimiento, $id_usuario);
+
+if (!$stmt_cliente->execute()) {
+    header("Location: /ShopNext/ShopNext-Beta/views/auth/signUp.html?error=registro_cliente");
+    exit;
 }
-// Aquí puedes añadir la lógica para 'vendedor' si es necesario
+$stmt_cliente->close();
+
 
 // 6. Enviar el correo de verificación
 $mail = new PHPMailer(true);
-$enlace_verificacion = "http://localhost/shopnext/ShopNext-Beta/controllers/verificarEmail.php?token=" . $token_verificacion;
+// 1. Determinar el protocolo (http o https)
+$protocolo = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
+
+// 2. Obtener el nombre del host (ej: localhost o www.tusitio.com)
+$host = $_SERVER['SERVER_ADDR']; 
+
+// 3. Construir la ruta base del proyecto dinámicamente
+// dirname($_SERVER['PHP_SELF'], 2) sube dos niveles desde /controllers/ para llegar a la raíz del proyecto
+$ruta_base = dirname($_SERVER['PHP_SELF'], 2);
+
+// 4. Crear el enlace de verificación completo y dinámico
+$enlace_verificacion = "{$protocolo}://{$host}{$ruta_base}/controllers/verificarEmail.php?token={$token_verificacion}";
 
 try {
     $mail->isSMTP();

@@ -12,12 +12,10 @@ $_SESSION['last_activity'] = time();
 $conexion = new mysqli("localhost", "root", "", "shopnexs");
 if ($conexion->connect_error) { die("Conexión fallida: " . $conexion->connect_error); }
 
-// --- Consultas para las Tarjetas de Estadísticas (Globales) ---
 $total_productos = $conexion->query("SELECT COUNT(*) as total FROM producto")->fetch_assoc()['total'];
 $valor_inventario = $conexion->query("SELECT SUM(precio * stock) as valor_total FROM producto")->fetch_assoc()['valor_total'];
 $productos_agotados = $conexion->query("SELECT COUNT(*) as agotados FROM producto WHERE stock = 0")->fetch_assoc()['agotados'];
 
-// --- Consulta para la Tabla (Uniendo productos y vendedores) ---
 $sql_productos = "SELECT 
                     p.id_producto, p.nombre_producto, p.precio, p.categoria, p.stock,
                     v.nombre AS nombre_vendedor
@@ -132,21 +130,17 @@ $resultado_productos = $conexion->query($sql_productos);
                                     <td><?php echo htmlspecialchars($fila['categoria']); ?></td>
                                     <td><?php echo htmlspecialchars($fila['stock']); ?></td>
                                     <td>$<?php echo number_format($fila['precio'], 2); ?></td>
-                                    <td>
-                                        <span class="status <?php echo $estado_clase; ?>">
-                                            <?php echo $estado_texto; ?>
-                                        </span>
-                                    </td>
+                                    <td><span class="status <?php echo $estado_clase; ?>"><?php echo $estado_texto; ?></span></td>
                                     <td class="table-actions">
                                         <a href="#" class="action-icon" title="Ver"><i data-lucide="eye"></i></a>
                                         <a href="#" class="action-icon" title="Editar"><i data-lucide="edit-2"></i></a>
-                                        <a href="#" class="action-icon" title="Eliminar"><i data-lucide="trash-2"></i></a>
+                                        <a href="#" class="action-icon delete-btn" title="Eliminar"><i data-lucide="trash-2"></i></a>
                                     </td>
                                 </tr>
                         <?php
                             }
                         } else {
-                            echo "<tr><td colspan='7' class='text-center'>No hay productos registrados en la tienda.</td></tr>";
+                            echo "<tr><td colspan='7' class='text-center'>No hay productos registrados.</td></tr>";
                         }
                         $conexion->close();
                         ?>
@@ -156,7 +150,9 @@ $resultado_productos = $conexion->query($sql_productos);
         </main>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>lucide.createIcons();</script>
+    <script src="../../../public/js/admin/main.js"></script>
     <script src="../../../public/js/admin/productos.js"></script>
 </body>
 </html>

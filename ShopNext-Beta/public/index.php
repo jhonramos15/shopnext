@@ -1,26 +1,36 @@
 <?php
 // public/index.php
-
-// 1. Conexión a la base de datos
+session_start();
 $conexion = new mysqli("localhost", "root", "", "shopnexs");
-if ($conexion->connect_error) {
-    die("Falló la conexión: " . $conexion->connect_error);
+if ($conexion->connect_error) { die("Falló la conexión: " . $conexion->connect_error); }
+
+// 1. Obtener la categoría de la URL. Si no se especifica, por defecto es 'Todos'.
+$categoria_seleccionada = $_GET['categoria'] ?? 'Todos';
+
+// 2. Consulta SQL base (siempre se ejecuta)
+$sql_base = "SELECT p.id_producto, p.nombre_producto, p.precio, p.ruta_imagen
+             FROM producto p
+             WHERE p.stock > 0"; // Siempre mostramos solo productos con stock
+
+// 3. Añadir el filtro de categoría SOLO si no es 'Todos'
+$params = [];
+$types = '';
+if ($categoria_seleccionada !== 'Todos') {
+    $sql_base .= " AND p.categoria = ?";
+    $params[] = $categoria_seleccionada;
+    $types .= 's';
 }
 
-// 2. Consulta para obtener los productos (ahora funcionará)
-$sql_productos = "SELECT 
-                    p.id_producto, 
-                    p.nombre_producto, 
-                    p.precio, 
-                    p.ruta_imagen
-                  FROM producto p
-                  WHERE p.stock > 0 -- Mostramos solo productos con stock disponible
-                  ORDER BY p.id_producto DESC
-                  LIMIT 8";
+$sql_base .= " ORDER BY p.id_producto DESC";
 
-$resultado_productos = $conexion->query($sql_productos);
+$stmt = $conexion->prepare($sql_base);
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
+
+$stmt->execute();
+$resultado_productos = $stmt->get_result();
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -135,39 +145,40 @@ $resultado_productos = $conexion->query($sql_productos);
   <p class="etiqueta">Productos por Sección</p>
   <h2 class="titulo">Todas nuestras secciones</h2>
 
-  <div class="contenedor-categorias">
+<div class="contenedor-categorias">
     <div class="categoria">
-      <a href="../views/pages/products/computersections.html"></a><i class="fa-solid fa-person-dress"></i></a>
+      <a href="../views/pages/products/category.php?name=Ropa Femenina"><i class="fa-solid fa-person-dress"></i></a>
       <p>Ropa Femenina</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/computersections.html"></a><i class="fa-solid fa-person"></i></a>
+      <a href="../views/pages/products/category.php?name=Ropa Masculina"><i class="fa-solid fa-person"></i></a>
       <p>Ropa Masculina</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/computersections.html"><i class="fa-solid fa-computer"></i></a>
+      <a href="../views/pages/products/category.php?name=Computadores"><i class="fa-solid fa-computer"></i></a>
       <p>Computadores</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/computersections.html"></a><i class="fas fa-gamepad"></i></a>
+      <a href="../views/pages/products/category.php?name=Videojuegos"><i class="fas fa-gamepad"></i></a>
       <p>Videojuegos</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/computersections.html"></a><i class="fa-solid fa-baseball-bat-ball"></i></a>
+      <a href="../views/pages/products/category.php?name=Deportes"><i class="fa-solid fa-baseball-bat-ball"></i></a>
       <p>Deportes</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/homesections.html"></a><i class="fa-solid fa-star-of-life"></i></a>
+      <a href="../views/pages/products/category.php?name=Hogar & Belleza"><i class="fa-solid fa-star-of-life"></i></a>
       <p>Hogar & Belleza</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/phonesections.html"></a><i class="fa-solid fa-mobile-button"></i></a>
+      <a href="../views/pages/products/category.php?name=Celulares"><i class="fa-solid fa-mobile-button"></i></a>
       <p>Celulares</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/phonesections.html"></a><i class="fa-solid fa-border-all"></i></a>
-      <p>Todos</p>
+        <a href="views/pages/products/category.php"><i class="fa-solid fa-border-all"></i></a>
+        <p>Todos</p>
     </div>             
+  </div>        
   </div>
 </section>
 <!-- Flash Sales (Ventas Relámpago) -->
@@ -189,29 +200,30 @@ $resultado_productos = $conexion->query($sql_productos);
     </div>
   </div>
 
-<div class="products-container">
+  <div class="products-container" id="products-container">
     <div class="products" id="products">
         <?php
         if ($resultado_productos && $resultado_productos->num_rows > 0) {
             while ($fila = $resultado_productos->fetch_assoc()) {
         ?>
-            <a href="../views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>" class="product-link">
-                <div class="product">
-                    <div class="product-icons">
-                        <i class="fas fa-heart"></i>
-                        <i class="fas fa-eye"></i>
-                    </div>
-                    <div class="product-image-wrapper">
-                      <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>">
-                      <button class="add-to-cart-btn" data-id="<?php echo $fila['id_producto']; ?>">Añadir al carrito</button>
-                    </div>
-                    <p class="product-title"><?php echo htmlspecialchars($fila['nombre_producto']); ?></p>
-                    <p class="price">$<?php echo number_format($fila['precio'], 0); ?></p>
-                    <p class="rating">★★★★★ (75)</p>
+              <div class="product">
+                <div class="product-image-wrapper">
+                  <a href="../views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>">
+                    <img src="uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>">
+                  </a>
+                  <form class="add-to-cart-form">
+                    <input type="hidden" name="id_producto" value="<?php echo $fila['id_producto']; ?>">
+                    <button type="submit" class="add-to-cart-btn">Añadir al carrito</button>
+                  </form>
                 </div>
-              </a>
+                <a href="../views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>" class="product-link">
+                  <p class="product-title"><?php echo htmlspecialchars($fila['nombre_producto']); ?></p>
+                </a>
+                <p class="price">$<?php echo number_format($fila['precio'], 0); ?></p>
+                <p class="rating">★★★★★ (75)</p>
+              </div>
         <?php
-            } // Fin del bucle
+            }
         } else {
             echo "<p>No hay productos disponibles en este momento.</p>";
         }
@@ -662,6 +674,9 @@ $resultado_productos = $conexion->query($sql_productos);
 </footer>
 <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="js/alertas.js"></script> 
+<script src="js/cart/carrito.js"></script>
 <script src="js/index.js"></script>
 <script src="js/menuHamburguer.js"></script>
 </body>

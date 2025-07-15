@@ -1,31 +1,14 @@
 <?php
 session_start();
 
-// Verificar si el usuario está logueado y tiene el rol correcto
+// Guardián de seguridad
 if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'vendedor') {
-    header("Location: ../auth/login.html");
+    header("Location: ../../auth/login.php");
     exit;
 }
+$_SESSION['last_activity'] = time();
 
-// Tiempo máximo de inactividad (5 minutos)
-$inactividad = 300;
-
-// Verificar si existe el tiempo de última actividad
-if (isset($_SESSION['last_activity'])) {
-    $tiempo_inactivo = time() - $_SESSION['last_activity'];
-
-    if ($tiempo_inactivo > $inactividad) {
-        // Cierra la sesión si pasó el tiempo
-        session_unset();
-        session_destroy();
-        header("Location: ../auth/login.php?mensaje=sesion_expirada");
-        exit;
-    } else {
-        $_SESSION['last_activity'] = time(); // ✅ Refresca el tiempo de actividad
-    }
-} else {
-    $_SESSION['last_activity'] = time(); // ✅ Inicializa el tiempo de actividad si no existía
-}
+$nombre_vendedor = $_SESSION['nombre_vendedor'] ?? 'Vendedor';
 ?>
 
 <!DOCTYPE html>
@@ -33,10 +16,10 @@ if (isset($_SESSION['last_activity'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Subir Producto</title>
     <link rel="stylesheet" href="../../../public/css/vendedor/subirProductos.css">
     <link rel="icon" href="../../../public/img/icon_principal.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-    <title>Dashboard - Nuevo Producto</title>
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
@@ -46,23 +29,23 @@ if (isset($_SESSION['last_activity'])) {
                 <img src="../../../public/img/logo.svg" alt="Logo" class="logo-img"/>
             </div>
             <ul class="menu">
-           <li class="active"><a href="../vendedorView.php"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
-           <li><a href="productos.php"><i data-lucide="package"></i><span>Productos</span></a></li>
-           <li><a href="pedidos.php"><i data-lucide="shopping-cart"></i><span>Pedidos</span></a></li>
-           <li><a href="subirProductos.php"><i data-lucide="upload-cloud"></i><span>Subir Producto</span></a></li>
-           <li><a href="ingresos.php"><i data-lucide="dollar-sign"></i><span>Ingresos</span></a></li>
+               <li><a href="../vendedorView.php"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
+               <li><a href="productos.php"><i data-lucide="package"></i><span>Productos</span></a></li>
+               <li><a href="pedidos.php"><i data-lucide="shopping-cart"></i><span>Pedidos</span></a></li>
+               <li class="active"><a href="subirProductos.php"><i data-lucide="upload-cloud"></i><span>Subir Producto</span></a></li>
+               <li><a href="ingresos.php"><i data-lucide="dollar-sign"></i><span>Ingresos</span></a></li>
             </ul>
             <div class="user-profile-container">
                 <div class="user" id="userProfileBtn">
+                    <img src="https://i.pravatar.cc/40" alt="user" />
                     <div class="user-info">
-                        <p>Brayan</p>
-                        <small>Administrador</small>
+                        <p><?php echo htmlspecialchars($nombre_vendedor); ?></p>
+                        <small>Vendedor</small>
                     </div>
                     <i data-lucide="chevron-down" class="profile-arrow"></i>
                 </div>
                 <div class="profile-dropdown" id="profileDropdownMenu">
                     <a href="#perfil"><i data-lucide="user"></i><span>Mi Perfil</span></a>
-                    <a href="#configuracion"><i data-lucide="settings"></i><span>Configuración</span></a>
                     <a href="../../../controllers/logout.php"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
                 </div>
             </div>
@@ -70,76 +53,67 @@ if (isset($_SESSION['last_activity'])) {
 
         <main class="main">
             <header class="header">
-                <h1>Nuevo Producto</h1>
+                <h1>Sube un Nuevo Producto</h1>
             </header>
 
-            <form action="../../../controllers/uploads/uploadProduct.php" method="POST" enctype="multipart/form-data">
-                <section class="new-product-section">
-                    <div class="details-column">
-                        <div class="form-group">
-                            <label for="titulo">Título <span class="required">*</span></label>
-                            <input type="text" id="titulo" name="titulo" placeholder="Crea un nombre corto a tu producto.">
-                            <small class="form-hint">Entre 5 y 100 caracteres alfanuméricos</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="categoria">Categoría <span class="required">*</span></label>
-                            <div class="input-icon">
-                                <i data-lucide="tag"></i>
-                                <input type="text" id="categoria" name="categoria" placeholder="Añade tu producto a una categoría existente.">
-                            </div>
-                            <div class="category-add">
-                                <i data-lucide="plus-circle"></i>
-                                <span>Añadir categoría principal</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="descripcion">Descripción <span class="required">*</span></label>
-                            <textarea id="descripcion" name="descripcion" rows="5" placeholder="Dale una descripción breve a tu producto."></textarea>
-                        </div>
+            <div class="form-container">
+                <form action="../../../controllers/uploads/uploadProduct.php" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="titulo">Título del Producto <span class="required">*</span></label>
+                        <input type="text" id="titulo" name="titulo" placeholder="Ej: Camisa de Algodón Slim Fit" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="categoria">Categoría <span class="required">*</span></label>
+                        <select id="categoria" name="categoria" required>
+                            <option value="" disabled selected>Selecciona una categoría</option>
+                            <option value="Ropa Masculina">Ropa Masculina</option>
+                            <option value="Ropa Femenina">Ropa Femenina</option>
+                            <option value="Computadores">Computadores</option>
+                            <option value="Celulares">Celulares</option>
+                            <option value="Videojuegos">Videojuegos</option>
+                            <option value="Deportes">Deportes</option>
+                            <option value="Hogar & Belleza">Hogar & Belleza</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descripcion">Descripción <span class="required">*</span></label>
+                        <textarea id="descripcion" name="descripcion" rows="4" placeholder="Describe las características principales de tu producto." required></textarea>
+                    </div>
+
+                    <div class="price-stock-container">
                         <div class="form-group">
                             <label for="precio">Precio <span class="required">*</span></label>
-                            <div class="input-icon">
-                                <i data-lucide="dollar-sign"></i>
-                                <input type="number" id="precio" name="precio" placeholder="Ponle un precio a tu producto.">
-                            </div>
+                            <input type="number" id="precio" name="precio" placeholder="0.00" step="0.01" required>
                         </div>
                         <div class="form-group">
-                            <label for="stock">Stock Disponible <span class="required">*</span></label>
-                            <div class="input-icon">
-                                <i data-lucide="package-check"></i>
-                                <input type="number" id="stock" name="stock" placeholder="¿Cuántas unidades tienes?">
+                            <label for="stock">Stock <span class="required">*</span></label>
+                            <input type="number" id="stock" name="stock" placeholder="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Imágenes del Producto <span class="required">*</span></label>
+                        <div class="image-upload-box">
+                            <input type="file" id="imagen" name="imagen[]" accept="image/png, image/jpeg, image/webp" required>
+                            <div class="upload-content">
+                                <i data-lucide="image-plus"></i>
+                                <p><span>Seleccionar archivo</span> o arrástralo aquí.</p>
+                                <small>PNG, JPG, WEBP de hasta 10MB</small>
                             </div>
                         </div>
                     </div>
 
-                    <div class="media-column">
-                        <div class="form-group">
-                            <label>Imagen <span class="required">*</span></label>
-                            <p class="form-hint">Añade hasta 10 imágenes de tu producto.</p>
-                            <div class="image-upload-section">
-                                <div class="image-preview-main">
-                                    <i data-lucide="image" class="placeholder-icon"></i>
-                                </div>
-                                <div class="image-preview-list">
-                                    <label for="imageUpload" class="add-image-button">
-                                        <i data-lucide="plus"></i>
-                                        <input type="file" id="imageUpload" name="imagen[]" hidden multiple>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="form-actions">
+                        <button class="submit-button" type="submit" name="subir_producto">Subir Producto</button>
                     </div>
-                </section>
-                
-                <div class="form-actions">
-                    <button class="submit-button" type="submit" name="subir_producto">Subir Producto</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </main>
     </div>
-    <script>
-        lucide.createIcons();
-    </script>
+
+    <script>lucide.createIcons();</script>
     <script src="../../../public/js/vendedor/subirProductos.js"></script>
 </body>
 </html>
