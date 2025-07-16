@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-07-2025 a las 10:45:15
+-- Tiempo de generación: 16-07-2025 a las 16:27:43
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -48,7 +48,8 @@ CREATE TABLE `carrito` (
 --
 
 INSERT INTO `carrito` (`id_carrito`, `id_cliente`, `fecha_creacion`) VALUES
-(1, 48, '2025-07-15 10:25:04');
+(1, 48, '2025-07-15 10:25:04'),
+(2, 56, '2025-07-16 09:14:23');
 
 -- --------------------------------------------------------
 
@@ -87,11 +88,14 @@ INSERT INTO `cliente` (`id_cliente`, `nombre`, `telefono`, `genero`, `fecha_naci
 (37, 'dsfghjk', NULL, NULL, NULL, 'default_avatar.png', '', '2025-07-05', 39),
 (38, 'Usuario 3', NULL, NULL, NULL, 'default_avatar.png', '', '2025-07-05', 41),
 (39, 'Usuario 4', NULL, NULL, NULL, 'default_avatar.png', NULL, '0000-00-00', 42),
-(47, 'BrayanBG', NULL, NULL, NULL, 'default_avatar.png', NULL, '0000-00-00', 51),
 (48, 'BransCliente', '3238818593', NULL, '2006-05-15', 'avatar_6874421258845.png', NULL, '0000-00-00', 54),
 (49, '29209298282', NULL, NULL, NULL, 'default_avatar.png', 'callleu28181', '0000-00-00', 57),
 (51, 'BransCliente2', '2345678765', 'Masculino', '2000-02-12', 'default_avatar.png', 'Calle 44 # 23 - 23', '0000-00-00', 59),
-(52, 'BransCliente', '3238818593', 'Masculino', '2939-12-11', 'default_avatar.png', 'Calle 44 # 23 - 23', '0000-00-00', 60);
+(52, 'BransCliente', '3238818593', 'Masculino', '2939-12-11', 'default_avatar.png', 'Calle 44 # 23 - 23', '0000-00-00', 60),
+(53, 'Paula', 'Torres', 'Femenino', '2006-07-01', 'default_avatar.png', 'fjfjgdjifjdi', '0000-00-00', 61),
+(54, 'Paula Torres', 'ererdfg', 'Femenino', '2006-07-01', 'default_avatar.png', 'fgsdfg', '0000-00-00', 62),
+(55, 'Joseph', '23948737473', 'Masculino', '2009-12-11', 'default_avatar.png', 'sdfghhgfdfdfg', '0000-00-00', 63),
+(56, 'BrayanBG', '', NULL, '0000-00-00', 'default_avatar.png', NULL, '0000-00-00', 64);
 
 -- --------------------------------------------------------
 
@@ -122,7 +126,8 @@ INSERT INTO `detalle_pedido` (`id_detalle`, `id_pedido`, `id_producto`, `cantida
 (8, 8, 13, 2, 100000.00),
 (9, 8, 16, 2, 2000000.00),
 (10, 8, 15, 2, 23456789.00),
-(11, 8, 14, 1, 10000.00);
+(11, 8, 14, 1, 10000.00),
+(12, 9, 20, 1, 20393.00);
 
 -- --------------------------------------------------------
 
@@ -172,10 +177,11 @@ CREATE TABLE `pedido` (
 
 INSERT INTO `pedido` (`id_pedido`, `id_cliente`, `id_vendedor`, `fecha`, `estado`) VALUES
 (4, 48, 6, '2025-07-14', 'pendiente'),
-(5, 48, 6, '2025-07-14', 'pendiente'),
+(5, 48, 6, '2025-07-14', 'cancelado'),
 (6, 48, 6, '2025-07-15', 'procesado'),
-(7, 48, 6, '2025-07-15', 'pendiente'),
-(8, 48, 6, '2025-07-15', 'entregado');
+(7, 48, 6, '2025-07-15', 'entregado'),
+(8, 48, 6, '2025-07-15', 'entregado'),
+(9, 56, 6, '2025-07-16', 'pendiente');
 
 -- --------------------------------------------------------
 
@@ -218,7 +224,11 @@ INSERT INTO `producto` (`id_producto`, `nombre_producto`, `descripcion`, `precio
 (13, 'Monitor', 'Monitor', 100000.00, 18, 'Videojuegos', 6, 'prod_686f53accdc0e.png'),
 (14, 'Curology', 'Curology', 10000.00, 12, 'Otro', 6, 'prod_687006e76b79f.png'),
 (15, 'Bolso Gucci xd', 'Bolso', 23456789.00, 117, 'Ropa Femenina', 6, 'prod_6870070bcfaed.png'),
-(16, 'GTA VI', 'JUegazo', 2000000.00, 2, 'Videojuegos', 6, 'prod_68767b14395a0.webp');
+(16, 'GTA VI', 'JUegazo', 2000000.00, 2, 'Videojuegos', 6, 'prod_68767b14395a0.webp'),
+(17, 'Ideapad Gaming', 'Computador portatil', 1000002.00, 11, 'Computadores', 6, 'prod_6877a5d0a1b0d.png'),
+(18, 'Chaqueta Verde Oscura', 'Chaqueta oscura', 22222.00, 12, 'Ropa Masculina', 6, 'prod_6877a5f7e2893.png'),
+(19, 'Silla', 'Silla del 2009', 10000.00, 100, 'Hogar & Belleza', 6, 'prod_6877a62adec7a.png'),
+(20, 'Cámara', 'Camara', 20393.00, 9, 'Celulares', 6, 'prod_6877a6530c56d.png');
 
 -- --------------------------------------------------------
 
@@ -258,7 +268,9 @@ INSERT INTO `tickets` (`id_ticket`, `id_usuario`, `asunto`, `mensaje`, `priorida
 (2, 54, 'Mi contraseña no sirve', 'MI contraseña no sirve', 'Baja', 'Abierto', '2025-07-16 01:59:40'),
 (3, 54, 'Mi contraseña y correo no sirve', 'Ok', 'Media', 'Abierto', '2025-07-16 02:04:37'),
 (4, 54, 'retyr', 'qwertyu', 'Baja', 'Abierto', '2025-07-16 02:05:00'),
-(5, 54, 'asddoi', 'iowjidji', 'Media', 'Resuelto', '2025-07-16 02:07:50');
+(5, 54, 'asddoi', 'iowjidji', 'Media', 'Resuelto', '2025-07-16 02:07:50'),
+(6, 54, 'Me mori', 'Me mori', 'Alta', 'Resuelto', '2025-07-16 07:58:38'),
+(7, 64, 'sded', 'ccfcfcf', 'Baja', 'Abierto', '2025-07-16 09:15:36');
 
 -- --------------------------------------------------------
 
@@ -317,14 +329,17 @@ INSERT INTO `usuario` (`id_usuario`, `correo_usuario`, `contraseña`, `fecha_reg
 (40, 'vendedor3@gmail.com', '$2y$10$W1EX2wUAHuGXZcmb1vKzFOMVBfLZH1tJa4xFX2Hg2vVp3kHVkvqKy', '2025-07-05', 'activo', 'vendedor', NULL, NULL, NULL, NULL, NULL, 0),
 (41, 'usuario3@gmail.com', '$2y$10$9vN1EBaKTUXzLOLhNQZC5ObALb5ezL5jRIDhftU77R/N6BdhHoJKm', '2025-07-05', 'activo', 'cliente', NULL, NULL, NULL, NULL, '40fa97226f963f715e451615bc29e054932bdcb08bd69f4d0d0750b314c9e830', 0),
 (42, 'usuario4@gmail.com', '$2y$10$rbZUuA56XA4XC1M9u/7Zuepwp7XllfDPi72yazYocl9EEXMnYMpcW', '2025-07-05', 'activo', 'cliente', NULL, NULL, NULL, NULL, '61a2460c306fdfd4ab8585354f25479c193363d30dc584d272e356ae84f7d0f4', 0),
-(51, 'brayan.stiven.ardila.espana@gmail.com', '$2y$10$PmuNV8iuRtih8zBqRq7PKufjMNNl5KTp59u2UGxvMxINA1U.eA/Xu', '2025-07-05', 'activo', 'admin', NULL, NULL, '1397319c669825118e6570c0cd7cd1d5', '2025-07-10 05:32:35', NULL, 1),
 (53, 'ardilabrayan42@gmail.com', '$2y$10$SExNC2S0SmDp6Z.Fkm7dm.hDjs4AC.ZrdMg.DHLp6NpWmr0P95N7m', '2025-07-05', 'activo', 'vendedor', NULL, NULL, NULL, NULL, NULL, 1),
 (54, 'bransostenso54@gmail.com', '$2y$10$qzKFZb3jhWEYImT/2b.Mzu9Qd2bgTByLYyWWyrJNCNRL6qwoKrM0u', '2025-07-05', 'activo', 'cliente', NULL, NULL, NULL, NULL, NULL, 1),
 (55, 'bransstens1@gmail.com', '$2y$10$5Llz3o5yMM/r4mdG1xtXeejHE5qBOAhZyL/rjwCAGucaCfE4dVdq.', '2025-07-10', 'activo', 'vendedor', NULL, NULL, NULL, NULL, '9deecb86e697d816683221dcb15505c63210c138ff23c3847b5289e287f38931', 0),
 (56, 'brayanstivenardila111@gmail.com', '$2y$10$392Zt4/p/c7He4H6bUg4Iegz1PfDJL6abJLf0QPWx1bQpEPNtJf8i', '2025-07-10', 'activo', 'vendedor', NULL, NULL, NULL, NULL, NULL, 1),
 (57, 'hola1234@hotmail.com', '$2y$10$NCMhKvRFPiuJg592KliBZuc/vPmNnYm0F1/fzXq7N3Zc7ZKKKGtVK', '2025-07-10', 'activo', 'cliente', NULL, NULL, NULL, NULL, NULL, 1),
 (59, 'ninjadata2929@gmail.com', '$2y$10$5ZZ2Xn/KQN89D2spkGySeewcQWu/64pUiiOSCZ5y6pf7U8Lnl0OWa', '2025-07-14', 'activo', 'cliente', NULL, NULL, NULL, NULL, '6f632596c00761d9598b91aa62f27eaaed4119ca22281b7fbe48e68e86fa626f', 0),
-(60, 'dfghf@gmail.com', '$2y$10$XW/YuykhebAebyhmibCYle8Onj.CrsmXR2ql7Zbebxd/wkjoOKxLK', '2025-07-16', 'activo', 'cliente', NULL, NULL, NULL, NULL, 'ca9ffebb837d9b52cdac870ad52cff49ae38f36ca34011b8880e6bfcc4e2d458', 0);
+(60, 'dfghf@gmail.com', '$2y$10$XW/YuykhebAebyhmibCYle8Onj.CrsmXR2ql7Zbebxd/wkjoOKxLK', '2025-07-16', 'activo', 'cliente', NULL, NULL, NULL, NULL, 'ca9ffebb837d9b52cdac870ad52cff49ae38f36ca34011b8880e6bfcc4e2d458', 0),
+(61, 'mpautorres.06@gmail.com', '$2y$10$.rcy/ZyKttJOMieH/hsmWOo6J/h9bPxLEyfTO/1a7YuXUJS5M/7VK', '2025-07-16', 'activo', 'cliente', NULL, NULL, NULL, NULL, '9e53427b54983264f3c76b84ef4f807ccd09c0209c07e65386c704fd86650c6f', 0),
+(62, 'torrespaula0620@gmail.com', '$2y$10$f0urj4hvQQzdrQI0TzB.EuXzoEs3rlunSdkOUFbPPSXvLkXg16Fze', '2025-07-16', 'activo', 'cliente', NULL, NULL, NULL, NULL, '0abf8ee6ca5998f87ea9deaab8dd010cdc427478aa6b622451d9524a994f918a', 0),
+(63, 'josephstiven2105@gmail.com', '$2y$10$SPqdqyuCoH1uqN3Xpusd3.1P5HWY6CC8zRWmr7uQdx8xl7ef2ed1G', '2025-07-16', 'activo', 'cliente', NULL, NULL, NULL, NULL, '724a1aac8f4128bfc9deb77814971964c9c85928a7645978701458e34d3d03ee', 0),
+(64, 'brayan.stiven.ardila.espana@gmail.com', '$2y$10$4GvGgoOloxCq6/rExEqUseJw4Ypzbff.H39/3BktPND.gVvrSJ1Nm', '0000-00-00', 'activo', 'cliente', NULL, NULL, NULL, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -453,19 +468,19 @@ ALTER TABLE `vendedor`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_pedido`
 --
 ALTER TABLE `detalle_pedido`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `envio`
@@ -483,7 +498,7 @@ ALTER TABLE `pago`
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
@@ -495,25 +510,25 @@ ALTER TABLE `pedidos`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `producto_carrito`
 --
 ALTER TABLE `producto_carrito`
-  MODIFY `id_producto_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_producto_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `tickets`
 --
 ALTER TABLE `tickets`
-  MODIFY `id_ticket` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_ticket` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT de la tabla `vendedor`

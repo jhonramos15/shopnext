@@ -35,6 +35,7 @@ $resultado_productos = $conexion->query($sql_productos);
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <title>ShopNext | Inicio</title>
+
 </head>
 <body>
 <header>
@@ -64,8 +65,8 @@ $resultado_productos = $conexion->query($sql_productos);
     <!-- Nav Menú -->
     <nav class="nav-links" id="navMenu">
       <a href="indexUser.php">Inicio</a>
-      <a href="../../views/auth/signUp.html">Productos</a>
-      <a href="../../views/pages/contact.html">Contacto</a>
+      <a href="#categorias">Productos</a>
+      <a href="pages/contact.php">Contacto</a>
     </nav>
 
     <!-- Buscador -->
@@ -83,7 +84,7 @@ $resultado_productos = $conexion->query($sql_productos);
           <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
           <div class="dropdown-content" id="dropdownMenu">
             <a href="../pages/account.php">Perfil</a>
-            <a href="#">Pedidos 🚧</a>
+            <a href="pages/pedidos.php">Pedidos</a>
             <a href="../../controllers/logout.php">Cerrar sesión</a>
           </div>
         </div>      
@@ -147,7 +148,7 @@ $resultado_productos = $conexion->query($sql_productos);
   <p class="etiqueta">Productos por Sección</p>
   <h2 class="titulo">Todas nuestras secciones</h2>
 
-<div class="contenedor-categorias">
+<div class="contenedor-categorias" id="categorias">
     <div class="categoria">
       <a href="../pages/products/category.php?name=Ropa Femenina"><i class="fa-solid fa-person-dress"></i></a>
       <p>Ropa Femenina</p>
@@ -175,11 +176,7 @@ $resultado_productos = $conexion->query($sql_productos);
     <div class="categoria">
       <a href="../pages/products/category.php?name=Celulares"><i class="fa-solid fa-mobile-button"></i></a>
       <p>Celulares</p>
-    </div>
-    <div class="categoria">
-      <a href="#"><i class="fa-solid fa-border-all"></i></a>
-      <p>Todos</p>
-    </div>             
+    </div>            
   </div>
 </section>
     <main>
@@ -233,9 +230,9 @@ $resultado_productos = $conexion->query($sql_productos);
     <div class="icon"><i class="fas fa-laptop"></i></div>
     <p>Computadores</p>
   </a>
-  <a href="audifonos.html" class="categoria-item">
-    <div class="icon"><i class="fas fa-headphones"></i></div>
-    <p>Audífonos</p>
+  <a href="../../views/pages/products/homesections.html" class="categoria-item">
+    <div class="icon"><i class="fa-solid fa-star-of-life"></i></div>
+    <p>Hogar & Belleza</p>
   </a>
   <a href="videojuegos.html" class="categoria-item">
     <div class="icon"><i class="fas fa-gamepad"></i></div>

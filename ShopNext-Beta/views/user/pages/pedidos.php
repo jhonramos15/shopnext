@@ -75,15 +75,14 @@ if ($id_cliente !== null) {
   <div class="header-main">
     <div class="logo-menu">
       <div class="logo">
-        <a href="../../public/index.php"><img src="../../../public/img/logo.svg" alt="ShopNext"></a>
+        <a href="../indexUser.php"><img src="../../../public/img/logo.svg" alt="ShopNext"></a>
       </div>
       <button class="hamburger" onclick="toggleMenu()">
         <i class="fa-solid fa-bars"></i>
       </button>
     </div>
     <nav class="nav-links" id="navMenu">
-      <a href="../../public/index.php">Inicio</a>
-      <a href="../pages/products/category.php?name=Todos">Productos</a>
+      <a href="../indexUser.php">Inicio</a>
       <a href="contact.php">Contacto</a>
     </nav>
     <div class="icons">
@@ -92,10 +91,11 @@ if ($id_cliente !== null) {
         <button><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
       <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
+      <a href="../cart/carrito.php"><button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button></a>
         <div class="user-menu-container">
           <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
           <div class="dropdown-content" id="dropdownMenu">
-            <a href="account.php">Perfil</a>
+            <a href="../../pages/account.php">Perfil</a>
             <a href="pedidos.php">Pedidos</a>
             <a href="../../../controllers/logout.php">Cerrar sesión</a>
           </div>

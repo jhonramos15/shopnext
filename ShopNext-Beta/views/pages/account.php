@@ -73,12 +73,12 @@ $conexion->close();
         <button><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
       <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
-      <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
+      <a href="../user/cart/carrito.php"><button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button></a>
       <!-- Ícono de usuario -->
         <div class="user-menu-container">
           <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
           <div class="dropdown-content" id="dropdownMenu">
-            <a href="../pages/account.php">Perfil</a>
+            <a href="account.php">Perfil</a>
             <a href="../user/pages/pedidos.php">Pedidos</a>
             <a href="../../controllers/logout.php">Cerrar sesión</a>
           </div>

@@ -31,7 +31,7 @@ require_once __DIR__ . '/../../../controllers/authGuardCliente.php';
     <!-- Logo Principal -->
     <div class="logo-menu">
       <div class="logo">
-        <a href="../../../public/index.php"><img src="../../../public/img/logo.svg" alt="ShopNext"></a>
+        <a href="../indexUser.php"><img src="../../../public/img/logo.svg" alt="ShopNext"></a>
       </div>
       <!-- Menú Hamburguesa -->
       <button class="hamburger" onclick="toggleMenu()">
@@ -41,8 +41,8 @@ require_once __DIR__ . '/../../../controllers/authGuardCliente.php';
 
     <!-- Nav Menú -->
     <nav class="nav-links" id="navMenu">
-      <a href="#">Productos</a>
-      <a href="../pages/contact.php">Contacto</a>
+      <a href="../indexUser.php">Inicio</a>
+      <a href="pedidos.php">Pedidos</a>
     </nav>
 
     <!-- Buscador -->
@@ -58,8 +58,8 @@ require_once __DIR__ . '/../../../controllers/authGuardCliente.php';
           <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
           <div class="dropdown-content" id="dropdownMenu">
             <a href="../pages/account.php">Perfil</a>
-            <a href="#">Pedidos 🚧</a>
-            <a href="../../controllers/logout.php">Cerrar sesión</a>
+            <a href="pedidos.php">Pedidos</a>
+            <a href="../../../controllers/logout.php">Cerrar sesión</a>
           </div>
         </div>   
     </div>
