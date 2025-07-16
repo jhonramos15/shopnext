@@ -1,81 +1,45 @@
+// public/js/tienda.js
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Buscamos el contenedor principal de los productos.
-    const productsContainer = document.getElementById('products-container');
 
-    // 2. Si el contenedor no existe en la página, no hacemos nada más.
-    if (!productsContainer) {
-        return; 
-    }
-
-    // 3. Creamos UN SOLO "escuchador" de eventos para todo el contenedor.
-    productsContainer.addEventListener('submit', function(event) {
-        
-        // 4. Verificamos si el evento fue disparado por un formulario de carrito.
+    document.body.addEventListener('submit', function(event) {
+        // Solo actuamos si se envía un formulario para añadir al carrito.
         if (event.target.matches('.add-to-cart-form')) {
-            
-            // 5. ¡LA CLAVE! Prevenimos que el formulario se envíe de la forma tradicional.
+            // ¡Prevenimos que la página se recargue!
             event.preventDefault(); 
-
+            
             const form = event.target;
             const formData = new FormData(form);
-            const controllerURL = '/shopnext/ShopNext-Beta/controllers/cart/carritoController.php';
 
-            // 6. Hacemos la petición al servidor.
-            fetch(controllerURL, {
+            // Enviamos los datos al controlador en segundo plano.
+            fetch('/shopnext/ShopNext-Beta/controllers/carritoController.php', {
                 method: 'POST',
                 body: formData
             })
+            .then(res => res.json())
             .then(response => {
-                // Primero, obtenemos la respuesta como texto para poder depurar.
-                return response.text().then(text => {
-                    try {
-                        // Intentamos convertir el texto a JSON.
-                        return JSON.parse(text);
-                    } catch (error) {
-                        // Si falla, el servidor envió algo que no es JSON (probablemente un error de PHP).
-                        console.error("La respuesta del servidor no es JSON:", text);
-                        throw new Error('El servidor respondió con un formato inesperado.');
-                    }
-                });
-            })
-            .then(data => {
-                // 7. Analizamos la respuesta JSON del servidor.
-                if (data.error) {
-                    if (data.error === 'login_required') {
-                        // Usuario no logueado: le pedimos que inicie sesión.
-                        Swal.fire({
-                            icon: 'info',
-                            title: '¡Un momento!',
-                            text: 'Debes iniciar sesión para añadir productos al carrito.',
-                            confirmButtonText: 'Entendido'
-                        });
-                    } else {
-                        // Otro tipo de error reportado por el servidor.
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: data.error
-                        });
-                    }
-                } else if (data.success) {
-                    // ¡Éxito! El producto fue añadido.
+                // Leemos la respuesta del PHP.
+                if (response.error && response.error === 'login_required') {
+                    // Si el PHP dice que se necesita login, mostramos la alerta de Swal.
                     Swal.fire({
-                        icon: 'success',
-                        title: '¡Producto añadido!',
-                        text: data.success,
-                        timer: 1500,
-                        showConfirmButton: false
+                        icon: 'info',
+                        title: 'Inicia Sesión',
+                        text: 'Necesitas iniciar sesión como cliente para poder comprar.',
+                        confirmButtonText: 'Ir a Login'
+                    }).then(() => {
+                        // Y después redirigimos a la URL correcta.
+                        window.location.href = '/shopnext/ShopNext-Beta/views/auth/login.php';
                     });
+                } else if (response.success) {
+                    // Si el PHP dice que todo salió bien, mostramos la alerta de éxito.
+                    Swal.fire('¡Añadido!', 'El producto se ha añadido a tu carrito.', 'success');
+                } else {
+                    // Para cualquier otro error.
+                    Swal.fire('Error', 'No se pudo añadir el producto.', 'error');
                 }
             })
             .catch(error => {
-                // 8. Capturamos cualquier error de red o de la lógica anterior.
-                console.error('Error en la solicitud fetch:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'No se pudo añadir el producto. Revisa la consola para más detalles.'
-                });
+                console.error('Error en fetch:', error);
+                Swal.fire('Error de Conexión', 'No se pudo comunicar con el servidor.', 'error');
             });
         }
     });

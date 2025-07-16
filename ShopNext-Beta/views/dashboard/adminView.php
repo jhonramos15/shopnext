@@ -44,6 +44,11 @@ $new_users_query = "SELECT COUNT(*) as nuevos_usuarios FROM usuario WHERE fecha_
 $new_users_result = $conexion->query($new_users_query);
 $nuevos_usuarios = $new_users_result->fetch_assoc()['nuevos_usuarios'];
 
+// 4. Consulta para las ventas totales
+$ventas_query = "SELECT SUM(cantidad * precio_unitario) as total_ventas FROM detalle_pedido";
+$ventas_result = $conexion->query($ventas_query);
+$total_ventas = $ventas_result->fetch_assoc()['total_ventas'] ?? 0;
+
 // 4. Calcular el cambio porcentual
 $usuarios_anteriores = $total_usuarios - $nuevos_usuarios;
 $cambio_porcentual = 0; // Inicializar en 0
@@ -54,6 +59,24 @@ if ($usuarios_anteriores > 0) {
 } elseif ($nuevos_usuarios > 0) {
     $cambio_porcentual = 100; // Si no había usuarios y ahora sí, es un 100% de aumento
 }
+
+// 5. CONSULTA PARA EL TOTAL DE PEDIDOS
+$total_pedidos_query = "SELECT COUNT(*) as total_pedidos FROM pedido";
+$total_pedidos_result = $conexion->query($total_pedidos_query);
+$total_pedidos = $total_pedidos_result->fetch_assoc()['total_pedidos'];
+
+// PEDIDOS RECIENTES
+$pedidos_recientes_query = "SELECT 
+                                p.fecha,
+                                prod.nombre_producto,
+                                p.estado,
+                                (dp.cantidad * dp.precio_unitario) AS importe
+                            FROM pedido p
+                            JOIN detalle_pedido dp ON p.id_pedido = dp.id_pedido
+                            JOIN producto prod ON dp.id_producto = prod.id_producto
+                            ORDER BY p.fecha DESC, p.id_pedido DESC
+                            LIMIT 5";
+$resultado_pedidos_recientes = $conexion->query($pedidos_recientes_query);
 
 $conexion->close(); // Cerrar la conexión
 ?>
@@ -135,14 +158,14 @@ $conexion->close(); // Cerrar la conexión
                     <i data-lucide="shopping-cart"></i>
                     <div>
                         <h3>Pedido total</h3>
-                        <p>18.800 <span class="percentage neutral">+27.4%</span></p>
-                    </div>
+                        <p><?php echo number_format($total_pedidos); ?></p>
+                        </div>
                 </div>
                 <div class="card">
                     <i data-lucide="dollar-sign"></i>
                     <div>
                         <h3>Ventas totales</h3>
-                        <p>$35,078 <span class="percentage neutral">+27.4%</span></p>
+                        <p>$<?php echo number_format($total_ventas, 2); ?></p>
                     </div>
                 </div>
             </section>
@@ -179,18 +202,31 @@ $conexion->close(); // Cerrar la conexión
                         <table>
                             <thead>
                                 <tr>
-                                    <th>NÚMERO DE SEGUIMIENTO</th>
+                                    <th>FECHA</th>
                                     <th>PRODUCTO</th>
                                     <th>ESTADO</th>
                                     <th>IMPORTE</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td>25/03/2024</td><td>Teclado</td><td><span class="status rejected">Rechazado</span></td><td>$70,999</td></tr>
-                                <tr><td>25/03/2024</td><td>Accesorios</td><td><span class="status approved">Aprobado</span></td><td>$83,348</td></tr>
-                                <tr><td>26/03/2024</td><td>Lente de cámara</td><td><span class="status rejected">Rechazado</span></td><td>$40,570</td></tr>
-                                <tr><td>26/03/2024</td><td>TELEVISOR</td><td><span class="status pending">Pendiente</span></td><td>$410,780</td></tr>
-                                <tr><td>26/03/2024</td><td>Auricular</td><td><span class="status approved">Aprobado</span></td><td>$10,239</td></tr>
+                                <?php if ($resultado_pedidos_recientes && $resultado_pedidos_recientes->num_rows > 0): ?>
+                                    <?php while ($pedido = $resultado_pedidos_recientes->fetch_assoc()): ?>
+                                        <tr>
+                                            <td><?php echo date("d/m/Y", strtotime($pedido['fecha'])); ?></td>
+                                            <td><?php echo htmlspecialchars($pedido['nombre_producto']); ?></td>
+                                            <td>
+                                                <span class="status <?php echo strtolower(htmlspecialchars($pedido['estado'])); ?>">
+                                                    <?php echo ucfirst(htmlspecialchars($pedido['estado'])); ?>
+                                                </span>
+                                            </td>
+                                            <td>$<?php echo number_format($pedido['importe'], 2); ?></td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="4" style="text-align: center;">No hay pedidos recientes.</td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>

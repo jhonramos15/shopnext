@@ -1,33 +1,41 @@
 <?php
 session_start();
 
-// Verificar si el usuario está logueado y tiene el rol correcto
+// Guardián para la sección de Administrador
 if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'admin') {
     header("Location: ../../auth/login.php");
     exit;
 }
+$_SESSION['last_activity'] = time();
 
-// Tiempo máximo de inactividad (5 minutos)
-$inactividad = 300;
+// --- CONEXIÓN Y CONSULTAS ---
+$conexion = new mysqli("localhost", "root", "", "shopnexs");
+if ($conexion->connect_error) { die("Conexión fallida: " . $conexion->connect_error); }
 
-// Verificar si existe el tiempo de última actividad
-if (isset($_SESSION['last_activity'])) {
-    $tiempo_inactivo = time() - $_SESSION['last_activity'];
+// --- Consultas para las Tarjetas ---
+$total_tickets = $conexion->query("SELECT COUNT(*) as total FROM tickets")->fetch_assoc()['total'] ?? 0;
+$nuevos_hoy = $conexion->query("SELECT COUNT(*) as total FROM tickets WHERE DATE(fecha_creacion) = CURDATE()")->fetch_assoc()['total'] ?? 0;
+$tickets_abiertos = $conexion->query("SELECT COUNT(*) as total FROM tickets WHERE estado = 'Abierto'")->fetch_assoc()['total'] ?? 0;
+$tickets_urgentes = $conexion->query("SELECT COUNT(*) as total FROM tickets WHERE estado = 'Abierto' AND prioridad = 'Alta'")->fetch_assoc()['total'] ?? 0;
+$tickets_resueltos = $conexion->query("SELECT COUNT(*) as total FROM tickets WHERE estado = 'Resuelto'")->fetch_assoc()['total'] ?? 0;
+$resueltos_hoy = $conexion->query("SELECT COUNT(*) as total FROM tickets WHERE estado = 'Resuelto' AND DATE(fecha_creacion) = CURDATE()")->fetch_assoc()['total'] ?? 0;
 
-    if ($tiempo_inactivo > $inactividad) {
-        // Cierra la sesión si pasó el tiempo
-        session_unset();
-        session_destroy();
-        header("Location: ../../auth/login.php?mensaje=sesion_expirada");
-        exit;
-    } else {
-        $_SESSION['last_activity'] = time(); // ✅ Refresca el tiempo de actividad
-    }
-} else {
-    $_SESSION['last_activity'] = time(); // ✅ Inicializa el tiempo de actividad si no existía
-}
+// --- NUEVA CONSULTA PARA LA TABLA DE PETICIONES ---
+$peticiones_query = "SELECT 
+                        t.id_ticket,
+                        c.nombre AS nombre_cliente,
+                        t.asunto,
+                        t.fecha_creacion,
+                        t.prioridad,
+                        t.estado
+                     FROM tickets t
+                     JOIN usuario u ON t.id_usuario = u.id_usuario
+                     JOIN cliente c ON u.id_usuario = c.id_usuario
+                     ORDER BY t.fecha_creacion DESC
+                     LIMIT 10"; // Limitamos a los 10 más recientes
+$resultado_peticiones = $conexion->query($peticiones_query);
+
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,168 +79,97 @@ if (isset($_SESSION['last_activity'])) {
       </div>
     </aside>
 
-    <main class="main">
-      <header class="header" id="ayuda-header">
-        <h1>Hola, Brayan 👋</h1>
-        <div class="header-search-container">
-            <div class="input-icon header-search">
-                <i data-lucide="search"></i>
-                <input type="text" placeholder="Buscar ticket..." />
-            </div>
-        </div>
-      </header>
+            <main class="main">
+            <header class="header" id="ayuda-header">
+                <h1>Hola, Brayan 👋</h1>
+                <div class="header-search-container">
+                    <div class="input-icon header-search">
+                        <i data-lucide="search"></i>
+                        <input type="text" placeholder="Buscar ticket..." />
+                    </div>
+                </div>
+            </header>
 
-      <section class="cards" id="ayuda-cards">
-        <div class="card">
-          <i data-lucide="ticket"></i>
-          <div>
-            <h3>Total Tickets</h3>
-            <p>452 <span class="success">25 nuevos hoy</span></p>
-          </div>
-        </div>
-        <div class="card">
-          <i data-lucide="inbox"></i>
-          <div>
-            <h3>Tickets Abiertos</h3>
-            <p>75 <span class="danger">10 urgentes</span></p>
-          </div>
-        </div>
-        <div class="card">
-          <i data-lucide="check-circle-2"></i>
-          <div>
-            <h3>Tickets Resueltos</h3>
-            <p>377 <span class="success">8 hoy</span></p>
-          </div>
-        </div>
-      </section>
+            <section class="cards" id="ayuda-cards">
+                <div class="card">
+                    <i data-lucide="ticket"></i>
+                    <div>
+                        <h3>Total Tickets</h3>
+                        <p><?php echo number_format($total_tickets); ?> <span class="success"><?php echo $nuevos_hoy; ?> nuevos hoy</span></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <i data-lucide="inbox"></i>
+                    <div>
+                        <h3>Tickets Abiertos</h3>
+                        <p><?php echo number_format($tickets_abiertos); ?> <span class="danger"><?php echo $tickets_urgentes; ?> urgentes</span></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <i data-lucide="check-circle-2"></i>
+                    <div>
+                        <h3>Tickets Resueltos</h3>
+                        <p><?php echo number_format($tickets_resueltos); ?> <span class="success"><?php echo $resueltos_hoy; ?> hoy</span></p>
+                    </div>
+                </div>
+            </section>
 
-      <section class="table-section" id="ayuda-table">
-        <div class="table-header">
-          <h2>Peticiones Recientes</h2>
-          <div class="right-controls">
-            <div class="input-icon table-search">
-              <i data-lucide="search"></i>
-              <input type="text" placeholder="Buscar por asunto o usuario..." />
-            </div>
-            <div class="custom-select table-select">
-              <select>
-                <option selected>Prioridad: Todas</option>
-                <option>Prioridad: Alta</option>
-                <option>Prioridad: Media</option>
-                <option>Prioridad: Baja</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Usuario</th>
-              <th>Asunto</th>
-              <th>Fecha</th>
-              <th>Prioridad</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Jane Cooper</td>
-              <td>No puedo resetear mi contraseña</td>
-              <td>18 Jun, 2025</td>
-              <td><span class="status priority-alta">Alta</span></td>
-              <td>
-                <div class="status-actions-container">
-                  <span class="status status-abierto">Abierto</span>
-                  <div class="action-icons">
-                    <a href="#" class="action-icon" title="Ver Ticket"><i data-lucide="eye"></i></a>
-                    <a href="#" class="action-icon" title="Responder"><i data-lucide="send"></i></a>
-                  </div>
+            <section class="table-section" id="ayuda-table">
+                <div class="table-header">
+                    <h2>Peticiones Recientes</h2>
+                    <div class="right-controls">
+                        </div>
                 </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Marvin McKinney</td>
-              <td>Consulta sobre facturación</td>
-              <td>17 Jun, 2025</td>
-              <td><span class="status priority-media">Media</span></td>
-              <td>
-                <div class="status-actions-container">
-                  <span class="status status-abierto">Abierto</span>
-                  <div class="action-icons">
-                    <a href="#" class="action-icon" title="Ver Ticket"><i data-lucide="eye"></i></a>
-                    <a href="#" class="action-icon" title="Responder"><i data-lucide="send"></i></a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Jerome Bell</td>
-              <td>Sugerencia para nueva función</td>
-              <td>17 Jun, 2025</td>
-              <td><span class="status priority-baja">Baja</span></td>
-              <td>
-                <div class="status-actions-container">
-                  <span class="status status-resuelto">Resuelto</span>
-                   <div class="action-icons">
-                    <a href="#" class="action-icon" title="Ver Ticket"><i data-lucide="eye"></i></a>
-                    <a href="#" class="action-icon" title="Reabrir"><i data-lucide="rotate-cw"></i></a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Ronald Richards</td>
-              <td>Error al cargar mis archivos</td>
-              <td>16 Jun, 2025</td>
-              <td><span class="status priority-alta">Alta</span></td>
-              <td>
-                <div class="status-actions-container">
-                  <span class="status status-resuelto">Resuelto</span>
-                   <div class="action-icons">
-                    <a href="#" class="action-icon" title="Ver Ticket"><i data-lucide="eye"></i></a>
-                    <a href="#" class="action-icon" title="Reabrir"><i data-lucide="rotate-cw"></i></a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-             <tr>
-              <td>Kathryn Murphy</td>
-              <td>¿Cómo exporto mis datos?</td>
-              <td>15 Jun, 2025</td>
-              <td><span class="status priority-media">Media</span></td>
-              <td>
-                <div class="status-actions-container">
-                  <span class="status status-resuelto">Resuelto</span>
-                   <div class="action-icons">
-                    <a href="#" class="action-icon" title="Ver Ticket"><i data-lucide="eye"></i></a>
-                    <a href="#" class="action-icon" title="Reabrir"><i data-lucide="rotate-cw"></i></a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="pagination-controls">
-            <div class="data-count">
-                Mostrando <span>1</span> a <span>5</span> de <span>75</span> tickets abiertos
-            </div>
-            <div class="pagination">
-                <button class="pagination-button" disabled><i data-lucide="chevron-left"></i> <span>Anterior</span></button>
-                <button class="pagination-button page-number active">1</button>
-                <button class="pagination-button page-number">2</button>
-                <button class="pagination-button page-number">3</button>
-                <span class="pagination-ellipsis">...</span>
-                <button class="pagination-button page-number">15</button>
-                <button class="pagination-button"><span>Siguiente</span> <i data-lucide="chevron-right"></i></button>
-            </div>
-        </div>
-      </section>
-    </main>
-  </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Asunto</th>
+                            <th>Fecha</th>
+                            <th>Prioridad</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if ($resultado_peticiones && $resultado_peticiones->num_rows > 0): ?>
+                            <?php while ($ticket = $resultado_peticiones->fetch_assoc()): ?>
+                                <tr data-id="<?php echo htmlspecialchars($ticket['id_ticket']); ?>">
+                                    <td><?php echo htmlspecialchars($ticket['nombre_cliente']); ?></td>
+                                    <td><?php echo htmlspecialchars($ticket['asunto']); ?></td>
+                                    <td><?php echo date("d M, Y", strtotime($ticket['fecha_creacion'])); ?></td>
+                                    <td>
+                                        <span class="status priority-<?php echo strtolower(htmlspecialchars($ticket['prioridad'])); ?>">
+                                            <?php echo htmlspecialchars($ticket['prioridad']); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="status status-<?php echo strtolower(htmlspecialchars($ticket['estado'])); ?>">
+                                            <?php echo htmlspecialchars($ticket['estado']); ?>
+                                        </span>
+                                    </td>
+                                    <td class="table-actions">
+                                        <a href="#" class="action-icon ver-btn" title="Ver Ticket"><i data-lucide="eye"></i></a>
 
+                                        <a href="#" class="action-icon responder-btn" title="Marcar como Resuelto"><i data-lucide="send"></i></a>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="6" style="text-align: center;">No hay tickets recientes.</td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php $conexion->close(); ?>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
   <script>
     lucide.createIcons();
   </script>
-  <script src="../../../public/js/admin/productos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../../../public/js/admin/ayuda.js"></script> 
 </body>
 </html>

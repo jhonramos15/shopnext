@@ -193,6 +193,249 @@ body {
   z-index: 1000;
   overflow: hidden;
 }
+
+.sidebar {
+  width: 80px;
+  background: #ffffff;
+  padding: 20px 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
+  border-right: 1px solid #e5e7eb;
+  border-radius: 0 20px 20px 0;
+  transition: width 0.3s ease;
+}
+
+.main {
+  flex-grow: 1;
+  padding: 25px 30px;
+  transition: margin-left 0.3s ease;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+/* Tarjetas de resumen */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.card {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+}
+
+.card i {
+    width: 48px;
+    height: 48px;
+    color: var(--primary-color);
+    background-color: #f3e8ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.9rem;
+    color: var(--subtle-text-color);
+    font-weight: 500;
+}
+
+.card p {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+
+/* Estilos de la Tabla */
+.table-section {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+}
+
+.table-header {
+    margin-bottom: 1rem;
+}
+
+.table-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+thead th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--subtle-text-color);
+    font-weight: 600;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody td {
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+/* Estilos para el estado del pedido */
+.status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    font-size: 0.8rem;
+    display: inline-block;
+}
+
+.status.pendiente {
+    background-color: #fef9c3;
+    color: #854d0e;
+}
+.status.enviado {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+.status.entregado,
+.status.aprobado {
+    background-color: #dcfce7;
+    color: #166534;
+}
+.status.cancelado,
+.status.rechazado {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+#ingresos-cards .card {
+  background: #111;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#ingresos-cards .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+#ingresos-cards .card i {
+  background: #333;
+  color: #fff;
+  padding: 12px;
+  border-radius: 50%;
+}
+
+#ingresos-cards .card h3 {
+  color: #ccc;
+  font-size: 0.9em;
+  font-weight: 500;
+  margin: 0;
+}
+
+#ingresos-cards .card p {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+/* 2. Estilos para la tabla de pedidos */
+.table-section {
+    background: #fff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    margin-top: 30px; /* Espacio entre las tarjetas y la tabla */
+}
+
+.table-header {
+    margin-bottom: 20px;
+}
+
+.table-header h2 {
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    text-align: left;
+    padding: 16px 14px;
+    font-size: 0.9em;
+    border-bottom: 1px solid #f3f4f6;
+    color: #374151;
+}
+
+th {
+    color: #6b7280;
+    font-weight: 600;
+    background-color: #f9fafb;
+}
+
+.status {
+    padding: 5px 12px;
+    border-radius: 9999px;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status.pendiente { background-color: #fef3c7; color: #92400e; }
+.status.procesado { background-color: #dbeafe; color: #1e40af; }
+.status.enviado { background-color: #e0e7ff; color: #3730a3; }
+.status.entregado { background-color: #dcfce7; color: #166534; }
+.status.cancelado { background-color: #fee2e2; color: #991b1b; }
+
 .sidebar:hover .profile-dropdown {
   left: 15px; 
   right: 15px;

@@ -28,7 +28,9 @@ const mensajes = {
     pass_no_coincide: ['error', 'Error', 'Las nuevas contraseñas no coinciden'],
     campos_vacios_perfil: ['warning', 'Campos Incompletos', 'Por favor, asegúrate de llenar todos los campos principales.'],
     pass_igual_actual: ['info', 'Contraseña Idéntica', 'La nueva contraseña no puede ser igual a la actual.'],
-    pass_campos_incompletos: ['warning', 'Campos de Contraseña Incompletos', 'Para cambiar tu contraseña, debes rellenar los tres campos.'],
+    pass_campos_incompletos: ['warning', 'Campos Incompletos', 'Para cambiar tu contraseña, debes rellenar los tres campos correspondientes.'],
+    reverificar_correo: ['info', 'Revisa tu Nuevo Correo', 'Hemos enviado un enlace de confirmación a tu nueva dirección de email.'],
+    correo_cambiado_ok: ['success', '¡Email Actualizado!', 'Tu dirección de correo ha sido cambiada. Por favor, inicia sesión de nuevo.'],   
 
     // Olvidé contraseña
     correo_enviado: ['success', 'Correo enviado', 'Revisa tu bandeja de entrada.'],
@@ -50,8 +52,11 @@ const mensajes = {
 
     // Carrito
     login_required: ['info', 'Inicia Sesión', 'Necesitas iniciar sesión como cliente para poder comprar.'],
-    added_to_cart: ['success', '¡Producto Añadido!', 'El producto ha sido añadido a tu carrito de compras.']
+    added_to_cart: ['success', '¡Producto Añadido!', 'El producto ha sido añadido a tu carrito de compras.'],
 
+
+    // Contacto
+    ticket_enviado: ['success', '¡Ticket Enviado!', 'Gracias por contactarnos. Tu mensaje ha sido recibido.']    
   };
 
   const key = status || error;

@@ -1,33 +1,50 @@
 <?php
 session_start();
 
-// Verificar si el usuario está logueado y tiene el rol correcto
+// Guardián para la sección de Administrador
 if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'admin') {
     header("Location: ../../auth/login.php");
     exit;
 }
+$_SESSION['last_activity'] = time();
 
-// Tiempo máximo de inactividad (5 minutos)
-$inactividad = 300;
+// --- CONEXIÓN Y CONSULTAS DE INGRESOS ---
+$conexion = new mysqli("localhost", "root", "", "shopnexs");
+if ($conexion->connect_error) { die("Conexión fallida: " . $conexion->connect_error); }
 
-// Verificar si existe el tiempo de última actividad
-if (isset($_SESSION['last_activity'])) {
-    $tiempo_inactivo = time() - $_SESSION['last_activity'];
+// 1. Ingresos Totales (Suma de todos los pedidos)
+$ingresos_totales_query = "SELECT SUM(cantidad * precio_unitario) as total FROM detalle_pedido";
+$ingresos_totales = $conexion->query($ingresos_totales_query)->fetch_assoc()['total'] ?? 0;
 
-    if ($tiempo_inactivo > $inactividad) {
-        // Cierra la sesión si pasó el tiempo
-        session_unset();
-        session_destroy();
-        header("Location: ../../auth/login.php?mensaje=sesion_expirada");
-        exit;
-    } else {
-        $_SESSION['last_activity'] = time(); // ✅ Refresca el tiempo de actividad
-    }
-} else {
-    $_SESSION['last_activity'] = time(); // ✅ Inicializa el tiempo de actividad si no existía
-}
+// 2. Ingresos del Mes Actual
+$ingresos_mes_query = "SELECT SUM(dp.cantidad * dp.precio_unitario) as total_mes
+                       FROM detalle_pedido dp
+                       JOIN pedido p ON dp.id_pedido = p.id_pedido
+                       WHERE MONTH(p.fecha) = MONTH(CURDATE()) AND YEAR(p.fecha) = YEAR(CURDATE())";
+$ingresos_mes = $conexion->query($ingresos_mes_query)->fetch_assoc()['total_mes'] ?? 0;
+
+// 3. Ventas del Día de Hoy
+$ventas_hoy_query = "SELECT COUNT(DISTINCT id_pedido) as ventas_hoy
+                     FROM pedido
+                     WHERE DATE(fecha) = CURDATE()";
+$ventas_hoy = $conexion->query($ventas_hoy_query)->fetch_assoc()['ventas_hoy'] ?? 0;
+
+// 4. Consulta para la tabla de Pedidos Recientes (¡CORREGIDA!)
+$pedidos_recientes_query = "SELECT
+                                p.id_pedido,
+                                p.fecha,
+                                c.nombre AS nombre_cliente, -- ¡¡LA CORRECCIÓN ESTABA AQUÍ!! Se busca en la tabla 'cliente' (c), no 'usuario' (u).
+                                p.estado,
+                                (SELECT SUM(dp.cantidad * dp.precio_unitario) 
+                                 FROM detalle_pedido dp 
+                                 WHERE dp.id_pedido = p.id_pedido) AS total_pedido
+                            FROM pedido p
+                            JOIN cliente c ON p.id_cliente = c.id_cliente
+                            ORDER BY p.fecha DESC
+                            LIMIT 20";
+$resultado_pedidos = $conexion->query($pedidos_recientes_query);
+
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -82,76 +99,67 @@ if (isset($_SESSION['last_activity'])) {
     </div>
   </header>
 
-  <section class="cards ingresos">
-    <div class="card ingreso-card">
-      <i data-lucide="hand-coins"></i>
-      <div>
-        <h3>Ingresos 30 días</h3>
-        <p>$ 22,485 <span class="success">↑ 1% este mes</span></p>
-      </div>
-    </div>
-    <div class="card ingreso-card">
-      <i data-lucide="dollar-sign"></i>
-      <div>
-        <h3>Ingresos 7 días</h3>
-        <p>$ 1,228 <span class="danger">↓ 6% esta semana</span></p>
-      </div>
-    </div>
-  </section>
+            <section class="cards" id="ingresos-cards">
+                <div class="card">
+                    <i data-lucide="dollar-sign"></i>
+                    <div>
+                        <h3>Ingresos Totales</h3>
+                        <p>$<?php echo number_format($ingresos_totales, 2); ?></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <i data-lucide="calendar"></i>
+                    <div>
+                        <h3>Ingresos del Mes</h3>
+                        <p>$<?php echo number_format($ingresos_mes, 2); ?></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <i data-lucide="shopping-cart"></i>
+                    <div>
+                        <h3>Ventas del Día</h3>
+                        <p><?php echo number_format($ventas_hoy); ?></p>
+                    </div>
+                </div>
+            </section>
 
-  <section class="table-section">
-    <div class="table-header">
-      <h2>Últimas Ventas</h2>
-      <div class="right-controls">
-        <div class="input-icon table-search">
-          <i data-lucide="search"></i>
-          <input type="text" placeholder="Buscar..." />
-        </div>
-        <div class="custom-select table-select">
-          <select>
-            <option>Ordenar: Todos</option>
-            <option>Ordenar: Entregado</option>
-            <option>Ordenar: Cancelado</option>
-            <option>Ordenar: Enviado</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Nombre Cliente</th>
-          <th>Producto</th>
-          <th>Precio</th>
-          <th>Email</th>
-          <th>Estado</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Jane Cooper</td><td>Microsoft</td><td>$ 484</td><td>jane@microsoft.com</td><td><span class="badge entregado">Entregado</span></td></tr>
-        <tr><td>Floyd Miles</td><td>Yahoo</td><td>$ 824</td><td>floyd@yahoo.com</td><td><span class="badge cancelado">Cancelado</span></td></tr>
-        <tr><td>Ronald Richards</td><td>Adobe</td><td>$ 123</td><td>ronald@adobe.com</td><td><span class="badge enviado">Enviado</span></td></tr>
-        <tr><td>Marvin McKinney</td><td>Tesla</td><td>$ 82</td><td>marvin@tesla.com</td><td><span class="badge cancelado">Cancelado</span></td></tr>
-        <tr><td>Jerome Bell</td><td>Google</td><td>$ 928</td><td>jerome@google.com</td><td><span class="badge enviado">Enviado</span></td></tr>
-        <tr><td>Kathryn Murphy</td><td>Microsoft</td><td>$ 10</td><td>kathryn@microsoft.com</td><td><span class="badge entregado">Entregado</span></td></tr>
-        <tr><td>Jacob Jones</td><td>Yahoo</td><td>$ 283</td><td>jacob@yahoo.com</td><td><span class="badge entregado">Entregado</span></td></tr>
-        <tr><td>Kristin Watson</td><td>Facebook</td><td>$ 384</td><td>kristin@facebook.com</td><td><span class="badge entregado">Entregado</span></td></tr>
-      </tbody>
-    </table>
-
-    <div class="pagination-controls">
-      <div class="data-count">Viendo datos de 1 a 8 de <span>256,000</span> ingresos</div>
-      <div class="pagination">
-        <button class="pagination-button" disabled><i data-lucide="chevron-left"></i></button>
-        <button class="pagination-button page-number active">1</button>
-        <button class="pagination-button page-number">2</button>
-        <button class="pagination-button page-number">3</button>
-        <span class="pagination-ellipsis">...</span>
-        <button class="pagination-button page-number">40</button>
-        <button class="pagination-button"><i data-lucide="chevron-right"></i></button>
-      </div>
-    </div>
-  </section>
+            <section class="table-section" id="pedidos-table">
+                <div class="table-header">
+                    <h2>Pedidos Recientes</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Pedido</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Total</th>
+                            <th>Estado del Pedido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if ($resultado_pedidos && $resultado_pedidos->num_rows > 0) {
+                            while ($pedido = $resultado_pedidos->fetch_assoc()) {
+                                $estado_clase = strtolower(htmlspecialchars($pedido['estado']));
+                        ?>
+                                <tr>
+                                    <td>#<?php echo htmlspecialchars($pedido['id_pedido']); ?></td>
+                                    <td><?php echo date("d/m/Y", strtotime($pedido['fecha'])); ?></td>
+                                    <td><?php echo htmlspecialchars($pedido['nombre_cliente']); ?></td>
+                                    <td>$<?php echo number_format($pedido['total_pedido'], 2); ?></td>
+                                    <td><span class="status <?php echo $estado_clase; ?>"><?php echo ucfirst($estado_clase); ?></span></td>
+                                </tr>
+                        <?php
+                            }
+                        } else {
+                            echo "<tr><td colspan='5' style='text-align:center;'>No hay pedidos registrados.</td></tr>";
+                        }
+                        $conexion->close();
+                        ?>
+                    </tbody>
+                </table>
+            </section>
 </main>
 
    <script>

@@ -28,6 +28,24 @@ $total_vendedores_query = "SELECT COUNT(*) as total FROM usuario WHERE rol = 've
 $total_vendedores_result = $conexion->query($total_vendedores_query);
 $total_vendedores = $total_vendedores_result->fetch_assoc()['total'];
 
+// NUEVO: Consulta para Ventas del Mes
+$ventas_mes_query = "SELECT SUM(dp.cantidad * dp.precio_unitario) as total
+                     FROM detalle_pedido dp
+                     JOIN pedido p ON dp.id_pedido = p.id_pedido
+                     WHERE MONTH(p.fecha) = MONTH(CURDATE()) AND YEAR(p.fecha) = YEAR(CURDATE())";
+$ventas_mes = $conexion->query($ventas_mes_query)->fetch_assoc()['total'] ?? 0;
+
+// NUEVO: Consulta para encontrar al Mejor Vendedor
+$mejor_vendedor_query = "SELECT v.nombre, SUM(dp.cantidad * dp.precio_unitario) AS total_vendido
+                         FROM vendedor v
+                         JOIN pedido p ON v.id_vendedor = p.id_vendedor
+                         JOIN detalle_pedido dp ON p.id_pedido = dp.id_pedido
+                         GROUP BY v.id_vendedor
+                         ORDER BY total_vendido DESC
+                         LIMIT 1";
+$mejor_vendedor_result = $conexion->query($mejor_vendedor_query);
+$mejor_vendedor_nombre = ($mejor_vendedor_result->num_rows > 0) ? $mejor_vendedor_result->fetch_assoc()['nombre'] : 'N/A';
+
 // --- Consulta para la Tabla (la que ya no dará error) ---
 $sql_vendedores = "SELECT u.id_usuario, v.nombre, u.correo_usuario, u.estado
                    FROM usuario u
@@ -93,22 +111,22 @@ $query_resultado = $conexion->query($sql_vendedores);
                     <i data-lucide="trending-up"></i>
                     <div>
                         <h3>Ventas del Mes</h3>
-                        <p>$12,540</p>
+                        <p>$<?php echo number_format($ventas_mes, 2); ?></p>
                     </div>
                 </div>
                 <div class="card">
                     <i data-lucide="award"></i>
                     <div>
                         <h3>Mejor Vendedor</h3>
-                        <p>Carlos Diaz</p>
+                        <p><?php echo htmlspecialchars($mejor_vendedor_nombre); ?></p>
                     </div>
                 </div>
             </section>
 
-            <section class="table-section" id="vendedores-table">
+            <section class="table-section">
                 <div class="table-header">
                     <h2>Todos los Vendedores</h2>
-                    </div>
+                </div>
                 <table>
                     <thead>
                         <tr>
@@ -119,42 +137,65 @@ $query_resultado = $conexion->query($sql_vendedores);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        // El bucle que rellena la tabla con datos reales
-                        if ($query_resultado && $query_resultado->num_rows > 0) {
-                            while ($fila = $query_resultado->fetch_assoc()) {
-                        ?>
+                        <?php if ($query_resultado && $query_resultado->num_rows > 0): ?>
+                            <?php while ($fila = $query_resultado->fetch_assoc()): ?>
                                 <tr data-id="<?php echo htmlspecialchars($fila['id_usuario']); ?>">
                                     <td><?php echo htmlspecialchars($fila['nombre']); ?></td>
                                     <td><?php echo htmlspecialchars($fila['correo_usuario']); ?></td>
                                     <td>
-                                        <div class="status-actions-container">
-                                            <span class="status <?php echo ($fila['estado'] === 'activo') ? 'active' : 'inactive'; ?>">
-                                                <?php echo ucfirst(htmlspecialchars($fila['estado'])); ?>
-                                            </span>
-                                        </div>
+                                        <span class="status <?php echo ($fila['estado'] === 'activo') ? 'active' : 'inactive'; ?>">
+                                            <?php echo ucfirst(htmlspecialchars($fila['estado'])); ?>
+                                        </span>
                                     </td>
                                     <td class="table-actions">
-                                        <div class="action-icons">
-                                            <a href="#" class="action-icon edit-btn" title="Editar"><i data-lucide="edit-2"></i></a>
-                                            <a href="#" class="action-icon delete-btn" title="Eliminar"><i data-lucide="trash-2"></i></a>
-                                        </div>
+                                        <a href="#" class="action-icon edit-btn" title="Editar"><i data-lucide="edit-2"></i></a>
+                                        <a href="#" class="action-icon delete-btn" title="Eliminar"><i data-lucide="trash-2"></i></a>
                                     </td>
                                 </tr>
-                        <?php
-                            } // Fin del while
-                        } else {
-                            echo "<tr><td colspan='4' class='text-center'>No se encontraron vendedores registrados.</td></tr>";
-                        }
-                        $conexion->close(); // Cerramos la conexión aquí
-                        ?>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr><td colspan="4" class="text-center">No se encontraron vendedores.</td></tr>
+                        <?php endif; $conexion->close(); ?>
                     </tbody>
                 </table>
-                </section>
+            </section>
         </main>
     </div>
 
+    <div id="edit-modal-overlay" class="modal-overlay" style="display:none;">
+        <div class="modal-content">
+            <h2>Editar Vendedor</h2>
+            <form id="edit-form">
+                <input type="hidden" id="edit-id-usuario" name="id_usuario">
+                <div class="form-group">
+                    <label for="edit-nombre">Nombre</label>
+                    <input type="text" id="edit-nombre" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-correo">Correo Electrónico</label>
+                    <input type="email" id="edit-correo" name="correo" required>
+                </div>
+                 <div class="form-group">
+                    <label for="edit-telefono">Teléfono</label>
+                    <input type="tel" id="edit-telefono" name="telefono" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-estado">Estado</label>
+                    <select id="edit-estado" name="estado">
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" id="cancel-edit-btn">Cancelar</button>
+                    <button type="submit" class="btn-save">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>lucide.createIcons();</script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../../../public/js/admin/vendedores.js"></script>
 </body>
 </html>

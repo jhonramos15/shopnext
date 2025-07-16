@@ -30,6 +30,21 @@ if (!empty($params)) {
 
 $stmt->execute();
 $resultado_productos = $stmt->get_result();
+
+$sql_mas_vendidos = "SELECT 
+                        p.id_producto, 
+                        p.nombre_producto, 
+                        p.precio, 
+                        p.ruta_imagen,
+                        SUM(dp.cantidad) as total_vendido
+                    FROM detalle_pedido dp
+                    JOIN producto p ON dp.id_producto = p.id_producto
+                    GROUP BY p.id_producto
+                    ORDER BY total_vendido DESC
+                    LIMIT 4";
+
+$resultado_mas_vendidos = $conexion->query($sql_mas_vendidos);
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -82,8 +97,8 @@ $resultado_productos = $stmt->get_result();
         <input type="text" placeholder="¿Qué estás buscando?">
         <button><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
-      <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
-      <a href="../views/user/cart/carrito.php"><button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button></a>
+      <a href="../views/auth/login.php"><button class="icon-btn"><i class="fa-solid fa-heart"></i></button></a>
+      <a href="../views/auth/login.php"><button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button></a>
       <a href="../views/auth/login.php" class="login-btn">Iniciar Sesión</a>
     </div>
   </div>
@@ -174,9 +189,6 @@ $resultado_productos = $stmt->get_result();
       <a href="../views/pages/products/category.php?name=Celulares"><i class="fa-solid fa-mobile-button"></i></a>
       <p>Celulares</p>
     </div>
-    <div class="categoria">
-        <a href="views/pages/products/category.php"><i class="fa-solid fa-border-all"></i></a>
-        <p>Todos</p>
     </div>             
   </div>        
   </div>
@@ -235,8 +247,7 @@ $resultado_productos = $stmt->get_result();
 
     <!-- Secciones Destacadas -->
 <div class="categoria-seccion">
-  <h3 class="subtitulo">Categorías</h3>
-  <h2 class="titulo">Explora por Categoría</h2>
+  <h2 class="titulo">Categorías destacadas</h2>
 <div class="categoria-grid">
   <a href="../views/pages/products/phonesections.html" class="categoria-item">
     <div class="icon"><i class="fas fa-mobile-alt"></i></div>
@@ -257,327 +268,46 @@ $resultado_productos = $stmt->get_result();
 </div>
 </div>
 <section></section>
-<section>
-  <div class="section-header">
-   <div class="title-buttons">
-     <div class="badge2">Este Mes</div>
-     <div class="title2">Productos Más Vendidos</div>
-   </div>
-   <div class="arrows-wrapper">
-     <button class="arrow-btn arrow-left" onclick="slide(-1)">&#10094;</button>
-     <button class="arrow-btn arrow-right" onclick="slide(1)">&#10095;</button>
-   </div>
- </div>
- <div class="products-section">
-    <div class="slider-container" id="slider">
-    <div class="slider">
-      <div class="products-grid">
-        <div class="product-card">
-          <div class="products-image-wrapper">
-            <div class="icons">
-              <a href="#"><i class="fas fa-heart"></i></a>
-              <a href="#"><i class="fas fa-eye"></i></a>
-            </div>
-            <img src="img/food-animal.png" alt="Animal Food">
-            <button class="add-to-cart-btns">Añadir al carrito</button>
-          </div>
-          <div class="products-details">
-            <div class="products-title">Comida de Animales</div>
-            <div>
-              <span class="prices">$260</span>
-              <span class="old-prices">$360</span>
-            </div>
-              <div class="stars2">★★★★★ <span class="rating-count">(65)</span></div>
-          </div>
+<section class="flash-sales"> <div class="section-header">
+        <div class="badge">
+            <span>Este Mes</span>
         </div>
-        <div class="product-card">
-          <div class="products-image-wrapper">
-            <div class="icons">
-              <a href="#"><i class="fas fa-heart"></i></a>
-              <a href="#"><i class="fas fa-eye"></i></a>
-            </div>
-            <img src="img/camera.png" alt="Camera">
-            <button class="add-to-cart-btns">Añadir al carrito</button>
-          </div>
-          <div class="products-details">
-            <div class="products-title">Camera</div>
-            <div>
-              <span class="prices">$260</span>
-              <span class="old-prices">$360</span>
-            </div>
-            <div class="stars2">★★★★★ <span class="rating-count">(65)</span></div>
-          </div>
-          </div>
-          <div class="product-card">
-            <div class="products-image-wrapper">
-              <div class="icons">
-                <a href="#"><i class="fas fa-heart"></i></a>
-                <a href="#"><i class="fas fa-eye"></i></a>
-              </div>
-              <img src="img/ideapad-gaming-3i-01-500x500 1.png" alt="Ideapad Gaming">
-              <button class="add-to-cart-btns">Añadir al carrito</button>
-            </div>
-            <div class="products-details">
-              <div class="products-title">ASUS FHD Gaming Laptop</div>
-              <div>
-                 <span class="prices">$260</span>
-                 <span class="old-prices">$360</span>
-              </div>
-              <div class="stars2">★★★★★ <span class="rating-count">(65)</span></div>
-            </div>
-          </div>
-          <div class="product-card">
-          <div class="products-image-wrapper">
-            <div class="icons">
-             <a href="#"><i class="fas fa-heart"></i></a>
-             <a href="#"><i class="fas fa-eye"></i></a>
-            </div>
-            <img src="img/curology.png" alt="Curology Product Set ">
-            <button class="add-to-cart-btns">Añadir al carrito</button>
-          </div>
-          <div class="products-details">
-            <div class="products-title">Conjunto de productos Curology</div>
-              <div>
-                <span class="prices">$260</span>
-                <span class="old-prices">$360</span>
-              </div>
-              <div class="stars2">★★★★★ <span class="rating-count">(65)</span></div>
-            </div>
-          </div>
+        <div class="title-container">
+            <h2 class="title">Productos Más Vendidos</h2>
         </div>
-        <div class="products-grid">
-        <!-- Fila 2 -->
-        <div class="product-card">
-          <div class="products-image-wrapper">
-            <div class="icons">
-              <a href="#"><i class="fas fa-heart"></i></a>
-              <a href="#"><i class="fas fa-eye"></i></a>
-            </div>
-            <img src="img/mini-car.png" alt="Car Electric">
-            <button class="add-to-cart-btns">Añadir al carrito</button>
-          </div>
-          <div class="products-details">
-            <div class="products-title">Carro Electríco de Niños</div>
-            <div>
-              <span class="prices">$260</span>
-              <span class="old-prices">$360</span>
-            </div>
-            <div class="stars2">★★★★★ <span class="rating-count">(65)</span></div>
-          </div>
+        <div class="arrows-wrapper">
+            <button class="arrow-btn"><i data-lucide="arrow-left"></i></button>
+            <button class="arrow-btn"><i data-lucide="arrow-right"></i></button>
         </div>
-        <div class="product-card">
-          <div class="products-image-wrapper">
-            <div class="icons">
-              <a href="#"><i class="fas fa-heart"></i></a>
-              <a href="#"><i class="fas fa-eye"></i></a>
-            </div>
-            <img src="img/shoes-football.png" alt="Shoes Football">
-            <button class="add-to-cart-btns">Añadir al carrito</button>
-          </div>
-          <div class="products-details">
-            <div class="products-title">Zapatos de Fútbol</div>
-              <div>
-                <span class="prices">$260</span>
-                <span class="old-prices">$360</span>
-              </div>
-              <div class="stars2">★★★★★ <span class="rating-count">(65)</span></div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="products-image-wrapper">
-              <div class="icons">
-                <a href="#"><i class="fas fa-heart"></i></a>
-                <a href="#"><i class="fas fa-eye"></i></a>
-              </div>
-              <img src="img/control-gamin.png" alt="Control Gaming">
-              <button class="add-to-cart-btns">Añadir al carrito</button>
-            </div>
-            <div class="products-details">
-              <div class="products-title">Control Gaming USB Gamepad</div>
-              <div>
-                <span class="prices">$260</span>
-                <span class="old-prices">$360</span>
-              </div>
-              <div class="stars2">★★★★★ <span class="rating-count">(65)</span></div>
-            </div>
-          </div>
-          <div class="product-card">
-          <div class="products-image-wrapper">
-            <div class="icons">
-              <a href="#"><i class="fas fa-heart"></i></a>
-              <a href="#"><i class="fas fa-eye"></i></a>
-            </div>
-            <img src="img/clothes-men.png" alt="Jacket Men">
-            <button class="add-to-cart-btns">Añadir al carrito</button>
-          </div>
-          <div class="products-details">
-            <div class="products-title">Chaqueta Verde Hombre</div>
-              <div>
-                <span class="prices">$260</span>
-                <span class="old-prices">$360</span>
-              </div>
-            <div class="stars2">★★★★★ <span class="rating-count">(65)</span></div>
-          </div>
-        </div>
-      </div>
-     </div>
-     <div class="slider">
-        <div class="products-grid">
-        <!-- Sección 2 Fila 1 -->
-          <div class="product-card">
-            <div class="products-image-wrapper">
-              <div class="icons">
-                <a href="#"><i class="fas fa-heart"></i></a>
-                <a href="#"><i class="fas fa-eye"></i></a>
-              </div>
-              <img src="img/bookself.png" alt="The north coat">
-              <button class="add-to-cart-btns">Añadir al carrito</button>
-            </div>
-            <div class="products-details">
-              <div class="products-title">The north coat</div>
-              <div>
-                <span class="prices">$260</span>
-                <span class="old-prices">$360</span>
-              </div>
-              <div class="stars2">★★★★★ <span class="rating-count">(65)</span></div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="products-image-wrapper">
-              <div class="icons">
-                <a href="#"><i class="fas fa-heart"></i></a>
-                <a href="#"><i class="fas fa-eye"></i></a>
-              </div>
-              <img src="img/bookself.png" alt="The north coat">
-              <button class="add-to-cart-btns">Añadir al carrito</button>
-            </div>
-            <div class="products-details">
-              <div class="products-title">The north coat</div>
-              <div>
-                <span class="prices">$260</span>
-                <span class="old-prices">$360</span>
-              </div>
-              <div class="stars2">★★★★★ <span class="rating-count">(65)</span></div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="products-image-wrapper">
-              <div class="icons">
-                <a href="#"><i class="fas fa-heart"></i></a>
-                <a href="#"><i class="fas fa-eye"></i></a>
-              </div>
-              <img src="img/bookself.png" alt="The north coat">
-              <button class="add-to-cart-btns">Añadir al carrito</button>
-            </div>
-            <div class="products-details">
-              <div class="products-title">The north coat</div>
-              <div>
-                <span class="prices">$260</span>
-                <span class="old-prices">$360</span>
-              </div>
-              <div class="stars2">★★★★★ <span class="rating-count">(65)</span></div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="products-image-wrapper">
-              <div class="icons">
-                <a href="#"><i class="fas fa-heart"></i></a>
-                <a href="#"><i class="fas fa-eye"></i></a>
-              </div>
-              <img src="img/bookself.png" alt="The north coat">
-              <button class="add-to-cart-btns">Añadir al carrito</button>
-            </div>
-            <div class="products-details">
-              <div class="products-title">The north coat</div>
-              <div>
-                <span class="prices">$260</span>
-                <span class="old-prices">$360</span>
-              </div>
-              <div class="stars2">★★★★★ <span class="rating-count">(65)</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="products-grid">
-        <!-- Sección 2 Fila 2 -->
-          <div class="product-card">
-            <div class="products-image-wrapper">
-              <div class="icons">
-                <a href="#"><i class="fas fa-heart"></i></a>
-                <a href="#"><i class="fas fa-eye"></i></a>
-              </div>
-              <img src="img/bookself.png" alt="The north coat">
-              <button class="add-to-cart-btns">Añadir al carrito</button>
-            </div>
-            <div class="products-details">
-              <div class="products-title">The north coat</div>
-              <div>
-                <span class="prices">$260</span>
-                <span class="old-prices">$360</span>
-              </div>
-              <div class="stars2">★★★★★ <span class="rating-count">(65)</span></div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="products-image-wrapper">
-              <div class="icons">
-                <a href="#"><i class="fas fa-heart"></i></a>
-                <a href="#"><i class="fas fa-eye"></i></a>
-              </div>
-              <img src="img/bookself.png" alt="The north coat">
-              <button class="add-to-cart-btns">Añadir al carrito</button>
-            </div>
-            <div class="products-details">
-              <div class="products-title">The north coat</div>
-              <div>
-                <span class="prices">$260</span>
-                <span class="old-prices">$360</span>
-              </div>
-              <div class="stars2">★★★★★ <span class="rating-count">(65)</span></div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="products-image-wrapper">
-              <div class="icons">
-                <a href="#"><i class="fas fa-heart"></i></a>
-                <a href="#"><i class="fas fa-eye"></i></a>
-              </div>
-              <img src="img/bookself.png" alt="The north coat">
-              <button class="add-to-cart-btns">Añadir al carrito</button>
-            </div>
-            <div class="products-details">
-              <div class="products-title">The north coat</div>
-              <div>
-                <span class="prices">$260</span>
-                <span class="old-prices">$360</span>
-              </div>
-              <div class="stars2">★★★★★ <span class="rating-count">(65)</span></div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="products-image-wrapper">
-              <div class="icons">
-                <a href="#"><i class="fas fa-heart"></i></a>
-                <a href="#"><i class="fas fa-eye"></i></a>
-              </div>
-              <img src="img/bookself.png" alt="The north coat">
-              <button class="add-to-cart-btns">Añadir al carrito</button>
-            </div>
-            <div class="products-details">
-              <div class="products-title">The north coat</div>
-              <div>
-                <span class="prices">$260</span>
-                <span class="old-prices">$360</span>
-              </div>
-              <div class="stars2">★★★★★ <span class="rating-count">(65)</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
-  <div>
-  <button class="view-all-btn3">Ver todos</button>
-  </div>
+
+    <div class="products-container">
+        <div class="products">
+            <?php
+            if ($resultado_mas_vendidos && $resultado_mas_vendidos->num_rows > 0) {
+                while ($fila = $resultado_mas_vendidos->fetch_assoc()) {
+            ?>
+                    <div class="product">
+                        <div class="product-image-wrapper">
+                            <a href="views/pages/producto-detalle.php?id=<?php echo $fila['id_producto']; ?>">
+                                <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>">
+                            </a>
+                            <form action="/shopnext/ShopNext-Beta/controllers/carritoController.php" method="POST" class="add-to-cart-form">
+                                <input type="hidden" name="id_producto" value="<?php echo $fila['id_producto']; ?>">
+                                <button type="submit" class="add-to-cart-btn">Añadir al carrito</button>
+                            </form>
+                        </div>
+                        <p class="product-title"><?php echo htmlspecialchars($fila['nombre_producto']); ?></p>
+                        <p class="price">$<?php echo number_format($fila['precio'], 0); ?></p>
+                    </div>
+            <?php
+                }
+            } else {
+                echo "<p style='text-align:center; width:100%;'>Aún no hay suficientes ventas para mostrar los productos más vendidos.</p>";
+            }
+            ?>
+        </div>
+    </div>
 </section>
 <section></section>
 

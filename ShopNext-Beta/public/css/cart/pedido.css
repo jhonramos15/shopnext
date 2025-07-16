@@ -296,60 +296,204 @@ section {
   }
 }
 
-/* --- Estilos para la Tabla de Pedidos --- */
-.table-section table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
-}
-
-.table-section th, .table-section td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid #f0f0f0;
-    vertical-align: middle;
-}
-
-.table-section th {
-    font-weight: 600;
-    color: #555;
-    font-size: 14px;
-}
-
-/* Estilo para la celda del producto con imagen y texto */
-.product-cell {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.product-image {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 6px;
-}
-
 /* Estilos para los badges de estado */
 .status {
-    padding: 5px 10px;
+    padding: 6px 12px;
     border-radius: 15px;
     font-size: 12px;
     font-weight: 600;
     text-transform: capitalize;
+    border: 1px solid transparent;
 }
-.status.paid { /* Asumiendo que 'Pagado' es un estado */
-    background-color: #e6f7ec;
-    color: #00b517;
-}
-/* ... (puedes añadir más estilos para otros estados) ... */
 
-.action-icons a {
-    color: #555;
-    margin-right: 10px;
+.status.pendiente, .status.procesado {
+    background-color: #fef9c3; /* Amarillo claro */
+    color: #854d0e;
+    border-color: #fde68a;
 }
-.action-icons a:hover {
-    color: #8E06C2; /* Tu color principal */
+.status.enviado {
+    background-color: #dbeafe; /* Azul claro */
+    color: #1e40af;
+    border-color: #bfdbfe;
+}
+.status.entregado {
+    background-color: #dcfce7; /* Verde claro */
+    color: #166534;
+    border-color: #bbf7d0;
+}
+.status.cancelado {
+    background-color: #fee2e2; /* Rojo claro */
+    color: #991b1b;
+    border-color: #fecaca;
+}
+
+.text-center {
+    text-align: center;
+    padding: 20px;
+    color: #6c757d;
+}
+
+
+/* --- FUENTES Y ESTILOS GENERALES --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+main {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 500;
+  margin-bottom: 30px;
+}
+
+/* --- CONTENEDOR DE LA TABLA DE PEDIDOS --- */
+.order-history-container {
+  width: 100%;
+}
+
+/* --- ENCABEZADO DE LA TABLA --- */
+.order-header {
+  display: grid;
+  grid-template-columns: 2.5fr 1.5fr 1fr 1fr 1.5fr; /* 5 columnas */
+  gap: 20px;
+  padding: 15px 25px;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #6c757d;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.order-header > div {
+  text-align: center;
+}
+
+.order-header .header-product {
+  text-align: left;
+}
+
+/* --- FILA DE CADA PRODUCTO EN EL PEDIDO --- */
+.order-item {
+  display: grid;
+  grid-template-columns: 2.5fr 1.5fr 1fr 1fr 1.5fr; /* Mismas 5 columnas */
+  gap: 20px;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 20px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.order-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Celda del Producto (Imagen y Nombre) */
+.product-cell {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.product-image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.product-cell span {
+  font-weight: 500;
+}
+
+/* Centrado para el resto de las celdas */
+.order-item > div:not(.product-cell) {
+  text-align: center;
+}
+
+/* Estilos para el estado del pedido */
+.status {
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+    border: 1px solid transparent;
+}
+
+.status.pendiente, .status.procesado {
+    background-color: #fef9c3;
+    color: #854d0e;
+    border-color: #fde68a;
+}
+.status.enviado {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border-color: #bfdbfe;
+}
+.status.entregado {
+    background-color: #dcfce7;
+    color: #166534;
+    border-color: #bbf7d0;
+}
+.status.cancelado {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border-color: #fecaca;
+}
+
+.text-center {
+    text-align: center;
+    padding: 40px;
+    color: #6c757d;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 992px) {
+  .order-header {
+    display: none; /* Ocultamos el header en pantallas más pequeñas */
+  }
+
+  .order-item {
+    grid-template-columns: 1fr; /* Una sola columna */
+    text-align: center;
+    gap: 15px;
+    position: relative;
+    padding-top: 20px;
+  }
+  
+  .order-item > div::before {
+    content: attr(data-label); /* Usamos el data-label como título */
+    font-weight: 600;
+    color: #8E06C2;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+  }
+  
+  .product-cell {
+    flex-direction: column; /* Apila imagen y nombre */
+  }
+
+  .order-item > div:not(.product-cell) {
+    text-align: center;
+  }
 }
 
 /* footer*/

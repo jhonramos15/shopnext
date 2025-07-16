@@ -12,11 +12,14 @@ $_SESSION['last_activity'] = time();
 $conexion = new mysqli("localhost", "root", "", "shopnexs");
 if ($conexion->connect_error) { die("Conexión fallida: " . $conexion->connect_error); }
 
+// Consultas para las tarjetas de resumen
 $total_productos = $conexion->query("SELECT COUNT(*) as total FROM producto")->fetch_assoc()['total'];
-$valor_inventario = $conexion->query("SELECT SUM(precio * stock) as valor_total FROM producto")->fetch_assoc()['valor_total'];
+$valor_inventario_result = $conexion->query("SELECT SUM(precio * stock) as valor_total FROM producto")->fetch_assoc();
+$valor_inventario = $valor_inventario_result['valor_total'] ?? 0; // Prevenir error si no hay productos
 $productos_agotados = $conexion->query("SELECT COUNT(*) as agotados FROM producto WHERE stock = 0")->fetch_assoc()['agotados'];
 
-$sql_productos = "SELECT 
+// Consulta para la tabla de productos
+$sql_productos = "SELECT
                     p.id_producto, p.nombre_producto, p.precio, p.categoria, p.stock,
                     v.nombre AS nombre_vendedor
                   FROM producto p
@@ -89,7 +92,7 @@ $resultado_productos = $conexion->query($sql_productos);
                     <i data-lucide="dollar-sign"></i>
                     <div>
                         <h3>Valor del Inventario</h3>
-                        <p>$<?php echo number_format($valor_inventario ?? 0, 2); ?></p>
+                        <p>$<?php echo number_format($valor_inventario, 2); ?></p>
                     </div>
                 </div>
                 <div class="card">
@@ -132,8 +135,10 @@ $resultado_productos = $conexion->query($sql_productos);
                                     <td>$<?php echo number_format($fila['precio'], 2); ?></td>
                                     <td><span class="status <?php echo $estado_clase; ?>"><?php echo $estado_texto; ?></span></td>
                                     <td class="table-actions">
-                                        <a href="#" class="action-icon" title="Ver"><i data-lucide="eye"></i></a>
-                                        <a href="#" class="action-icon" title="Editar"><i data-lucide="edit-2"></i></a>
+                                        <a href="#" class="action-icon" title="Ver (pendiente)"><i data-lucide="eye"></i></a>
+                                                                
+                                        <a href="#" class="action-icon edit-btn" title="Editar"><i data-lucide="edit-2"></i></a>
+                                                                
                                         <a href="#" class="action-icon delete-btn" title="Eliminar"><i data-lucide="trash-2"></i></a>
                                     </td>
                                 </tr>

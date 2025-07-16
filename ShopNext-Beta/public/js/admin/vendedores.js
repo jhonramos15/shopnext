@@ -42,3 +42,114 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const tableBody = document.querySelector('.table-section tbody');
+    const modal = document.getElementById('edit-modal-overlay');
+    const editForm = document.getElementById('edit-form');
+    const cancelBtn = document.getElementById('cancel-edit-btn');
+
+    // Escuchador de eventos para toda la tabla
+    tableBody.addEventListener('click', function(event) {
+        const target = event.target;
+        const editBtn = target.closest('.edit-btn');
+        const deleteBtn = target.closest('.delete-btn');
+        
+        if (editBtn) {
+            event.preventDefault();
+            const row = editBtn.closest('tr');
+            const userId = row.dataset.id;
+            abrirModalEdicion(userId);
+        }
+
+        if (deleteBtn) {
+            event.preventDefault();
+            const row = deleteBtn.closest('tr');
+            const userId = row.dataset.id;
+            const userName = row.cells[0].textContent;
+            confirmarEliminacion(userId, userName, row);
+        }
+    });
+
+    // Abrir modal y llenarlo con datos del vendedor
+    function abrirModalEdicion(id) {
+        fetch(`../../../controllers/admin/vendedorController.php?accion=get_vendedor&id=${id}`)
+        .then(res => res.json())
+        .then(response => {
+            if (response.success) {
+                const vendedor = response.data;
+                document.getElementById('edit-id-usuario').value = id;
+                document.getElementById('edit-nombre').value = vendedor.nombre;
+                document.getElementById('edit-correo').value = vendedor.correo_usuario;
+                document.getElementById('edit-telefono').value = vendedor.telefono;
+                document.getElementById('edit-estado').value = vendedor.estado;
+                modal.style.display = 'flex';
+            } else {
+                Swal.fire('Error', response.error, 'error');
+            }
+        });
+    }
+
+    // Cerrar modal al cancelar
+    cancelBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    // Enviar formulario de edición
+    editForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        formData.append('accion', 'editar');
+
+        fetch('../../../controllers/admin/vendedorController.php', {
+            method: 'POST',
+            credentials: 'same-origin',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire('¡Éxito!', data.message, 'success').then(() => {
+                    location.reload(); // Recargamos para ver los cambios
+                });
+            } else {
+                Swal.fire('Error', data.error, 'error');
+            }
+        });
+    });
+
+    // Confirmar y eliminar vendedor
+    function confirmarEliminacion(id, name, row) {
+        Swal.fire({
+            title: `¿Eliminar a ${name}?`,
+            text: "Esta acción no se puede deshacer.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then(result => {
+            if (result.isConfirmed) {
+                const formData = new FormData();
+                formData.append('accion', 'eliminar');
+                formData.append('id_usuario', id);
+
+                fetch('../../../controllers/admin/vendedorController.php', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire('Eliminado', data.message, 'success');
+                        row.remove();
+                    } else {
+                        Swal.fire('Error', data.error, 'error');
+                    }
+                });
+            }
+        });
+    }
+});

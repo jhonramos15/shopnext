@@ -42,3 +42,68 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// public/js/admin/ayuda.js
+document.addEventListener('DOMContentLoaded', () => {
+    const tableBody = document.querySelector('#ayuda-table tbody');
+
+    if (!tableBody) return;
+
+    tableBody.addEventListener('click', function(event) {
+        const responderBtn = event.target.closest('.responder-btn');
+
+        if (responderBtn) {
+            event.preventDefault();
+            const row = responderBtn.closest('tr');
+            const ticketId = row.dataset.id;
+            
+            // Confirmación antes de cambiar el estado
+            Swal.fire({
+                title: '¿Marcar como Resuelto?',
+                text: "Esta acción cambiará el estado del ticket.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sí, resolver',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    resolverTicket(ticketId, row);
+                }
+            });
+        }
+    });
+
+    function resolverTicket(id, rowElement) {
+        const formData = new URLSearchParams();
+        formData.append('id_ticket', id);
+        formData.append('accion', 'resolver'); // Enviamos la acción que queremos realizar
+
+        fetch('../../../controllers/admin/accionesTicket.php', {
+            method: 'POST',
+            credentials: 'same-origin', // Importante para la sesión
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire('¡Éxito!', 'El ticket ha sido marcado como resuelto.', 'success');
+                
+                // Actualizamos la fila en la tabla al instante
+                const estadoCell = rowElement.querySelector('.status.status-abierto');
+                if (estadoCell) {
+                    estadoCell.textContent = 'Resuelto';
+                    estadoCell.classList.remove('status-abierto');
+                    estadoCell.classList.add('status-resuelto');
+                }
+            } else {
+                Swal.fire('Error', data.error || 'No se pudo actualizar el ticket.', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire('Error de Conexión', 'Hubo un problema al contactar con el servidor.', 'error');
+        });
+    }
+});
