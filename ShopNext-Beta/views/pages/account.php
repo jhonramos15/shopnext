@@ -61,9 +61,7 @@ $conexion->close();
     <!-- Nav Menú -->
     <nav class="nav-links" id="navMenu">
       <a href="../user/indexUser.php">Inicio</a>
-      <a href="../../views/auth/signUp.html">Regístrate</a>
-      <a href="../../views/pages/contact.html">Contacto</a>
-      <a href="../../views/pages/aboutUs.html">Acerca de</a>
+      <a href="../user/pages/contact.php">Contacto</a>
     </nav>
 
     <!-- Buscador -->
@@ -95,7 +93,7 @@ $conexion->close();
             </div>
             <ul>
                 <li class="active"><a href="#">Mi Cuenta</a></li>
-                <li><a href="#">Mis Pedidos</a></li>
+                <li><a href="../user/pages/pedidos.php">Mis Pedidos</a></li>
                 <li><a href="#">Mis Reseñas</a></li>
                 <li><a href="../../controllers/logout.php" style="color: #DB4444;">Cerrar Sesión</a></li>
             </ul>
@@ -126,12 +124,15 @@ $conexion->close();
             <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php echo htmlspecialchars($usuario['fecha_nacimiento']); ?>" disabled>
         </div>
     </div>
-    <div class="form-row">
-         <div class="form-group">
-            <label for="genero">Género</label>
-            <select id="genero" name="genero" disabled>
-                </select>
-        </div>
+      <div class="form-row">
+           <div class="form-group">
+              <label for="genero">Género</label>
+              <select id="genero" name="genero" disabled>
+                  <option value="Masculino" <?php echo ($usuario['genero'] == 'Masculino') ? 'selected' : ''; ?>>Masculino</option>
+                  <option value="Femenino" <?php echo ($usuario['genero'] == 'Femenino') ? 'selected' : ''; ?>>Femenino</option>
+                  <option value="Otro" <?php echo ($usuario['genero'] == 'Otro') ? 'selected' : ''; ?>>Otro</option>
+              </select>
+          </div>
         <div class="form-group">
             <label for="profile-pic-upload">Foto de Perfil</label>
             <input type="file" id="profile-pic-upload" name="foto_perfil" accept="image/*" disabled>

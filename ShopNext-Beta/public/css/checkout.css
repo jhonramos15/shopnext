@@ -1,44 +1,42 @@
-/* CSS General */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
+
+/* CSS General */
 body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f8f9fa;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #ffffff;
     color: #333;
     margin: 0;
     padding: 40px;
     display: flex;
     justify-content: center;
+    align-items: flex-start;
 }
 
 .container {
     display: flex;
-    gap: 40px;
+    gap: 60px;
     width: 100%;
-    max-width: 1200px;
-    flex-wrap: wrap;
+    max-width: 1100px;
 }
 
 /* Columna Izquierda - Detalles de Facturación */
 .billing-details {
     flex: 1.5;
-    min-width: 320px;
 }
 
 .billing-details h1 {
-    font-size: 26px;
-    font-weight: 500;
+    font-size: 28px;
     margin-bottom: 30px;
 }
 
 .form-group {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .form-group label {
     display: block;
     font-size: 14px;
-    color: #6c757d;
+    color: #555;
     margin-bottom: 8px;
 }
 
@@ -46,19 +44,22 @@ body {
 .form-group input[type="email"],
 .form-group input[type="tel"] {
     width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #ced4da;
-    background-color: #fff;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    background-color: #f9f9f9;
     border-radius: 5px;
     font-size: 16px;
     box-sizing: border-box;
-    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input::placeholder {
+    color: #aaa;
 }
 
 .form-group input:focus {
     outline: none;
-    border-color: #8E06C2;
-    box-shadow: 0 0 0 3px rgba(142, 6, 194, 0.15);
+    border-color: #a0a0a0;
+    background-color: #fff;
 }
 
 .save-info {
@@ -71,13 +72,19 @@ body {
     width: 18px;
     height: 18px;
     margin-right: 10px;
-    accent-color: #8E06C2;
+    accent-color: #8A2BE2;
+}
+
+.save-info label {
+    font-size: 15px;
 }
 
 /* Columna Derecha - Resumen del Pedido */
 .order-summary {
     flex: 1;
-    min-width: 320px;
+    padding: 30px;
+    border-radius: 8px;
+    background-color: #fdfdfd;
 }
 
 .order-item {
@@ -90,56 +97,97 @@ body {
 .order-item .item-info {
     display: flex;
     align-items: center;
-    gap: 15px;
 }
 
 .order-item img {
-    width: 55px;
-    height: 55px;
-    object-fit: cover;
-    border-radius: 6px;
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+    object-fit: contain;
+}
+
+.order-item span {
+    font-size: 16px;
 }
 
 .order-total {
-    border-top: 1px solid #e9ecef;
+    border-top: 1px solid #e0e0e0;
     padding-top: 20px;
-    margin: 20px 0;
+    margin-top: 20px;
 }
 
 .order-total div {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
+    font-size: 16px;
 }
 
 .order-total .total {
-    font-weight: 600;
+    font-weight: bold;
     font-size: 18px;
 }
 
-.payment-method { margin-top: 30px; }
-.payment-method div { margin-bottom: 15px; display: flex; align-items: center; }
-.payment-method input[type="radio"] { margin-right: 10px; accent-color: #8E06C2; }
+.payment-method {
+    margin-top: 30px;
+    font-size: 16px;
+}
 
-.coupon-section { display: flex; margin-top: 30px; gap: 10px; }
-.coupon-section input { flex-grow: 1; padding: 12px; border: 1px solid #ced4da; border-radius: 5px; font-size: 16px; }
+.payment-method div {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
 
-.apply-coupon-btn, .place-order-btn {
-    padding: 12px 25px;
-    background-color: #8E06C2;
+.payment-method input[type="radio"] {
+    margin-right: 10px;
+    accent-color: #000000;
+}
+
+.payment-method .bank-icons img {
+    height: 40px; 
+    margin-left: 8px;
+}
+
+.coupon-section {
+    display: flex;
+    margin-top: 30px;
+    gap: 10px;
+}
+
+.coupon-section input {
+    flex-grow: 1;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.apply-coupon-btn {
+    padding: 12px 20px;
+    background-color: #8A2BE2;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    font-weight: 500;
-    transition: background-color 0.2s;
+    font-weight: bold;
 }
-.place-order-btn { width: 100%; margin-top: 25px; padding: 15px; }
-.apply-coupon-btn:hover, .place-order-btn:hover { background-color: #700B97; }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .container { flex-direction: column-reverse; gap: 30px; }
-    body { padding: 20px; }
+.place-order-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #8A2BE2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.apply-coupon-btn:hover,
+.place-order-btn:hover {
+    opacity: 0.9;
 }

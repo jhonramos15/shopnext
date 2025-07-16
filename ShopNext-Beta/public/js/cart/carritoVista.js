@@ -9,7 +9,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const quantity = parseInt(item.querySelector('.quantity-input').value);
             total += price * quantity;
         });
-        document.getElementById('cart-total').textContent = `$${total.toLocaleString('es-CO')}`;
+        const totalElement = document.getElementById('cart-total');
+        if(totalElement) {
+            totalElement.textContent = `$${total.toLocaleString('es-CO')}`;
+        }
     };
 
     // Función genérica para llamar a la API
@@ -20,72 +23,59 @@ document.addEventListener('DOMContentLoaded', function () {
         if (quantity !== null) {
             formData.append('cantidad', quantity);
         }
-
-        return fetch('/shopnext/ShopNext-Beta/controllers/cart/carrito_api.php', {
+        
+        // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
+        // La URL ahora apunta a "carritoAPI.php" con "API" en mayúsculas.
+        return fetch('/shopnext/ShopNext-Beta/controllers/cart/carritoAPI.php', {
             method: 'POST',
             body: formData
-        }).then(response => response.json());
+        }).then(response => {
+            if (!response.ok) {
+                // Esto nos ayuda a ver el error 404 más claramente en la consola.
+                throw new Error(`Error HTTP ${response.status}: No se encontró el recurso.`);
+            }
+            return response.json(); // Intentamos convertir la respuesta a JSON
+        }).catch(error => {
+            console.error('Error en la llamada a la API:', error);
+            // Mostramos un error más amigable al usuario.
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Hubo un problema al actualizar tu carrito. Revisa la consola para más detalles.'
+            });
+        });
     };
 
     // Event delegation para manejar los clics en todo el contenedor
-    cartItemsContainer.addEventListener('click', function (event) {
-        const target = event.target;
-        const cartItem = target.closest('.cart-item');
-        if (!cartItem) return;
+    if (cartItemsContainer) {
+        cartItemsContainer.addEventListener('click', function (event) {
+            const target = event.target;
+            const cartItem = target.closest('.cart-item');
+            if (!cartItem) return;
 
-        const id = cartItem.dataset.id;
-        const quantityInput = cartItem.querySelector('.quantity-input');
-        const price = parseFloat(cartItem.querySelector('.product-price').dataset.price);
-        const subtotalElement = cartItem.querySelector('.product-subtotal');
-        let quantity = parseInt(quantityInput.value);
+            const id = cartItem.dataset.id;
+            const quantityInput = cartItem.querySelector('.quantity-input');
+            const price = parseFloat(cartItem.querySelector('.product-price').dataset.price);
+            const subtotalElement = cartItem.querySelector('.product-subtotal');
+            let quantity = parseInt(quantityInput.value);
 
-        // --- Botón de AUMENTAR cantidad ---
-        if (target.matches('.increase-qty')) {
-            quantity++;
-            quantityInput.value = quantity;
-            subtotalElement.textContent = `$${(price * quantity).toLocaleString('es-CO')}`;
-            callApi('update', id, quantity).then(updateCartTotal);
-        }
-
-        // --- Botón de DISMINUIR cantidad ---
-        if (target.matches('.decrease-qty')) {
-            if (quantity > 1) {
-                quantity--;
+            // --- Botón de AUMENTAR cantidad ---
+            if (target.matches('.increase-qty')) {
+                quantity++;
                 quantityInput.value = quantity;
                 subtotalElement.textContent = `$${(price * quantity).toLocaleString('es-CO')}`;
-                callApi('update', id, quantity).then(updateCartTotal);
+                callApi('update', id, quantity).then(() => updateCartTotal());
             }
-        }
 
-        // --- Botón de ELIMINAR producto ---
-        if (target.closest('.delete-product')) {
-            Swal.fire({
-                title: '¿Quitar producto?',
-                text: "El producto se eliminará de tu carrito.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#DB4444',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Sí, quitar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    callApi('delete', id).then(response => {
-                        if (response.success) {
-                            cartItem.style.transition = 'opacity 0.5s ease';
-                            cartItem.style.opacity = '0';
-                            setTimeout(() => {
-                                cartItem.remove();
-                                updateCartTotal();
-                                // Si el carrito queda vacío
-                                if (document.querySelectorAll('.cart-item').length === 0) {
-                                    cartItemsContainer.innerHTML = '<p class="empty-cart">Tu carrito está vacío.</p>';
-                                }
-                            }, 500);
-                        }
-                    });
+            // --- Botón de DISMINUIR cantidad ---
+            if (target.matches('.decrease-qty')) {
+                if (quantity > 1) {
+                    quantity--;
+                    quantityInput.value = quantity;
+                    subtotalElement.textContent = `$${(price * quantity).toLocaleString('es-CO')}`;
+                    callApi('update', id, quantity).then(() => updateCartTotal());
                 }
-            });
-        }
-    });
+            }
+        });
+    }
 });

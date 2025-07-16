@@ -70,7 +70,7 @@ if ($id_carrito > 0) {
     <!-- Logo Principal -->
     <div class="logo-menu">
       <div class="logo">
-        <a href="../../../public/index.php"><img src="../../../public/img/logo.svg" alt="ShopNext"></a>
+        <a href="../indexUser.php"><img src="../../../public/img/logo.svg" alt="ShopNext"></a>
       </div>
       <!-- Menú Hamburguesa -->
       <button class="hamburger" onclick="toggleMenu()">
@@ -96,9 +96,9 @@ if ($id_carrito > 0) {
         <div class="user-menu-container">
           <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
           <div class="dropdown-content" id="dropdownMenu">
-            <a href="../pages/account.php">Perfil</a>
-            <a href="#">Pedidos 🚧</a>
-            <a href="../../controllers/logout.php">Cerrar sesión</a>
+            <a href="../../pages/account.php">Perfil</a>
+            <a href="../../user/pages/pedidos.php">Pedidos</a>
+            <a href="../../../controllers/logout.php">Cerrar sesión</a>
           </div>
         </div>   
     </div>

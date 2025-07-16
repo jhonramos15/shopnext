@@ -15,8 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 input.disabled = false;
             });
     
-            // ¡IMPORTANTE! Ya NO borramos el contenido de los campos.
-    
             // 2. Cambiamos los botones.
             this.style.display = 'none';
             saveButton.style.display = 'inline-block';
@@ -27,13 +25,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- MODO LECTURA (Cancelar) ---
     if (cancelButton) {
         cancelButton.addEventListener('click', function() {
-            // Al cancelar, simplemente recargamos la página.
-            // Esto descartará cualquier cambio y restaurará los datos originales.
+            // Al cancelar, simplemente recargamos la página para descartar cambios.
             location.reload(); 
         });
     }
 
-    // --- Lógica para la previsualización de la foto (sin cambios) ---
+    // --- Previsualización de la foto ---
     const profilePicInput = document.getElementById('profile-pic-upload');
     const profilePicImage = document.getElementById('profile-pic');
     if (profilePicInput && profilePicImage) {
@@ -43,5 +40,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 profilePicImage.src = URL.createObjectURL(file);
             }
         };
+    }
+
+    // --- VALIDACIÓN DEL LADO DEL CLIENTE ---
+    if (form) {
+        form.addEventListener('submit', function(event) {
+            const nombre = document.getElementById('nombre').value.trim();
+            const correo = document.getElementById('email').value.trim();
+
+            if (nombre === '' || correo === '') {
+                // Evita que el formulario se envíe si los campos están vacíos
+                event.preventDefault(); 
+                alert('Por favor, completa los campos de Nombre y Correo.');
+            }
+        });
     }
 });

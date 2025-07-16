@@ -85,7 +85,7 @@ $resultado_productos = $conexion->query($sql_productos);
         <?php while ($fila = $resultado_productos->fetch_assoc()): ?>
             <div class="product">
                 <div class="product-image-wrapper">
-                    <a href="productoDetalle.php?id=<?php echo $fila['id_producto']; ?>">
+                    <a href="../productoDetalle.php?id=<?php echo $fila['id_producto']; ?>">
                         <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>">
                     </a>
                     <form class="add-to-cart-form">
