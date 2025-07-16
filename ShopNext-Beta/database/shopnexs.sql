@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-07-2025 a las 16:27:43
+-- Tiempo de generación: 16-07-2025 a las 22:27:03
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -95,7 +95,7 @@ INSERT INTO `cliente` (`id_cliente`, `nombre`, `telefono`, `genero`, `fecha_naci
 (53, 'Paula', 'Torres', 'Femenino', '2006-07-01', 'default_avatar.png', 'fjfjgdjifjdi', '0000-00-00', 61),
 (54, 'Paula Torres', 'ererdfg', 'Femenino', '2006-07-01', 'default_avatar.png', 'fgsdfg', '0000-00-00', 62),
 (55, 'Joseph', '23948737473', 'Masculino', '2009-12-11', 'default_avatar.png', 'sdfghhgfdfdfg', '0000-00-00', 63),
-(56, 'BrayanBG', '', NULL, '0000-00-00', 'default_avatar.png', NULL, '0000-00-00', 64);
+(56, 'BrayanBG', '3238818593', 'Masculino', '2000-02-22', 'avatar_6877d324de451.png', NULL, '0000-00-00', 64);
 
 -- --------------------------------------------------------
 
@@ -127,7 +127,8 @@ INSERT INTO `detalle_pedido` (`id_detalle`, `id_pedido`, `id_producto`, `cantida
 (9, 8, 16, 2, 2000000.00),
 (10, 8, 15, 2, 23456789.00),
 (11, 8, 14, 1, 10000.00),
-(12, 9, 20, 1, 20393.00);
+(12, 9, 20, 1, 20393.00),
+(13, 10, 20, 2, 20393.00);
 
 -- --------------------------------------------------------
 
@@ -181,7 +182,8 @@ INSERT INTO `pedido` (`id_pedido`, `id_cliente`, `id_vendedor`, `fecha`, `estado
 (6, 48, 6, '2025-07-15', 'procesado'),
 (7, 48, 6, '2025-07-15', 'entregado'),
 (8, 48, 6, '2025-07-15', 'entregado'),
-(9, 56, 6, '2025-07-16', 'pendiente');
+(9, 56, 6, '2025-07-16', 'pendiente'),
+(10, 56, 6, '2025-07-16', 'pendiente');
 
 -- --------------------------------------------------------
 
@@ -228,7 +230,7 @@ INSERT INTO `producto` (`id_producto`, `nombre_producto`, `descripcion`, `precio
 (17, 'Ideapad Gaming', 'Computador portatil', 1000002.00, 11, 'Computadores', 6, 'prod_6877a5d0a1b0d.png'),
 (18, 'Chaqueta Verde Oscura', 'Chaqueta oscura', 22222.00, 12, 'Ropa Masculina', 6, 'prod_6877a5f7e2893.png'),
 (19, 'Silla', 'Silla del 2009', 10000.00, 100, 'Hogar & Belleza', 6, 'prod_6877a62adec7a.png'),
-(20, 'Cámara', 'Camara', 20393.00, 9, 'Celulares', 6, 'prod_6877a6530c56d.png');
+(20, 'Cámara', 'Camara', 20393.00, 7, 'Celulares', 6, 'prod_6877a6530c56d.png');
 
 -- --------------------------------------------------------
 
@@ -339,7 +341,7 @@ INSERT INTO `usuario` (`id_usuario`, `correo_usuario`, `contraseña`, `fecha_reg
 (61, 'mpautorres.06@gmail.com', '$2y$10$.rcy/ZyKttJOMieH/hsmWOo6J/h9bPxLEyfTO/1a7YuXUJS5M/7VK', '2025-07-16', 'activo', 'cliente', NULL, NULL, NULL, NULL, '9e53427b54983264f3c76b84ef4f807ccd09c0209c07e65386c704fd86650c6f', 0),
 (62, 'torrespaula0620@gmail.com', '$2y$10$f0urj4hvQQzdrQI0TzB.EuXzoEs3rlunSdkOUFbPPSXvLkXg16Fze', '2025-07-16', 'activo', 'cliente', NULL, NULL, NULL, NULL, '0abf8ee6ca5998f87ea9deaab8dd010cdc427478aa6b622451d9524a994f918a', 0),
 (63, 'josephstiven2105@gmail.com', '$2y$10$SPqdqyuCoH1uqN3Xpusd3.1P5HWY6CC8zRWmr7uQdx8xl7ef2ed1G', '2025-07-16', 'activo', 'cliente', NULL, NULL, NULL, NULL, '724a1aac8f4128bfc9deb77814971964c9c85928a7645978701458e34d3d03ee', 0),
-(64, 'brayan.stiven.ardila.espana@gmail.com', '$2y$10$4GvGgoOloxCq6/rExEqUseJw4Ypzbff.H39/3BktPND.gVvrSJ1Nm', '0000-00-00', 'activo', 'cliente', NULL, NULL, NULL, NULL, NULL, 1);
+(64, 'brayan.stiven.ardila.espana@gmail.com', '$2y$10$hmteoDp2cNEyrwPNzSlvd.tkk74lJ8zUFGzArnWe1t7HaFkCyO/0.', '0000-00-00', 'activo', 'cliente', NULL, NULL, NULL, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -480,7 +482,7 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `detalle_pedido`
 --
 ALTER TABLE `detalle_pedido`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `envio`
@@ -498,7 +500,7 @@ ALTER TABLE `pago`
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
@@ -516,7 +518,7 @@ ALTER TABLE `producto`
 -- AUTO_INCREMENT de la tabla `producto_carrito`
 --
 ALTER TABLE `producto_carrito`
-  MODIFY `id_producto_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_producto_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `tickets`
