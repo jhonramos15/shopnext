@@ -1,33 +1,71 @@
 <?php
 session_start();
 
-// Verificar si el usuario está logueado y tiene el rol correcto
+// Guardián para la sección de Vendedor
 if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'vendedor') {
-    header("Location: ../auth/login.html");
+    header("Location: ../../auth/login.php");
     exit;
 }
+$_SESSION['last_activity'] = time();
 
-// Tiempo máximo de inactividad (5 minutos)
-$inactividad = 300;
+// --- CONEXIÓN Y OBTENCIÓN DEL ID DEL VENDEDOR ---
+$conexion = new mysqli("localhost", "root", "", "shopnexs");
+if ($conexion->connect_error) { die("Conexión fallida: " . $conexion->connect_error); }
 
-// Verificar si existe el tiempo de última actividad
-if (isset($_SESSION['last_activity'])) {
-    $tiempo_inactivo = time() - $_SESSION['last_activity'];
+$id_usuario_session = $_SESSION['id_usuario'];
+$stmt_vendedor_id = $conexion->prepare("SELECT id_vendedor, nombre FROM vendedor WHERE id_usuario = ?");
+$stmt_vendedor_id->bind_param("i", $id_usuario_session);
+$stmt_vendedor_id->execute();
+$vendedor_info = $stmt_vendedor_id->get_result()->fetch_assoc();
+$id_vendedor = $vendedor_info['id_vendedor'];
+$nombre_vendedor = $vendedor_info['nombre'];
+$stmt_vendedor_id->close();
 
-    if ($tiempo_inactivo > $inactividad) {
-        // Cierra la sesión si pasó el tiempo
-        session_unset();
-        session_destroy();
-        header("Location: ../auth/login.php?mensaje=sesion_expirada");
-        exit;
-    } else {
-        $_SESSION['last_activity'] = time(); // ✅ Refresca el tiempo de actividad
-    }
-} else {
-    $_SESSION['last_activity'] = time(); // ✅ Inicializa el tiempo de actividad si no existía
-}
+
+// --- CONSULTAS DE INGRESOS FILTRADAS POR VENDEDOR (CORREGIDAS) ---
+
+// 1. Ingresos de los últimos 30 días
+$ingresos_30d_query = "SELECT SUM(dp.cantidad * dp.precio_unitario) as total
+                       FROM detalle_pedido dp
+                       JOIN pedido p ON dp.id_pedido = p.id_pedido
+                       WHERE p.id_vendedor = ? AND p.fecha >= CURDATE() - INTERVAL 30 DAY";
+$stmt30 = $conexion->prepare($ingresos_30d_query);
+$stmt30->bind_param("i", $id_vendedor);
+$stmt30->execute();
+$ingresos_30_dias = $stmt30->get_result()->fetch_assoc()['total'] ?? 0;
+$stmt30->close();
+
+// 2. Ingresos de los últimos 7 días
+$ingresos_7d_query = "SELECT SUM(dp.cantidad * dp.precio_unitario) as total
+                      FROM detalle_pedido dp
+                      JOIN pedido p ON dp.id_pedido = p.id_pedido
+                      WHERE p.id_vendedor = ? AND p.fecha >= CURDATE() - INTERVAL 7 DAY";
+$stmt7 = $conexion->prepare($ingresos_7d_query);
+$stmt7->bind_param("i", $id_vendedor);
+$stmt7->execute();
+$ingresos_7_dias = $stmt7->get_result()->fetch_assoc()['total'] ?? 0;
+$stmt7->close();
+
+// 3. Consulta para la tabla de "Últimas Ventas"
+$ultimas_ventas_query = "SELECT
+                            c.nombre AS nombre_cliente,
+                            prod.nombre_producto,
+                            dp.precio_unitario,
+                            u.correo_usuario AS email_cliente,
+                            p.estado
+                        FROM detalle_pedido dp
+                        JOIN pedido p ON dp.id_pedido = p.id_pedido
+                        JOIN producto prod ON dp.id_producto = prod.id_producto
+                        JOIN cliente c ON p.id_cliente = c.id_cliente
+                        JOIN usuario u ON c.id_usuario = u.id_usuario
+                        WHERE p.id_vendedor = ?
+                        ORDER BY p.fecha DESC, p.id_pedido DESC
+                        LIMIT 8"; // Mostrar los últimos 8 artículos vendidos
+$stmt_ventas = $conexion->prepare($ultimas_ventas_query);
+$stmt_ventas->bind_param("i", $id_vendedor);
+$stmt_ventas->execute();
+$resultado_ventas = $stmt_ventas->get_result();
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -71,87 +109,60 @@ if (isset($_SESSION['last_activity'])) {
       </aside>
 
     <main class="main">
-  <header class="header">
-    <h1>Hola, Brayan 👋</h1>
-    <div class="header-search-container">
-      <div class="input-icon header-search">
-        <i data-lucide="search"></i>
-        <input type="text" placeholder="Buscar..." />
-      </div>
-    </div>
-  </header>
+      <header class="header">
+        <h1>Hola, <?php echo htmlspecialchars(explode(' ', $nombre_vendedor)[0]); ?> 👋</h1>
+        </header>
 
-  <section class="cards ingresos">
-    <div class="card ingreso-card">
-      <i data-lucide="hand-coins"></i>
-      <div>
-        <h3>Ingresos 30 días</h3>
-        <p>$ 22,485 <span class="success">↑ 1% este mes</span></p>
-      </div>
-    </div>
-    <div class="card ingreso-card">
-      <i data-lucide="dollar-sign"></i>
-      <div>
-        <h3>Ingresos 7 días</h3>
-        <p>$ 1,228 <span class="danger">↓ 6% esta semana</span></p>
-      </div>
-    </div>
-  </section>
-
-  <section class="table-section">
-    <div class="table-header">
-      <h2>Últimas Ventas</h2>
-      <div class="right-controls">
-        <div class="input-icon table-search">
-          <i data-lucide="search"></i>
-          <input type="text" placeholder="Buscar..." />
+      <section class="cards ingresos" id="ingresos-cards">
+        <div class="card">
+          <i data-lucide="hand-coins"></i>
+          <div>
+            <h3>Ingresos 30 días</h3>
+            <p>$<?php echo number_format($ingresos_30_dias, 2); ?></p>
+          </div>
         </div>
-        <div class="custom-select table-select">
-          <select>
-            <option>Ordenar: Todos</option>
-            <option>Ordenar: Entregado</option>
-            <option>Ordenar: Cancelado</option>
-            <option>Ordenar: Enviado</option>
-          </select>
+        <div class="card">
+          <i data-lucide="dollar-sign"></i>
+          <div>
+            <h3>Ingresos 7 días</h3>
+            <p>$<?php echo number_format($ingresos_7_dias, 2); ?></p>
+          </div>
         </div>
-      </div>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Nombre Cliente</th>
-          <th>Producto</th>
-          <th>Precio</th>
-          <th>Email</th>
-          <th>Estado</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Jane Cooper</td><td>Microsoft</td><td>$ 484</td><td>jane@microsoft.com</td><td><span class="badge entregado">Entregado</span></td></tr>
-        <tr><td>Floyd Miles</td><td>Yahoo</td><td>$ 824</td><td>floyd@yahoo.com</td><td><span class="badge cancelado">Cancelado</span></td></tr>
-        <tr><td>Ronald Richards</td><td>Adobe</td><td>$ 123</td><td>ronald@adobe.com</td><td><span class="badge enviado">Enviado</span></td></tr>
-        <tr><td>Marvin McKinney</td><td>Tesla</td><td>$ 82</td><td>marvin@tesla.com</td><td><span class="badge cancelado">Cancelado</span></td></tr>
-        <tr><td>Jerome Bell</td><td>Google</td><td>$ 928</td><td>jerome@google.com</td><td><span class="badge enviado">Enviado</span></td></tr>
-        <tr><td>Kathryn Murphy</td><td>Microsoft</td><td>$ 10</td><td>kathryn@microsoft.com</td><td><span class="badge entregado">Entregado</span></td></tr>
-        <tr><td>Jacob Jones</td><td>Yahoo</td><td>$ 283</td><td>jacob@yahoo.com</td><td><span class="badge entregado">Entregado</span></td></tr>
-        <tr><td>Kristin Watson</td><td>Facebook</td><td>$ 384</td><td>kristin@facebook.com</td><td><span class="badge entregado">Entregado</span></td></tr>
-      </tbody>
-    </table>
+      </section>
 
-    <div class="pagination-controls">
-      <div class="data-count">Viendo datos de 1 a 8 de <span>256,000</span> ingresos</div>
-      <div class="pagination">
-        <button class="pagination-button" disabled><i data-lucide="chevron-left"></i></button>
-        <button class="pagination-button page-number active">1</button>
-        <button class="pagination-button page-number">2</button>
-        <button class="pagination-button page-number">3</button>
-        <span class="pagination-ellipsis">...</span>
-        <button class="pagination-button page-number">40</button>
-        <button class="pagination-button"><i data-lucide="chevron-right"></i></button>
-      </div>
-    </div>
-  </section>
-</main>
+      <section class="table-section">
+        <div class="table-header">
+          <h2>Últimas Ventas</h2>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre Cliente</th>
+              <th>Producto</th>
+              <th>Precio</th>
+              <th>Email</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php if ($resultado_ventas && $resultado_ventas->num_rows > 0): ?>
+              <?php while ($venta = $resultado_ventas->fetch_assoc()): ?>
+                <tr>
+                  <td><?php echo htmlspecialchars($venta['nombre_cliente']); ?></td>
+                  <td><?php echo htmlspecialchars($venta['nombre_producto']); ?></td>
+                  <td>$<?php echo number_format($venta['precio_unitario'], 2); ?></td>
+                  <td><?php echo htmlspecialchars($venta['email_cliente']); ?></td>
+                  <td><span class="badge <?php echo strtolower(htmlspecialchars($venta['estado'])); ?>"><?php echo htmlspecialchars($venta['estado']); ?></span></td>
+                </tr>
+              <?php endwhile; ?>
+            <?php else: ?>
+                <tr><td colspan="5" style="text-align: center;">Aún no has registrado ninguna venta.</td></tr>
+            <?php endif; $conexion->close(); ?>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
 
    <script>
     lucide.createIcons();

@@ -1,31 +1,76 @@
 <?php
 session_start();
 
-// Verificar si el usuario está logueado y tiene el rol correcto
+// Guardián para la sección de Vendedor
 if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'vendedor') {
-    header("Location: ../auth/login.html");
+    header("Location: ../auth/login.php?status=sesion_expirada");
     exit;
 }
+$_SESSION['last_activity'] = time();
 
-// Tiempo máximo de inactividad (5 minutos)
-$inactividad = 300;
+// --- CONEXIÓN Y OBTENCIÓN DEL ID DEL VENDEDOR ---
+$conexion = new mysqli("localhost", "root", "", "shopnexs");
+if ($conexion->connect_error) { die("Conexión fallida: " . $conexion->connect_error); }
 
-// Verificar si existe el tiempo de última actividad
-if (isset($_SESSION['last_activity'])) {
-    $tiempo_inactivo = time() - $_SESSION['last_activity'];
+// Obtener el id_vendedor y nombre a partir del id_usuario en la sesión
+$id_usuario_session = $_SESSION['id_usuario'];
+$stmt_vendedor_info = $conexion->prepare("SELECT id_vendedor, nombre FROM vendedor WHERE id_usuario = ?");
+$stmt_vendedor_info->bind_param("i", $id_usuario_session);
+$stmt_vendedor_info->execute();
+$vendedor_info = $stmt_vendedor_info->get_result()->fetch_assoc();
 
-    if ($tiempo_inactivo > $inactividad) {
-        // Cierra la sesión si pasó el tiempo
-        session_unset();
-        session_destroy();
-        header("Location: ../auth/login.php?mensaje=sesion_expirada");
-        exit;
-    } else {
-        $_SESSION['last_activity'] = time(); // ✅ Refresca el tiempo de actividad
-    }
-} else {
-    $_SESSION['last_activity'] = time(); // ✅ Inicializa el tiempo de actividad si no existía
+if (!$vendedor_info) {
+    die("Error: Perfil de vendedor no encontrado.");
 }
+$id_vendedor = $vendedor_info['id_vendedor'];
+$nombre_vendedor = $vendedor_info['nombre'];
+$stmt_vendedor_info->close();
+
+// --- CONSULTAS PARA LAS TARJETAS (FILTRADAS POR VENDEDOR) ---
+
+// 1. Ingresos Totales del Vendedor
+$ingresos_query = "SELECT SUM(dp.cantidad * dp.precio_unitario) as total
+                   FROM detalle_pedido dp
+                   JOIN pedido p ON dp.id_pedido = p.id_pedido
+                   WHERE p.id_vendedor = ?";
+$stmt = $conexion->prepare($ingresos_query);
+$stmt->bind_param("i", $id_vendedor);
+$stmt->execute();
+$ingresos_totales = $stmt->get_result()->fetch_assoc()['total'] ?? 0;
+
+// 2. Pedidos Realizados al Vendedor
+$pedidos_query = "SELECT COUNT(*) as total FROM pedido WHERE id_vendedor = ?";
+$stmt = $conexion->prepare($pedidos_query);
+$stmt->bind_param("i", $id_vendedor);
+$stmt->execute();
+$pedidos_realizados = $stmt->get_result()->fetch_assoc()['total'] ?? 0;
+
+// 3. Clientes Únicos del Vendedor
+$clientes_query = "SELECT COUNT(DISTINCT id_cliente) as total FROM pedido WHERE id_vendedor = ?";
+$stmt = $conexion->prepare($clientes_query);
+$stmt->bind_param("i", $id_vendedor);
+$stmt->execute();
+$nuevos_clientes = $stmt->get_result()->fetch_assoc()['total'] ?? 0;
+
+
+// 4. Consulta para la Tabla de "Pedidos Recientes"
+$pedidos_recientes_query = "SELECT 
+                                p.id_pedido, 
+                                prod.nombre_producto, 
+                                p.estado, 
+                                (dp.cantidad * dp.precio_unitario) as importe
+                            FROM pedido p
+                            JOIN detalle_pedido dp ON p.id_pedido = dp.id_pedido
+                            JOIN producto prod ON dp.id_producto = prod.id_producto
+                            WHERE p.id_vendedor = ?
+                            ORDER BY p.fecha DESC
+                            LIMIT 5";
+$stmt = $conexion->prepare($pedidos_recientes_query);
+$stmt->bind_param("i", $id_vendedor);
+$stmt->execute();
+$resultado_pedidos_recientes = $stmt->get_result();
+
+$conexion->close();
 ?>
 
 <!DOCTYPE html>
@@ -68,48 +113,41 @@ if (isset($_SESSION['last_activity'])) {
         </div>
     </aside>
 
-    <main class="main">
-        <header class="header">
-            <h1>Hola, Brayan 👋</h1>
-            <div class="header-search-container">
-                <div class="input-icon header-search">
-                    <i data-lucide="search"></i>
-                    <input type="text" placeholder="Buscar..." />
-                </div>
-            </div>
-        </header>
+        <main class="main">
+            <header class="header">
+                <h1>Hola, <?php echo htmlspecialchars(explode(' ', $nombre_vendedor)[0]); ?> 👋</h1>
+            </header>
 
-        <div class="dashboard-content">
-            <section class="overview-cards">
-                <div class="card">
-                    <i data-lucide="dollar-sign"></i>
-                    <div>
-                        <h3>Ingresos Totales</h3>
-                        <p>$12,450 <span class="percentage positive">+15.2%</span></p>
+            <div class="dashboard-content">
+                <section class="overview-cards">
+                    <div class="card">
+                        <i data-lucide="dollar-sign"></i>
+                        <div>
+                            <h3>Ingresos Totales</h3>
+                            <p>$<?php echo number_format($ingresos_totales, 2); ?></p>
+                        </div>
                     </div>
-                </div>
-                <div class="card">
-                    <i data-lucide="shopping-cart"></i>
-                    <div>
-                        <h3>Pedidos Realizados</h3>
-                        <p>350 <span class="percentage positive">+21.0%</span></p>
+                    <div class="card">
+                        <i data-lucide="shopping-cart"></i>
+                        <div>
+                            <h3>Pedidos Realizados</h3>
+                            <p><?php echo number_format($pedidos_realizados); ?></p>
+                        </div>
                     </div>
-                </div>
-                <div class="card">
-                    <i data-lucide="user-plus"></i>
-                    <div>
-                        <h3>Nuevos Clientes</h3>
-                        <p>82 <span class="percentage neutral">+5.4%</span></p>
+                    <div class="card">
+                        <i data-lucide="user-plus"></i>
+                        <div>
+                            <h3>Clientes Únicos</h3>
+                            <p><?php echo number_format($nuevos_clientes); ?></p>
+                        </div>
                     </div>
-                </div>
-                <div class="card">
-                    <i data-lucide="activity"></i>
-                    <div>
-                        <h3>Tasa de Conversión</h3>
-                        <p>4.25% <span class="percentage positive">+1.5%</span></p>
+                    <div class="card">
+                        <i data-lucide="activity"></i>
+                        <div>
+                            <h3>Tasa de Conversión</h3>
+                            <p>N/A</p> </div>
                     </div>
-                </div>
-            </section>
+                </section>
             
             <section class="grid-row top-row">
                 <div class="card revenue-summary-card">

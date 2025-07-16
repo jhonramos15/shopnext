@@ -1,31 +1,33 @@
 <?php
-// views/dashboard/vendedor/pedidos.php
 session_start();
-// Guardián de seguridad (similar al de otros archivos de vendedor)
+
+if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'vendedor') {
+    header("Location: ../../auth/login.php");
+    exit;
+}
 
 $conexion = new mysqli("localhost", "root", "", "shopnexs");
-$id_usuario_session = $_SESSION['id_usuario'];
+if ($conexion->connect_error) { die("Conexión fallida: " . $conexion->connect_error); }
 
-// Obtener el id_vendedor del usuario actual
+$id_usuario_session = $_SESSION['id_usuario'];
 $stmt_vendedor = $conexion->prepare("SELECT id_vendedor FROM vendedor WHERE id_usuario = ?");
 $stmt_vendedor->bind_param("i", $id_usuario_session);
 $stmt_vendedor->execute();
 $id_vendedor = $stmt_vendedor->get_result()->fetch_assoc()['id_vendedor'];
+$stmt_vendedor->close();
 
-$sql_pedidos_vendedor = "SELECT p.id_pedido, p.fecha, p.estado, c.nombre as nombre_cliente, SUM(dp.cantidad * dp.precio_unitario) as total
-                         FROM pedido p
-                         JOIN cliente c ON p.id_cliente = c.id_cliente
-                         JOIN detalle_pedido dp ON p.id_pedido = dp.id_pedido
-                         WHERE p.id_vendedor = ?
-                         GROUP BY p.id_pedido
-                         ORDER BY p.fecha DESC";
-
-$stmt = $conexion->prepare($sql_pedidos_vendedor);
+$sql_pedidos = "SELECT 
+                    p.id_pedido, p.fecha, c.nombre AS nombre_cliente, p.estado, 
+                    (SELECT SUM(dp.cantidad * dp.precio_unitario) FROM detalle_pedido dp WHERE dp.id_pedido = p.id_pedido) AS total
+                FROM pedido p
+                JOIN cliente c ON p.id_cliente = c.id_cliente
+                WHERE p.id_vendedor = ?
+                ORDER BY p.fecha DESC";
+$stmt = $conexion->prepare($sql_pedidos);
 $stmt->bind_param("i", $id_vendedor);
 $stmt->execute();
-$pedidos = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$resultado_pedidos = $stmt->get_result();
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -102,69 +104,51 @@ $pedidos = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         </div>
       </section>
 
-      <section class="table-section" id="pedidos-table">
-        <div class="table-header">
-          <h2>Historial de Pedidos</h2>
-          <div class="right-controls">
-            <div class="input-icon table-search">
-              <i data-lucide="search"></i>
-              <input type="text" placeholder="Buscar..." />
-            </div>
-            <div class="custom-select table-select">
-              <select>
-                <option selected>Estado: Todos</option>
-                <option>Enviado</option>
-                <option>Entregado</option>
-                <option>Pendiente</option>
-                <option>Cancelado</option>
-              </select>
-            </div>
-          </div>
-        </div>
-<table>
-    <tbody>
-        <?php foreach ($pedidos as $pedido): ?>
-            <tr>
-                <td><?php echo $pedido['id_pedido']; ?></td>
-                <td><?php echo $pedido['nombre_cliente']; ?></td>
-                <td>$<?php echo number_format($pedido['total']); ?></td>
-                <td>
-                    <form action="/shopnext/ShopNext-Beta/controllers/vendedor/actualizarPedido.php" method="POST">
-                        <input type="hidden" name="id_pedido" value="<?php echo $pedido['id_pedido']; ?>">
-                        <select name="estado">
-                            <option value="pendiente" <?php echo $pedido['estado'] == 'pendiente' ? 'selected' : ''; ?>>Pendiente</option>
-                            <option value="en curso" <?php echo $pedido['estado'] == 'en curso' ? 'selected' : ''; ?>>En Curso</option>
-                            <option value="finalizado" <?php echo $pedido['estado'] == 'finalizado' ? 'selected' : ''; ?>>Finalizado</option>
-                            <option value="cancelado" <?php echo $pedido['estado'] == 'cancelado' ? 'selected' : ''; ?>>Cancelado</option>
-                        </select>
-                        <button type="submit">Actualizar</button>
-                    </form>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
-        <div class="pagination-controls">
-            <div class="data-count">
-                Mostrando <span>1</span> a <span>5</span> de <span>1,287</span> pedidos
-            </div>
-            <div class="pagination">
-                <button class="pagination-button" disabled><i data-lucide="chevron-left"></i> <span>Anterior</span></button>
-                <button class="pagination-button page-number active">1</button>
-                <button class="pagination-button page-number">2</button>
-                <button class="pagination-button page-number">3</button>
-                <span class="pagination-ellipsis">...</span>
-                <button class="pagination-button page-number">258</button>
-                <button class="pagination-button"><span>Siguiente</span> <i data-lucide="chevron-right"></i></button>
-            </div>
-        </div>
-      </section>
-    </main>
-  </div>
+            <section class="table-section" id="pedidos-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Pedido</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if ($resultado_pedidos && $resultado_pedidos->num_rows > 0): ?>
+                            <?php while ($pedido = $resultado_pedidos->fetch_assoc()): ?>
+                                <tr data-id="<?php echo $pedido['id_pedido']; ?>" data-estado="<?php echo strtolower($pedido['estado']); ?>">
+                                    <td>#<?php echo htmlspecialchars($pedido['id_pedido']); ?></td>
+                                    <td><?php echo date("d/m/Y", strtotime($pedido['fecha'])); ?></td>
+                                    <td><?php echo htmlspecialchars($pedido['nombre_cliente']); ?></td>
+                                    <td>$<?php echo number_format($pedido['total'], 2); ?></td>
+                                    <td>
+                                        <span class="status <?php echo strtolower(htmlspecialchars($pedido['estado'])); ?>">
+                                            <?php echo ucfirst(htmlspecialchars($pedido['estado'])); ?>
+                                        </span>
+                                    </td>
+                                    <td class="table-actions">
+                                        <a href="#" class="action-icon edit-status-btn" title="Cambiar Estado">
+                                            <i data-lucide="edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr><td colspan="6" style="text-align:center;">No tienes pedidos todavía.</td></tr>
+                        <?php endif; $conexion->close(); ?>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
 
   <script>
     lucide.createIcons();
   </script>
-  <script src="../../../public/js/vendedor/productos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="../../../public/js/vendedor/pedidos.js"></script>
 </body>
 </html>

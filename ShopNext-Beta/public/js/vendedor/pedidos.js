@@ -42,3 +42,77 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// public/js/vendedor/pedidos.js
+document.addEventListener('DOMContentLoaded', () => {
+    const tableBody = document.querySelector('#pedidos-table tbody');
+    if (!tableBody) return;
+
+    // Usamos un solo escuchador para toda la tabla
+    tableBody.addEventListener('click', function(event) {
+        const editButton = event.target.closest('.edit-status-btn');
+        if (!editButton) return;
+
+        event.preventDefault();
+        const row = editButton.closest('tr');
+        const pedidoId = row.dataset.id;
+        const estadoActual = row.dataset.estado;
+
+        // Abrimos el modal de SweetAlert2 para cambiar el estado
+        Swal.fire({
+            title: `Cambiar estado del Pedido #${pedidoId}`,
+            input: 'select',
+            inputOptions: {
+                'pendiente': 'Pendiente',
+                'procesado': 'Procesado',
+                'enviado': 'Enviado',
+                'entregado': 'Entregado',
+                'cancelado': 'Cancelado'
+            },
+            inputValue: estadoActual,
+            showCancelButton: true,
+            confirmButtonText: 'Actualizar Estado',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#7f56d9',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const nuevoEstado = result.value;
+                actualizarEstadoPedido(pedidoId, nuevoEstado, row);
+            }
+        });
+    });
+
+    function actualizarEstadoPedido(id, estado, rowElement) {
+        // Usamos URLSearchParams que es ideal para 'application/x-www-form-urlencoded'
+        const formData = new URLSearchParams();
+        formData.append('id_pedido', id);
+        formData.append('estado', estado);
+
+        fetch('../../../controllers/vendedor/accionesPedido.php', {
+            method: 'POST',
+            credentials: 'same-origin', // ¡No olvidar esto para que la sesión funcione!
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire('¡Actualizado!', 'El estado del pedido ha sido cambiado.', 'success');
+                
+                // Actualizamos la fila en la tabla al instante, sin recargar la página
+                const estadoBadge = rowElement.querySelector('.status');
+                estadoBadge.textContent = estado;
+                estadoBadge.className = `status ${estado.toLowerCase()}`; // Actualiza la clase para el color
+                rowElement.dataset.estado = estado; // Actualiza el estado guardado en la fila
+            } else {
+                Swal.fire('Error', data.error || 'No se pudo actualizar el estado.', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire('Error de Conexión', 'Hubo un problema con el servidor.', 'error');
+        });
+    }
+});
