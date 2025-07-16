@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-07-2025 a las 23:12:13
+-- Tiempo de generación: 16-07-2025 a las 10:45:15
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -90,7 +90,8 @@ INSERT INTO `cliente` (`id_cliente`, `nombre`, `telefono`, `genero`, `fecha_naci
 (47, 'BrayanBG', NULL, NULL, NULL, 'default_avatar.png', NULL, '0000-00-00', 51),
 (48, 'BransCliente', '3238818593', NULL, '2006-05-15', 'avatar_6874421258845.png', NULL, '0000-00-00', 54),
 (49, '29209298282', NULL, NULL, NULL, 'default_avatar.png', 'callleu28181', '0000-00-00', 57),
-(51, 'BransCliente2', '2345678765', 'Masculino', '2000-02-12', 'default_avatar.png', 'Calle 44 # 23 - 23', '0000-00-00', 59);
+(51, 'BransCliente2', '2345678765', 'Masculino', '2000-02-12', 'default_avatar.png', 'Calle 44 # 23 - 23', '0000-00-00', 59),
+(52, 'BransCliente', '3238818593', 'Masculino', '2939-12-11', 'default_avatar.png', 'Calle 44 # 23 - 23', '0000-00-00', 60);
 
 -- --------------------------------------------------------
 
@@ -172,9 +173,9 @@ CREATE TABLE `pedido` (
 INSERT INTO `pedido` (`id_pedido`, `id_cliente`, `id_vendedor`, `fecha`, `estado`) VALUES
 (4, 48, 6, '2025-07-14', 'pendiente'),
 (5, 48, 6, '2025-07-14', 'pendiente'),
-(6, 48, 6, '2025-07-15', 'pendiente'),
+(6, 48, 6, '2025-07-15', 'procesado'),
 (7, 48, 6, '2025-07-15', 'pendiente'),
-(8, 48, 6, '2025-07-15', 'pendiente');
+(8, 48, 6, '2025-07-15', 'entregado');
 
 -- --------------------------------------------------------
 
@@ -216,8 +217,8 @@ INSERT INTO `producto` (`id_producto`, `nombre_producto`, `descripcion`, `precio
 (12, 'Zapatos', 'OK', 200000.00, 200, 'Deporte', 6, 'prod_686f0e31509ed.png'),
 (13, 'Monitor', 'Monitor', 100000.00, 18, 'Videojuegos', 6, 'prod_686f53accdc0e.png'),
 (14, 'Curology', 'Curology', 10000.00, 12, 'Otro', 6, 'prod_687006e76b79f.png'),
-(15, 'Bolso Gucci', 'Bolso', 23456789.00, 117, 'Ropa Femenina', 6, 'prod_6870070bcfaed.png'),
-(16, 'GTA VI', 'JUegazo', 2000000.00, 0, 'Videojuegos', 6, 'prod_68767b14395a0.webp');
+(15, 'Bolso Gucci xd', 'Bolso', 23456789.00, 117, 'Ropa Femenina', 6, 'prod_6870070bcfaed.png'),
+(16, 'GTA VI', 'JUegazo', 2000000.00, 2, 'Videojuegos', 6, 'prod_68767b14395a0.webp');
 
 -- --------------------------------------------------------
 
@@ -231,6 +232,33 @@ CREATE TABLE `producto_carrito` (
   `id_producto` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tickets`
+--
+
+CREATE TABLE `tickets` (
+  `id_ticket` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `asunto` varchar(255) NOT NULL,
+  `mensaje` text NOT NULL,
+  `prioridad` enum('Baja','Media','Alta') NOT NULL,
+  `estado` enum('Abierto','Resuelto') NOT NULL DEFAULT 'Abierto',
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tickets`
+--
+
+INSERT INTO `tickets` (`id_ticket`, `id_usuario`, `asunto`, `mensaje`, `prioridad`, `estado`, `fecha_creacion`) VALUES
+(1, 54, 'Mi correo no sirve', 'MI correo no sirve', 'Baja', 'Abierto', '2025-07-16 01:57:32'),
+(2, 54, 'Mi contraseña no sirve', 'MI contraseña no sirve', 'Baja', 'Abierto', '2025-07-16 01:59:40'),
+(3, 54, 'Mi contraseña y correo no sirve', 'Ok', 'Media', 'Abierto', '2025-07-16 02:04:37'),
+(4, 54, 'retyr', 'qwertyu', 'Baja', 'Abierto', '2025-07-16 02:05:00'),
+(5, 54, 'asddoi', 'iowjidji', 'Media', 'Resuelto', '2025-07-16 02:07:50');
 
 -- --------------------------------------------------------
 
@@ -295,7 +323,8 @@ INSERT INTO `usuario` (`id_usuario`, `correo_usuario`, `contraseña`, `fecha_reg
 (55, 'bransstens1@gmail.com', '$2y$10$5Llz3o5yMM/r4mdG1xtXeejHE5qBOAhZyL/rjwCAGucaCfE4dVdq.', '2025-07-10', 'activo', 'vendedor', NULL, NULL, NULL, NULL, '9deecb86e697d816683221dcb15505c63210c138ff23c3847b5289e287f38931', 0),
 (56, 'brayanstivenardila111@gmail.com', '$2y$10$392Zt4/p/c7He4H6bUg4Iegz1PfDJL6abJLf0QPWx1bQpEPNtJf8i', '2025-07-10', 'activo', 'vendedor', NULL, NULL, NULL, NULL, NULL, 1),
 (57, 'hola1234@hotmail.com', '$2y$10$NCMhKvRFPiuJg592KliBZuc/vPmNnYm0F1/fzXq7N3Zc7ZKKKGtVK', '2025-07-10', 'activo', 'cliente', NULL, NULL, NULL, NULL, NULL, 1),
-(59, 'ninjadata2929@gmail.com', '$2y$10$5ZZ2Xn/KQN89D2spkGySeewcQWu/64pUiiOSCZ5y6pf7U8Lnl0OWa', '2025-07-14', 'activo', 'cliente', NULL, NULL, NULL, NULL, '6f632596c00761d9598b91aa62f27eaaed4119ca22281b7fbe48e68e86fa626f', 0);
+(59, 'ninjadata2929@gmail.com', '$2y$10$5ZZ2Xn/KQN89D2spkGySeewcQWu/64pUiiOSCZ5y6pf7U8Lnl0OWa', '2025-07-14', 'activo', 'cliente', NULL, NULL, NULL, NULL, '6f632596c00761d9598b91aa62f27eaaed4119ca22281b7fbe48e68e86fa626f', 0),
+(60, 'dfghf@gmail.com', '$2y$10$XW/YuykhebAebyhmibCYle8Onj.CrsmXR2ql7Zbebxd/wkjoOKxLK', '2025-07-16', 'activo', 'cliente', NULL, NULL, NULL, NULL, 'ca9ffebb837d9b52cdac870ad52cff49ae38f36ca34011b8880e6bfcc4e2d458', 0);
 
 -- --------------------------------------------------------
 
@@ -319,7 +348,7 @@ CREATE TABLE `vendedor` (
 
 INSERT INTO `vendedor` (`id_vendedor`, `nombre`, `direccion`, `correo`, `telefono`, `fecha_registro`, `id_usuario`) VALUES
 (1, 'Vendedor', NULL, '', '12345456', '0000-00-00', 35),
-(2, 'Vendedor2', NULL, '', '23284576584', '0000-00-00', 36),
+(2, 'Vendedor22', NULL, '', '23284576584', '0000-00-00', 36),
 (3, 'Vendedor 3', NULL, '', '23456', '0000-00-00', 40),
 (6, 'BrayanBG Vendedor', NULL, '', '3238818593', '0000-00-00', 53),
 (7, 'uhuh', NULL, '', '4567890', '0000-00-00', 55),
@@ -396,6 +425,13 @@ ALTER TABLE `producto_carrito`
   ADD KEY `id_producto` (`id_producto`);
 
 --
+-- Indices de la tabla `tickets`
+--
+ALTER TABLE `tickets`
+  ADD PRIMARY KEY (`id_ticket`),
+  ADD KEY `id_usuario` (`id_usuario`);
+
+--
 -- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
@@ -423,7 +459,7 @@ ALTER TABLE `carrito`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_pedido`
@@ -468,10 +504,16 @@ ALTER TABLE `producto_carrito`
   MODIFY `id_producto_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT de la tabla `tickets`
+--
+ALTER TABLE `tickets`
+  MODIFY `id_ticket` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT de la tabla `vendedor`
@@ -539,6 +581,12 @@ ALTER TABLE `producto`
 ALTER TABLE `producto_carrito`
   ADD CONSTRAINT `producto_carrito_ibfk_1` FOREIGN KEY (`id_carrito`) REFERENCES `carrito` (`id_carrito`) ON DELETE CASCADE,
   ADD CONSTRAINT `producto_carrito_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `tickets`
+--
+ALTER TABLE `tickets`
+  ADD CONSTRAINT `tickets_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `vendedor`
