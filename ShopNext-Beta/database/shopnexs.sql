@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-07-2025 a las 12:53:19
+-- Tiempo de generación: 17-07-2025 a las 23:03:44
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -95,7 +95,8 @@ INSERT INTO `cliente` (`id_cliente`, `nombre`, `telefono`, `genero`, `fecha_naci
 (53, 'Paula', 'Torres', 'Femenino', '2006-07-01', 'default_avatar.png', 'fjfjgdjifjdi', '0000-00-00', 61),
 (54, 'Paula Torres', 'ererdfg', 'Femenino', '2006-07-01', 'default_avatar.png', 'fgsdfg', '0000-00-00', 62),
 (55, 'Joseph', '23948737473', 'Masculino', '2009-12-11', 'default_avatar.png', 'sdfghhgfdfdfg', '0000-00-00', 63),
-(56, 'BrayanBG', '3238818593', 'Masculino', '2000-02-22', 'avatar_6877d324de451.png', NULL, '0000-00-00', 64);
+(56, 'BrayanBG', '3238818593', 'Masculino', '2000-02-22', 'avatar_6877d324de451.png', NULL, '0000-00-00', 64),
+(57, 'Otro Brayan', NULL, NULL, NULL, 'default_avatar.png', NULL, '0000-00-00', 65);
 
 -- --------------------------------------------------------
 
@@ -131,7 +132,17 @@ INSERT INTO `detalle_pedido` (`id_detalle`, `id_pedido`, `id_producto`, `cantida
 (13, 10, 20, 2, 20393.00),
 (14, 11, 23, 1, 294999.00),
 (15, 11, 22, 1, 20000.00),
-(16, 12, 23, 1, 294999.00);
+(16, 12, 23, 1, 294999.00),
+(17, 13, 23, 2, 294999.00),
+(18, 13, 16, 1, 2000000.00),
+(19, 13, 17, 1, 1000002.00),
+(20, 13, 18, 1, 22222.00),
+(21, 13, 19, 1, 10000.00),
+(22, 13, 20, 1, 20393.00),
+(23, 13, 21, 1, 100000.00),
+(24, 13, 22, 1, 20000.00),
+(25, 14, 22, 6, 20000.00),
+(26, 14, 23, 6, 294999.00);
 
 -- --------------------------------------------------------
 
@@ -165,8 +176,11 @@ CREATE TABLE `lista_favoritos` (
 --
 
 INSERT INTO `lista_favoritos` (`id_favorito`, `id_cliente`, `id_producto`, `fecha_agregado`) VALUES
-(3, 48, 19, '2025-07-17 10:47:34'),
-(5, 48, 17, '2025-07-17 10:47:38');
+(34, 48, 23, '2025-07-17 16:50:37'),
+(35, 48, 21, '2025-07-17 16:57:50'),
+(36, 48, 20, '2025-07-17 16:58:13'),
+(37, 48, 22, '2025-07-17 16:58:14'),
+(38, 48, 19, '2025-07-17 16:58:16');
 
 -- --------------------------------------------------------
 
@@ -206,10 +220,12 @@ INSERT INTO `pedido` (`id_pedido`, `id_cliente`, `id_vendedor`, `fecha`, `estado
 (6, 48, 6, '2025-07-15', 'procesado'),
 (7, 48, 6, '2025-07-15', 'entregado'),
 (8, 48, 6, '2025-07-15', 'entregado'),
-(9, 56, 6, '2025-07-16', 'pendiente'),
+(9, 56, 6, '2025-07-16', 'procesado'),
 (10, 56, 6, '2025-07-16', 'pendiente'),
 (11, 48, 6, '2025-07-17', 'pendiente'),
-(12, 48, 6, '2025-07-17', 'pendiente');
+(12, 48, 6, '2025-07-17', 'pendiente'),
+(13, 48, 6, '2025-07-17', 'pendiente'),
+(14, 48, 6, '2025-07-17', 'enviado');
 
 -- --------------------------------------------------------
 
@@ -252,14 +268,14 @@ INSERT INTO `producto` (`id_producto`, `nombre_producto`, `descripcion`, `precio
 (13, 'Monitor', 'Monitor', 100000.00, 18, 'Videojuegos', 6, 'prod_686f53accdc0e.png'),
 (14, 'Curology', 'Curology', 10000.00, 12, 'Otro', 6, 'prod_687006e76b79f.png'),
 (15, 'Bolso Gucci xd', 'Bolso', 23456789.00, 117, 'Ropa Femenina', 6, 'prod_6870070bcfaed.png'),
-(16, 'GTA VI', 'JUegazo', 2000000.00, 2, 'Videojuegos', 6, 'prod_68767b14395a0.webp'),
-(17, 'Ideapad Gaming', 'Computador portatil', 1000002.00, 11, 'Computadores', 6, 'prod_6877a5d0a1b0d.png'),
-(18, 'Chaqueta Verde Oscura', 'Chaqueta oscura', 22222.00, 12, 'Ropa Masculina', 6, 'prod_6877a5f7e2893.png'),
-(19, 'Silla', 'Silla del 2009', 10000.00, 100, 'Hogar & Belleza', 6, 'prod_6877a62adec7a.png'),
-(20, 'Cámara', 'Camara', 20393.00, 7, 'Celulares', 6, 'prod_6877a6530c56d.png'),
-(21, 'Play Station 5', 'PS5', 100000.00, 20, 'Videojuegos', 6, 'prod_68780ff13b935.png'),
-(22, 'Altavoces JBL', 'Altavoces', 20000.00, 99, 'Deportes', 6, 'prod_687811bded356.jpg'),
-(23, 'Parlantes JBL', 'Parlantes deportes', 294999.00, 198, 'Deportes', 6, 'prod_687812348c98d.jpg');
+(16, 'GTA VI', 'JUegazo', 2000000.00, 1, 'Videojuegos', 6, 'prod_68767b14395a0.webp'),
+(17, 'Ideapad Gaming', 'Computador portatil', 1000002.00, 10, 'Computadores', 6, 'prod_6877a5d0a1b0d.png'),
+(18, 'Chaqueta Verde Oscura', 'Chaqueta oscura', 22222.00, 11, 'Ropa Masculina', 6, 'prod_6877a5f7e2893.png'),
+(19, 'Silla', 'Silla del 2009', 10000.00, 99, 'Hogar & Belleza', 6, 'prod_6877a62adec7a.png'),
+(20, 'Cámara', 'Camara', 20393.00, 6, 'Celulares', 6, 'prod_6877a6530c56d.png'),
+(21, 'Play Station 5', 'PS5', 100000.00, 19, 'Videojuegos', 6, 'prod_68780ff13b935.png'),
+(22, 'Altavoces JBL', 'Altavoces', 20000.00, 92, 'Deportes', 6, 'prod_687811bded356.jpg'),
+(23, 'Parlantes JBL', 'Parlantes deportes', 294999.00, 190, 'Deportes', 6, 'prod_687812348c98d.jpg');
 
 -- --------------------------------------------------------
 
@@ -279,7 +295,8 @@ CREATE TABLE `producto_carrito` (
 --
 
 INSERT INTO `producto_carrito` (`id_producto_carrito`, `id_carrito`, `id_producto`, `cantidad`) VALUES
-(11, 1, 23, 1);
+(28, 1, 23, 1),
+(29, 1, 16, 1);
 
 -- --------------------------------------------------------
 
@@ -290,6 +307,7 @@ INSERT INTO `producto_carrito` (`id_producto_carrito`, `id_carrito`, `id_product
 CREATE TABLE `resenas` (
   `id_resena` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
   `nombre_usuario` varchar(100) NOT NULL,
   `puntuacion` int(11) NOT NULL,
   `comentario` text DEFAULT NULL,
@@ -300,12 +318,18 @@ CREATE TABLE `resenas` (
 -- Volcado de datos para la tabla `resenas`
 --
 
-INSERT INTO `resenas` (`id_resena`, `id_producto`, `nombre_usuario`, `puntuacion`, `comentario`, `fecha_creacion`) VALUES
-(1, 23, 'Brayan', 2, 'Buenisimo pero no mucho', '2025-07-17 00:00:19'),
-(2, 23, 'Brans', 3, 'nah', '2025-07-17 00:00:32'),
-(3, 23, 'Bra', 3, 'Ok', '2025-07-17 01:20:55'),
-(4, 22, 'No sirven', 1, 'OK', '2025-07-17 03:15:56'),
-(5, 22, 'Buenisimo', 5, 'IJAS', '2025-07-17 03:16:11');
+INSERT INTO `resenas` (`id_resena`, `id_producto`, `id_cliente`, `nombre_usuario`, `puntuacion`, `comentario`, `fecha_creacion`) VALUES
+(1, 23, NULL, 'Brayan', 2, 'Buenisimo pero no mucho', '2025-07-17 00:00:19'),
+(2, 23, NULL, 'Brans', 3, 'nah', '2025-07-17 00:00:32'),
+(3, 23, NULL, 'Bra', 3, 'Ok', '2025-07-17 01:20:55'),
+(4, 22, NULL, 'No sirven', 1, 'OK', '2025-07-17 03:15:56'),
+(5, 22, NULL, 'Buenisimo', 5, 'IJAS', '2025-07-17 03:16:11'),
+(6, 20, NULL, 'Ok', 1, 'Horrible', '2025-07-17 12:20:17'),
+(7, 20, NULL, 'sijdf', 5, 'ertfyhijo', '2025-07-17 12:20:33'),
+(8, 23, NULL, 'fgg', 5, 'buenisimo', '2025-07-17 13:20:04'),
+(9, 23, 48, 'BransCliente', 2, 'hola', '2025-07-17 15:00:25'),
+(10, 23, 48, 'BransCliente', 5, 'Ok', '2025-07-17 15:09:11'),
+(11, 17, 48, 'BransCliente', 5, '10/10 muy bueno', '2025-07-17 15:51:29');
 
 -- --------------------------------------------------------
 
@@ -403,7 +427,8 @@ INSERT INTO `usuario` (`id_usuario`, `correo_usuario`, `contraseña`, `fecha_reg
 (61, 'mpautorres.06@gmail.com', '$2y$10$.rcy/ZyKttJOMieH/hsmWOo6J/h9bPxLEyfTO/1a7YuXUJS5M/7VK', '2025-07-16', 'activo', 'cliente', NULL, NULL, NULL, NULL, '9e53427b54983264f3c76b84ef4f807ccd09c0209c07e65386c704fd86650c6f', 0),
 (62, 'torrespaula0620@gmail.com', '$2y$10$f0urj4hvQQzdrQI0TzB.EuXzoEs3rlunSdkOUFbPPSXvLkXg16Fze', '2025-07-16', 'activo', 'cliente', NULL, NULL, NULL, NULL, '0abf8ee6ca5998f87ea9deaab8dd010cdc427478aa6b622451d9524a994f918a', 0),
 (63, 'josephstiven2105@gmail.com', '$2y$10$SPqdqyuCoH1uqN3Xpusd3.1P5HWY6CC8zRWmr7uQdx8xl7ef2ed1G', '2025-07-16', 'activo', 'cliente', NULL, NULL, NULL, NULL, '724a1aac8f4128bfc9deb77814971964c9c85928a7645978701458e34d3d03ee', 0),
-(64, 'brayan.stiven.ardila.espana@gmail.com', '$2y$10$hmteoDp2cNEyrwPNzSlvd.tkk74lJ8zUFGzArnWe1t7HaFkCyO/0.', '0000-00-00', 'activo', 'admin', NULL, NULL, NULL, NULL, NULL, 1);
+(64, 'brayan.stiven.ardila.espana@gmail.com', '$2y$10$hmteoDp2cNEyrwPNzSlvd.tkk74lJ8zUFGzArnWe1t7HaFkCyO/0.', '0000-00-00', 'activo', 'admin', NULL, NULL, NULL, NULL, NULL, 1),
+(65, 'iweiue@gmail.com', '$2y$10$.O41gouWRsalJnKX4H16Uuo/XMXqoPj8EqXgQH1oUCf3yY97hKlCm', '0000-00-00', 'activo', 'cliente', NULL, NULL, NULL, NULL, 'fc782d7bb03f6be9f0535e8b1dd162c2a4d9a33020c09fe67052c83103e88ff4', 0);
 
 -- --------------------------------------------------------
 
@@ -517,7 +542,8 @@ ALTER TABLE `producto_carrito`
 --
 ALTER TABLE `resenas`
   ADD PRIMARY KEY (`id_resena`),
-  ADD KEY `id_producto` (`id_producto`);
+  ADD KEY `id_producto` (`id_producto`),
+  ADD KEY `id_cliente` (`id_cliente`);
 
 --
 -- Indices de la tabla `tickets`
@@ -554,13 +580,13 @@ ALTER TABLE `carrito`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_pedido`
 --
 ALTER TABLE `detalle_pedido`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de la tabla `envio`
@@ -572,7 +598,7 @@ ALTER TABLE `envio`
 -- AUTO_INCREMENT de la tabla `lista_favoritos`
 --
 ALTER TABLE `lista_favoritos`
-  MODIFY `id_favorito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_favorito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de la tabla `pago`
@@ -584,7 +610,7 @@ ALTER TABLE `pago`
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
@@ -602,13 +628,13 @@ ALTER TABLE `producto`
 -- AUTO_INCREMENT de la tabla `producto_carrito`
 --
 ALTER TABLE `producto_carrito`
-  MODIFY `id_producto_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_producto_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT de la tabla `resenas`
 --
 ALTER TABLE `resenas`
-  MODIFY `id_resena` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_resena` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `tickets`
@@ -620,7 +646,7 @@ ALTER TABLE `tickets`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT de la tabla `vendedor`
@@ -700,7 +726,8 @@ ALTER TABLE `producto_carrito`
 -- Filtros para la tabla `resenas`
 --
 ALTER TABLE `resenas`
-  ADD CONSTRAINT `resenas_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`) ON DELETE CASCADE;
+  ADD CONSTRAINT `resenas_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`) ON DELETE CASCADE,
+  ADD CONSTRAINT `resenas_ibfk_2` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`);
 
 --
 -- Filtros para la tabla `tickets`

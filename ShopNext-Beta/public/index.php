@@ -1,50 +1,46 @@
 <?php
-// public/index.php
+// public/index.php (Unificado)
 session_start();
 $conexion = new mysqli("localhost", "root", "", "shopnexs");
 if ($conexion->connect_error) { die("Falló la conexión: " . $conexion->connect_error); }
 
-// 1. Obtener la categoría de la URL. Si no se especifica, por defecto es 'Todos'.
-$categoria_seleccionada = $_GET['categoria'] ?? 'Todos';
+// Variable para saber si el usuario está logueado
+$usuario_logueado = isset($_SESSION['id_usuario']);
+$favoritos_usuario = [];
 
-// 2. Consulta SQL base (siempre se ejecuta)
-$sql_base = "SELECT p.id_producto, p.nombre_producto, p.precio, p.ruta_imagen
-             FROM producto p
-             WHERE p.stock > 0"; // Siempre mostramos solo productos con stock
+// --- SI EL USUARIO ESTÁ LOGUEADO, BUSCAMOS SUS FAVORITOS ---
+if ($usuario_logueado) {
+    $id_usuario_actual = $_SESSION['id_usuario'];
+    $stmt_cliente = $conexion->prepare("SELECT id_cliente FROM cliente WHERE id_usuario = ?");
+    $stmt_cliente->bind_param("i", $id_usuario_actual);
+    $stmt_cliente->execute();
+    $resultado_cliente = $stmt_cliente->get_result();
 
-// 3. Añadir el filtro de categoría SOLO si no es 'Todos'
-$params = [];
-$types = '';
-if ($categoria_seleccionada !== 'Todos') {
-    $sql_base .= " AND p.categoria = ?";
-    $params[] = $categoria_seleccionada;
-    $types .= 's';
+    if ($resultado_cliente->num_rows > 0) {
+        $id_cliente = $resultado_cliente->fetch_assoc()['id_cliente'];
+        $stmt_favoritos = $conexion->prepare("SELECT id_producto FROM lista_favoritos WHERE id_cliente = ?");
+        $stmt_favoritos->bind_param("i", $id_cliente);
+        $stmt_favoritos->execute();
+        $resultado_favoritos = $stmt_favoritos->get_result();
+        while ($favorito = $resultado_favoritos->fetch_assoc()) {
+            $favoritos_usuario[] = $favorito['id_producto'];
+        }
+        $stmt_favoritos->close();
+    }
+    $stmt_cliente->close();
 }
 
-$sql_base .= " ORDER BY p.id_producto DESC";
-
-$stmt = $conexion->prepare($sql_base);
-if (!empty($params)) {
-    $stmt->bind_param($types, ...$params);
-}
-
-$stmt->execute();
-$resultado_productos = $stmt->get_result();
-
-$sql_mas_vendidos = "SELECT 
-                        p.id_producto, 
-                        p.nombre_producto, 
-                        p.precio, 
-                        p.ruta_imagen,
-                        SUM(dp.cantidad) as total_vendido
-                    FROM detalle_pedido dp
-                    JOIN producto p ON dp.id_producto = p.id_producto
-                    GROUP BY p.id_producto
-                    ORDER BY total_vendido DESC
-                    LIMIT 4";
-
-$resultado_mas_vendidos = $conexion->query($sql_mas_vendidos);
-
+// --- CONSULTA DE PRODUCTOS (Funciona para ambos casos) ---
+$sql_productos = "SELECT
+                    p.id_producto, p.nombre_producto, p.precio, p.ruta_imagen,
+                    AVG(r.puntuacion) as average_rating,
+                    COUNT(r.id_resena) as review_count
+                  FROM producto p
+                  LEFT JOIN resenas r ON p.id_producto = r.id_producto
+                  WHERE p.stock > 0
+                  GROUP BY p.id_producto
+                  ORDER BY p.id_producto DESC";
+$resultado_productos = $conexion->query($sql_productos);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -60,50 +56,49 @@ $resultado_mas_vendidos = $conexion->query($sql_mas_vendidos);
 </head>
 <body>
 <header>
-  <!-- Header Negro -->
   <div class="header-top">
     <p>Rebajas de Verano: ¡50 % de Descuento!</p>
     <h2>¡Compra Ahora!</h2>
-    <select>
-      <option value="es">Español</option>
-      <option value="en">English</option>
-    </select>
   </div>
 
-  <!-- Header Principal -->
   <div class="header-main">
-    <!-- Logo Principal -->
-    <div class="logo-menu">
-      <div class="logo">
-        <a href="index.php"><img src="img/logo.svg" alt="ShopNext"></a>
-      </div>
-      <!-- Menú Hamburguesa -->
-      <button class="hamburger" onclick="toggleMenu()">
-        <i class="fa-solid fa-bars"></i>
-      </button>
+    <div class="logo">
+      <a href="/shopnext/ShopNext-Beta/public/index.php"><img src="/shopnext/ShopNext-Beta/public/img/logo.svg" alt="ShopNext"></a>
     </div>
 
-    <!-- Nav Menú -->
-    <nav class="nav-links" id="navMenu">
-      <a href="index.php">Inicio</a>
-      <a href="../views/auth/signUp.html">Regístrate</a>
-      <a href="../views/pages/contact.html">Contacto</a>
-      <a href="../views/pages/aboutUs.html">Acerca de</a>
+    <nav class="nav-links">
+      <a href="/shopnext/ShopNext-Beta/public/index.php">Inicio</a>
+      <?php if ($usuario_logueado): ?>
+        <a href="#productos">Productos</a>
+        <a href="/shopnext/ShopNext-Beta/views/user/pages/contact.php">Contacto</a>
+      <?php else: ?>
+        <a href="/shopnext/ShopNext-Beta/views/auth/signUp.html">Regístrate</a>
+        <a href="/shopnext/ShopNext-Beta/views/pages/contact.html">Contacto</a>
+      <?php endif; ?>
     </nav>
 
-    <!-- Buscador -->
-<div class="header-icons">
-  
-  <form id="search-form" class="buscador">
-    <div style="position: relative;">
-        <input type="text" id="search-input" name="query" placeholder="¿Qué estás buscando?" autocomplete="off">
-        <div id="search-results" class="search-results-container"></div>
-    </div>
-    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-  </form>
-      <a href="../views/auth/login.php"><button class="icon-btn"><i class="fa-solid fa-heart"></i></button></a>
-      <a href="../views/auth/login.php"><button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button></a>
-      <a href="../views/auth/login.php" class="login-btn">Iniciar Sesión</a>
+    <div class="header-icons">
+      <div class="buscador">
+        <input type="text" placeholder="¿Qué estás buscando?">
+        <button><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+
+      <?php if ($usuario_logueado): ?>
+        <a href="/shopnext/ShopNext-Beta/views/user/pages/favoritos.php" title="Favoritos"><i class="fa-solid fa-heart"></i></a>
+        <a href="/shopnext/ShopNext-Beta/views/user/cart/carrito.php" title="Carrito"><i class="fa-solid fa-cart-shopping"></i></a>
+        <div class="user-menu-container">
+          <i class="fas fa-user user-icon" onclick="toggleDropdown()"></i>
+          <div class="dropdown-content" id="dropdownMenu">
+            <a href="/shopnext/ShopNext-Beta/views/pages/account.php">Mi Perfil</a>
+            <a href="/shopnext/ShopNext-Beta/views/user/pages/pedidos.php">Mis Pedidos</a>
+            <a href="/shopnext/ShopNext-Beta/controllers/logout.php">Cerrar Sesión</a>
+          </div>
+        </div>
+      <?php else: ?>
+        <a href="/shopnext/ShopNext-Beta/views/auth/login.php"><i class="fa-solid fa-heart"></i></a>
+        <a href="/shopnext/ShopNext-Beta/views/auth/login.php"><i class="fa-solid fa-cart-shopping"></i></a>
+        <a href="/shopnext/ShopNext-Beta/views/auth/login.php" class="login-btn">Iniciar Sesión</a>
+      <?php endif; ?>
     </div>
   </div>
 </header>

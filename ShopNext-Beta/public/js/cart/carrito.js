@@ -137,3 +137,70 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+/**
+ * Función para eliminar un producto específico del carrito.
+ * @param {number} idProducto - El ID del producto a eliminar.
+ */
+function eliminarDelCarrito(idProducto) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Este producto se eliminará de tu carrito.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#8E06C2',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, ¡eliminar!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // ===== RUTA CORREGIDA AQUÍ =====
+            fetch('/shopnext/ShopNext-Beta/controllers/cart/carritoController.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `action=eliminar&id_producto=${idProducto}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    Swal.fire('Error', data.message, 'error');
+                }
+            });
+        }
+    });
+}
+
+/**
+ * Función para vaciar completamente el carrito de compras.
+ */
+function vaciarCarrito() {
+    Swal.fire({
+        title: '¿Vaciar todo el carrito?',
+        text: "Esta acción eliminará todos los productos y no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#8E06C2',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, ¡vaciarlo!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // ===== Y RUTA CORREGIDA AQUÍ =====
+            fetch('/shopnext/ShopNext-Beta/controllers/cart/carritoController.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'action=vaciar'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    Swal.fire('Error', data.message, 'error');
+                }
+            });
+        }
+    });
+}
