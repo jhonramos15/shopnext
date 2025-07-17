@@ -1,70 +1,53 @@
 document.addEventListener('DOMContentLoaded', function () {
     const reviewForm = document.getElementById('review-form');
-    if (!reviewForm) return;
 
-    const messageContainer = document.getElementById('review-form-message');
-    const submitButton = reviewForm.querySelector('button[type="submit"]');
+    // Si no se encuentra el formulario en la página, no hacemos nada.
+    if (!reviewForm) {
+        return;
+    }
 
     reviewForm.addEventListener('submit', function (event) {
+        // Prevenimos el envío tradicional del formulario
         event.preventDefault();
 
         const formData = new FormData(reviewForm);
-        
-        submitButton.disabled = true;
-        messageContainer.textContent = 'Enviando...';
-        messageContainer.style.color = 'black';
 
-        // --- ¡¡ESTA ES LA LÍNEA CORREGIDA!! ---
-        // Desde 'views/pages/', necesitamos subir dos niveles (../../) para llegar a la raíz
-        const fetchURL = '../../controllers/guardarResena.php'; 
-
-        fetch(fetchURL, {
+        // Hacemos la petición al backend para guardar la reseña
+        fetch('../../controllers/guardarResena.php', {
             method: 'POST',
             body: formData
         })
         .then(response => {
+            // Si la respuesta no es OK (ej: error 401 o 500), lanzamos un error
             if (!response.ok) {
-                // Si la respuesta del servidor no es exitosa (ej: 404, 500)
-                return response.text().then(text => { 
-                    throw new Error("El servidor devolvió una respuesta inesperada: " + text);
-                });
+                return response.json().then(err => { throw err; });
             }
-            // Si la respuesta es exitosa (2xx), la procesamos como JSON
             return response.json();
         })
         .then(data => {
+            // Si la reseña se guardó con éxito
             if (data.success) {
-                messageContainer.textContent = data.message;
-                messageContainer.style.color = 'green';
-                reviewForm.reset();
-                setTimeout(() => window.location.reload(), 2000);
-            } else {
-                // Errores controlados devueltos por nuestro PHP
-                throw new Error(data.message);
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Reseña Enviada!',
+                    text: data.message,
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    // Recargamos la página para que el usuario vea su nueva reseña
+                    window.location.reload();
+                });
             }
         })
         .catch(error => {
-            // Capturamos cualquier error y lo mostramos
-            messageContainer.textContent = `Error: ${error.message}`;
-            messageContainer.style.color = 'red';
-        })
-        .finally(() => {
-            // Se ejecuta siempre, al final
-            submitButton.disabled = false;
+            // Si ocurre cualquier error (de red, del servidor, etc.), lo mostramos
+            console.error('Error al enviar la reseña:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                // Usamos el mensaje del error si está disponible, si no, uno genérico
+                text: error.message || 'No se pudo guardar la reseña. Inténtalo de nuevo.'
+            });
         });
     });
 });
-
-function showLoginAlert() {
-    Swal.fire({
-        icon: 'info',
-        title: 'Inicia Sesión',
-        text: 'Necesitas iniciar sesión para poder comprar.',
-        confirmButtonText: 'Ir a Login',
-        confirmButtonColor: '#8E06C2'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = '../auth/login.php';
-        }
-    });
-}

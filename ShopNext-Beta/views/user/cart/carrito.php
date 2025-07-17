@@ -49,7 +49,7 @@ if ($id_carrito > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tu Carrito de Compras | ShopNext</title>
-    <link rel="stylesheet" href="../../../public/css/carrito.css"> 
+    <link rel="stylesheet" href="../../../public/css/cart/carrito.css"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
@@ -91,7 +91,7 @@ if ($id_carrito > 0) {
         <button><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
       <!-- Favoritos -->
-      <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
+      <a href="../pages/favoritos.php"><button class="icon-btn"><i class="fa-solid fa-heart"></i></button></a>
       <!-- Ícono de usuario -->
         <div class="user-menu-container">
           <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
@@ -124,25 +124,26 @@ if ($id_carrito > 0) {
                 $total_general += $subtotal;
         ?>
             <div class="cart-item" data-id="<?php echo $item['id_producto_carrito']; ?>">
-                <div class="product-details">
-                    <div class="product-image">
-                        <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($item['ruta_imagen']); ?>" alt="<?php echo htmlspecialchars($item['nombre_producto']); ?>">
-                        <div class="delete-product">
-                            <i class="fas fa-times"></i>
-                        </div>
-                    </div>
-                    <span class="product-name"><?php echo htmlspecialchars($item['nombre_producto']); ?></span>
-                </div>
-                <div class="product-price" data-price="<?php echo $item['precio']; ?>">$<?php echo number_format($item['precio']); ?></div>
-                <div class="product-quantity">
-                    <div class="quantity-selector">
-                        <button class="quantity-btn decrease-qty">-</button>
-                        <input type="number" class="quantity-input" value="<?php echo $item['cantidad']; ?>" readonly>
-                        <button class="quantity-btn increase-qty">+</button>
-                    </div>
-                </div>
-                <div class="product-subtotal">$<?php echo number_format($subtotal); ?></div>
-            </div>
+    <div class="product-details">
+         <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($item['ruta_imagen']); ?>" alt="<?php echo htmlspecialchars($item['nombre_producto']); ?>" class="product-image">
+        <span class="product-name"><?php echo htmlspecialchars($item['nombre_producto']); ?></span>
+    </div>
+    <div class="product-price" data-price="<?php echo $item['precio']; ?>">$<?php echo number_format($item['precio']); ?></div>
+    <div class="product-quantity">
+        <div class="quantity-selector">
+            <button class="quantity-btn decrease-qty">-</button>
+            <input type="number" class="quantity-input" value="<?php echo $item['cantidad']; ?>" readonly>
+            <button class="quantity-btn increase-qty">+</button>
+        </div>
+    </div>
+    <div class="product-subtotal">$<?php echo number_format($subtotal); ?></div>
+
+    <div class="remove-action">
+        <button class="remove-item-btn" title="Eliminar producto" onclick="eliminarDelCarrito(<?php echo $item['id_producto']; ?>)">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</div>
         <?php
             }
         } else {
@@ -152,20 +153,20 @@ if ($id_carrito > 0) {
     </div>
 
     <div class="cart-bottom">
-        <div class="coupon-section">
-            <input type="text" placeholder="Código de Cupón" />
-            <button class="btn btn-primary">Aplicar Cupón</button>
-        </div>
-
-        <div class="summary-section">
-            <h3 class="summary-title">Resumen del Carrito</h3>
-            <div class="summary-item total-item">
-                <span>Total:</span>
-                <strong id="cart-total">$<?php echo number_format($total_general); ?></strong>
-            </div>
-            <a href="checkout.php" class="btn btn-primary btn-checkout">Finalizar Compra</a>
-        </div>
+    <div class="cart-actions">
+        <a href="../indexUser.php" class="btn btn-outline">Volver a la Tienda</a>
+        <button type="button" class="btn btn-danger" onclick="vaciarCarrito()">Vaciar Carrito</button>
     </div>
+    
+    <div class="summary-section">
+        <h3 class="summary-title">Resumen del Carrito</h3>
+        <div class="summary-item total-item">
+            <span>Total:</span>
+            <strong id="cart-total">$<?php echo number_format($total_general); ?></strong>
+        </div>
+        <a href="checkout.php" class="btn btn-primary btn-checkout">Finalizar Compra</a>
+    </div>
+</div>
   </main>
 
 <footer class="footer-contact">

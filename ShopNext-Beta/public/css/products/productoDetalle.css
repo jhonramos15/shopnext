@@ -279,7 +279,7 @@ section {
     width: 80px; height: 80px; object-fit: cover; cursor: pointer;
     border: 2px solid #e0e0e0; border-radius: 4px; padding: 5px;
 }
-.thumbnail-img.active { border-color: #DB4444; } /* Color rojo para el borde activo */
+.thumbnail-img.active { border-color: #8E06C2; } /* Color rojo para el borde activo */
 .main-image-container {
     background-color: #F5F5F5; border-radius: 4px;
     padding: 20px; height: 500px; width: 500px; /* Tamaño fijo */
@@ -467,6 +467,77 @@ section {
     color: #333;
 }
 
+/* Estilos para las estrellas de valoración */
+.product-rating .stars .fa-star {
+    color: #680493; /* Color amarillo/naranja para las estrellas */
+}
+
+.wishlist-btn {
+    padding: 10px; border: 0px; border-radius: 4px;
+    background-color: transparent; cursor: pointer; font-size: 20px;
+}
+.wishlist-btn i { color: #333; }
+.wishlist-btn:hover, .wishlist-btn.active {
+    border-color: #121212;
+}
+.wishlist-btn.active i {
+    color: #680493; /* Corazón rojo cuando está activo */
+}
+
+.actions {
+    display: flex;
+    align-items: center;  /* Centra los botones verticalmente */
+    gap: 16px;          /* ¡ESTA ES LA LÍNEA CLAVE! Añade espacio entre los botones */
+    margin-top: 24px;
+}
+
+/* Hacemos que el botón "Comprar Ahora" ocupe el espacio restante */
+.buy-btn {
+    flex-grow: 1; 
+}
+
+/* El texto "En Stock" en verde */
+.product-rating .stock-status {
+    color: #00B517; 
+    font-size: 14px; 
+    font-weight: 500;
+}
+
+/* Contenedor principal del aviso */
+.login-prompt {
+    border: 1px solid #e0e0e0;  /* Borde sutil */
+    border-radius: 8px;         /* Esquinas redondeadas */
+    padding: 25px 30px;         /* Espaciado interno amplio */
+    text-align: center;         /* Centra el texto y el botón */
+    background-color: #f8f9fa;  /* Un fondo gris muy claro */
+    margin-top: 20px;
+}
+
+/* Párrafo del mensaje */
+.login-prompt p {
+    margin: 0 0 15px 0;   /* Espacio solo debajo del texto */
+    font-size: 16px;
+    color: #333;          /* Color de texto oscuro para legibilidad */
+}
+
+/* Botón/Enlace para Iniciar Sesión */
+.login-link-btn {
+    display: inline-block;        /* Permite darle padding y forma */
+    padding: 12px 30px;           /* Tamaño del botón */
+    background-color: #8E06C2;    /* Tu color morado principal */
+    color: #ffffff;               /* Texto blanco */
+    text-decoration: none;        /* Quita el subrayado del enlace */
+    border-radius: 5px;           /* Esquinas redondeadas */
+    font-weight: 500;
+    transition: all 0.3s ease;  /* Transición suave para el hover */
+}
+
+/* Efecto al pasar el mouse sobre el botón */
+.login-link-btn:hover {
+    background-color: #680493;    /* Morado un poco más oscuro */
+    transform: translateY(-2px);  /* Efecto de "levantarse" */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
 #review-form input[type="text"],
 #review-form textarea {
     width: 100%;

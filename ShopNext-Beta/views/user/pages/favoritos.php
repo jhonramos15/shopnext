@@ -79,8 +79,9 @@ $conexion->close();
         <input type="text" placeholder="¿Qué estás buscando?">
         <button><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
-      <!-- Favoritos -->
-      <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
+      <a href="/shopnext/ShopNext-Beta/views/user/cart/carrito.php" class="header-icon">
+        <i class="fa-solid fa-cart-shopping" style="color: #121212;"></i>
+      </a>
       <!-- Ícono de usuario -->
         <div class="user-menu-container">
           <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
@@ -109,7 +110,7 @@ $conexion->close();
                             <i class="fas fa-trash-alt"></i>
                         </button>
                         
-                        <a href="../pages/productoDetalle.php?id=<?php echo $producto['id_producto']; ?>">
+                        <a href="../../pages/productoDetalle.php?id=<?php echo $producto['id_producto']; ?>">
                             <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($producto['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($producto['nombre_producto']); ?>">
                         </a>
 
@@ -143,7 +144,7 @@ $conexion->close();
 <!-- Footer -->
      <footer class="footer-contact">
       <div class="footer-section">
-          <img src="../img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
+          <img src="../../../public/img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
       </div>
 
       <div class="footer-section">
@@ -168,9 +169,15 @@ $conexion->close();
           <h3>Contacto</h3>
           <ul>
               <li><a>Redes Sociales</a></li>
-              <img src="../img/Icon-Twitter.png" alt="Icon Twitter">
-              <img src="../img/icon-instagram.png" alt="Icon Instagram">
-              <img src="../img/Icon-Linkedin.png" alt="Icon LinkedIn">
+              <img src="../../../public/img/Icon-Twitter.png" alt="Icon Twitter">
+              <img src="../../../public/img/icon-instagram.png" alt="Icon Instagram">
+              <img src="../../../public/img/Icon-Linkedin.png" alt="Icon LinkedIn">
             </ul>
           </div>
     </footer>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+<script src="/shopnext/ShopNext-Beta/public/js/user/deleteFavorito.js"></script>
+<script src="/shopnext/ShopNext-Beta/public/js/cart/carrito.js"></script>
+<script src="/shopnext/ShopNext-Beta/public/js/user/wishlistActions.js"></script>
+</body>
+</html>

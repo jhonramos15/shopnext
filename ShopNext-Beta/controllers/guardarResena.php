@@ -1,58 +1,67 @@
 <?php
+session_start();
 header('Content-Type: application/json');
 
-// Conexión a la base de datos (usa la misma que en searchController.php)
-$conexion = new mysqli("localhost", "root", "", "shopnexs");
+// 1. VERIFICAR SI EL USUARIO ESTÁ AUTENTICADO
+if (!isset($_SESSION['id_usuario'])) {
+    http_response_code(401); // No autorizado
+    echo json_encode(['success' => false, 'message' => 'Debes iniciar sesión para dejar una reseña.']);
+    exit;
+}
 
+// 2. CONEXIÓN A LA BASE DE DATOS
+$conexion = new mysqli("localhost", "root", "", "shopnexs");
 if ($conexion->connect_error) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Error de conexión a la base de datos.']);
+    echo json_encode(['success' => false, 'message' => 'Error de conexión con el servidor.']);
+    exit;
+}
+$conexion->set_charset("utf8mb4");
+
+// 3. OBTENER ID y NOMBRE DEL CLIENTE DESDE LA BD (MÁS SEGURO)
+$id_usuario_actual = $_SESSION['id_usuario'];
+$id_cliente = null;
+$nombre_usuario = null;
+
+$stmt_cliente = $conexion->prepare("SELECT id_cliente, nombre FROM cliente WHERE id_usuario = ?");
+$stmt_cliente->bind_param("i", $id_usuario_actual);
+$stmt_cliente->execute();
+$resultado_cliente = $stmt_cliente->get_result();
+
+if ($fila_cliente = $resultado_cliente->fetch_assoc()) {
+    $id_cliente = $fila_cliente['id_cliente'];
+    $nombre_usuario = $fila_cliente['nombre'];
+}
+$stmt_cliente->close();
+
+// Si no se encontró un cliente asociado, es un error.
+if (is_null($id_cliente)) {
+    http_response_code(403); // Prohibido
+    echo json_encode(['success' => false, 'message' => 'Tu cuenta no está asociada a un perfil de cliente.']);
     exit;
 }
 
-// Validamos que la solicitud sea POST
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405); // Method Not Allowed
-    echo json_encode(['success' => false, 'message' => 'Método no permitido.']);
-    exit;
-}
-
-// Obtenemos los datos del formulario
+// 4. VALIDAR LOS DATOS RECIBIDOS DEL FORMULARIO
 $id_producto = filter_input(INPUT_POST, 'id_producto', FILTER_VALIDATE_INT);
-$nombre_usuario = trim(filter_input(INPUT_POST, 'nombre_usuario', FILTER_SANITIZE_STRING));
 $puntuacion = filter_input(INPUT_POST, 'puntuacion', FILTER_VALIDATE_INT);
 $comentario = trim(filter_input(INPUT_POST, 'comentario', FILTER_SANITIZE_STRING));
 
-// Validaciones básicas
-if (!$id_producto || !$nombre_usuario || !$puntuacion) {
-    http_response_code(400); // Bad Request
-    echo json_encode(['success' => false, 'message' => 'Faltan datos obligatorios (producto, nombre o puntuación).']);
+if (!$id_producto || !$puntuacion) {
+    http_response_code(400); // Solicitud incorrecta
+    echo json_encode(['success' => false, 'message' => 'Datos incompletos. Por favor, selecciona una puntuación.']);
     exit;
 }
 
-if ($puntuacion < 1 || $puntuacion > 5) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'La puntuación debe estar entre 1 y 5.']);
-    exit;
-}
-
-// Preparamos la consulta para insertar la reseña de forma segura
-$sql = "INSERT INTO resenas (id_producto, nombre_usuario, puntuacion, comentario) VALUES (?, ?, ?, ?)";
+// 5. INSERTAR LA RESEÑA CON EL ID_CLIENTE
+$sql = "INSERT INTO resenas (id_producto, id_cliente, nombre_usuario, puntuacion, comentario) VALUES (?, ?, ?, ?, ?)";
 $stmt = $conexion->prepare($sql);
-
-if (!$stmt) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Error al preparar la consulta.']);
-    exit;
-}
-
-$stmt->bind_param("isis", $id_producto, $nombre_usuario, $puntuacion, $comentario);
+$stmt->bind_param("iisis", $id_producto, $id_cliente, $nombre_usuario, $puntuacion, $comentario);
 
 if ($stmt->execute()) {
     echo json_encode(['success' => true, 'message' => '¡Gracias por tu reseña!']);
 } else {
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'No se pudo guardar tu reseña. Inténtalo de nuevo.']);
+    echo json_encode(['success' => false, 'message' => 'No se pudo guardar la reseña. Inténtalo más tarde.']);
 }
 
 $stmt->close();

@@ -478,220 +478,226 @@ section {
   color: #fefefe;
 }
 
-/* Descuentos */
-
-.flash-sales { 
-  max-width: 1200px;
-  margin: auto;
+/* Contenedor general del H2 para alinear los spans */
+.section-header h2 {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0;
+    display: flex; /* Alinea los spans */
+    gap: 8px; /* Espacio entre las palabras */
 }
 
-.flash-header {
-  padding-top: 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 40px;
-  position: relative;
+/* Estilo para la palabra "Últimos" */
+.section-header h2 .title-part-1 {
+    color: #121212;
+    font-weight: 700;
+}
+
+/* Estilo para la palabra "Productos" */
+.section-header h2 .title-part-2 {
+    color: #6d2c91;
+}
+
+.latest-products-section {
+    /* Padding a los lados para que no toque los bordes */
+    padding-left: 80px;
+    padding-right: 80px;
+    margin-bottom: 40px; /* Espacio inferior */
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
 }
 
 .title-container {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
-.flash-header h2 {
-  font-size: 36px;
-  white-space: nowrap;
-  }
-
-.flash-header h2 span.flash {
-  color: #000;
+/* Esta es la barrita de color */
+.title-badge {
+    display: block;
+    width: 20px;
+    height: 40px;
+    background-color: #8E06C2; /* Rojo distintivo */
+    border-radius: 4px;
 }
 
-.flash-header h2 span.sales {
-  color: #8e44ad;
+.section-header h2 {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0;
+}
+/* Ajuste para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .latest-products-section {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
 }
 
-.countdown {
-  display: flex;
-  gap: 10px;
-  font-size: 16px;
-  align-items: center;
-  background: #f5f5f5;
-  padding: 8px 15px;
-  border-radius: 30px;
+.product-card {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column; 
 }
 
-.countdown div {
-  text-align: center;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.countdown div span {
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.scroll-controls {
-  margin-top: 40px;
-  position: absolute;
-  right: 0;
-  top: 0;
-  display: flex;
-  gap: 10px;
-  background: #f5f5f5;
-  padding: 5px;
-  border-radius: 30px;
-}
-
-.scroll-btn {
-  background: #121212;
-  color: white;
-  border: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s;
-}
-.scroll-btn:hover {
-  background: #8e44ad;
-}
-
-    
-.products-container {
-  overflow-x: auto;
-  scroll-behavior: smooth;
-}
-
-.products {
-  display: flex;
-  gap: 1.5rem;
-  padding-bottom: 1rem;
-  width: max-content;
-  padding-left: 50px;
-  padding-right: 50px;
-}
-
-.product {
-  min-width: 280px;
-  height: auto;
-  border: 1px solid #eee;
-  border-radius: 10px;
-  background-color: transparent;
-  overflow: hidden;
-  position: relative;
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .product-image-wrapper {
-  position: relative;
-  background-color: #f9f9f9;
-  background-image: grey;
-  background-size: 20px 20px;
-  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
+    position: relative;
+    background-color: #F5F5F5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1; /* Mantiene la proporción cuadrada */
 }
 
-.product img {
-  width: auto;
-  height: 100%;
-  object-fit: contain;
-  padding: 0;
+.product-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
+/* --- Iconos y Botones sobre la imagen --- */
+
+/* Contenedor para los iconos superiores */
+.product-card-icons {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.product-card-icons .icon-btn {
+    background-color: white;
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #121212;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.product-card-icons .icon-btn:hover {
+    background-color: #8A2BE2;
+    color: white;
+}
+
+/* Botón "Añadir al Carrito" que aparece al hacer hover */
 .add-to-cart-btn {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #000000;
-  color: white;
-  border: none;
-  padding: 10px 0;
-  font-size: 14px;
-  cursor: pointer;
-  display: none;
-  transition: background 0.3s;
-  border-radius: 0 0 10px 10px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: black; /* Color negro sólido como en la imagen */
+    color: white;
+    border: none;
+    padding: 12px 0;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: all 0.3s ease-in-out;
 }
 
-.product-image-wrapper:hover .add-to-cart-btn {
-  display: block;
+.product-card:hover .add-to-cart-btn {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.add-to-cart-btn:hover {
-  background-color: #222;
+.product-details .product-rating {
+    display: flex;
+    align-items: center;
+    gap: 2px; /* Espacio mínimo entre estrellas */
+    margin-top: 4px; /* Pequeño espacio superior */
 }
 
-.discount {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: #8E06C2;
-  color: white;
-  padding: 2px 8px;
-  font-size: 12px;
-  font-weight: bold;
-  border-radius: 4px;
-  z-index: 2;
+/* Estilo base para todos los íconos de estrella */
+.product-details .product-rating i {
+    font-size: 15px;      /* Tamaño exacto del ícono */
+    color: #8E06C2;      /* Color morado principal */
 }
 
-.product-icons {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 2;
+/* El ícono de la estrella vacía (`.far`) se mostrará como un contorno */
+.product-details .product-rating .far {
+    font-weight: 400; /* Asegura que el contorno no sea demasiado grueso */
 }
 
-.product-icons i {
-  color: #555;
-  background: white;
-  border-radius: 50%;
-  padding: 6px;
-  font-size: 14px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
+/* Estilo para el número de reseñas (ej: "(75)") */
+.product-details .review-count {
+    font-size: 15px;     /* Mismo tamaño que las estrellas */
+    color: #999;         /* Un gris suave, como en la imagen */
+    font-weight: 500;
+    margin-left: 6px;    /* Espacio entre las estrellas y el contador */
+    transform: translateY(-1px); /* Ajuste vertical para alineación perfecta */
 }
 
-.product-icons i:hover {
-  background-color: #8000ff;
-  color: white;
+/* --- Detalles del producto --- */
+.product-details {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
-.product p {
-  padding: 0 1rem;
-  margin: 0.25rem 0;
-  font-size: 14px;
-  text-align: left;
+.product-details h3 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #121212;
+    margin: 0 0 8px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.product .price {
-  font-weight: bold;
-  color: #5a00e0;
+.product-price {
+    font-size: 16px;
+    font-weight: 500;
+    color: #8A2BE2;
+    margin-bottom: 8px;
 }
 
-.product .old-price {
-  text-decoration: line-through;
-  color: #aaa;
-  margin-left: 6px;
+.product-rating {
+    display: flex;
+    align-items: center;
 }
 
-.product .rating {
-  color: #110e16;
-  font-size: 13px;
-  padding-bottom: 1rem;
+.product-rating .fa-star {
+    color: #680493;
+    font-size: 14px;
+}
+
+.product-rating .review-count {
+    color: #888;
+    font-size: 13px;
+    margin-left: 8px;
 }
 
  /* Personaliza la barra de scroll horizontal */

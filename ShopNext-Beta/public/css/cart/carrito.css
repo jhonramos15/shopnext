@@ -434,7 +434,7 @@ main.cart-container h2 {
 .btn-primary { background-color: #8E06C2; color: white; }
 .btn-primary:hover { background-color: #700B97; }
 .btn-outline { background-color: transparent; color: #343a40; border: 1px solid #ced4da; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
-.btn-outline:hover { background-color: #f1f3f5; }
+.btn-outline:hover { background-color: #000000; }
 .btn-checkout { width: 100%; margin-top: 20px; text-decoration: none; color: white; display: inline-flex; align-items: center; justify-content: center;}
 
 .empty-cart { text-align: center; padding: 50px; font-size: 18px; color: #6c757d; }
@@ -467,6 +467,33 @@ main.cart-container h2 {
     .summary-section { max-width: 100%; }
 }
 
+/* Estilos para los nuevos botones */
+.cart-actions {
+    display: flex;
+    gap: 15px;
+    flex-grow: 1;
+}
+
+.remove-item-btn {
+    background: none;
+    border: none;
+    color: #8E06C2;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.btn-danger {
+    background-color: #8E06C2;
+    color: white;
+}
+.btn-danger:hover {
+    background-color: #6d0596;
+}
+
+.btn-outline {
+    background-color: #121212;
+    color: #FEFEFE;
+}
 
 /* footer*/
 

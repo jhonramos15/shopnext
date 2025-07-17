@@ -60,6 +60,34 @@ while ($fila = $resultado_stats->fetch_assoc()) {
 }
 $stmt_stats->close();
 
+// --- VERIFICAR SI EL PRODUCTO ES FAVORITO DEL USUARIO ---
+$es_favorito = false; // Valor por defecto
+if (isset($_SESSION['id_usuario'])) {
+    // Necesitas una conexión a la BD aquí si la cerraste antes
+    // $conexion = new mysqli(...); 
+    
+    // Obtener id_cliente desde id_usuario
+    $id_usuario = $_SESSION['id_usuario'];
+    $stmt_cliente = $conexion->prepare("SELECT id_cliente FROM cliente WHERE id_usuario = ?");
+    $stmt_cliente->bind_param("i", $id_usuario);
+    $stmt_cliente->execute();
+    $resultado_cliente = $stmt_cliente->get_result();
+    
+    if ($resultado_cliente->num_rows > 0) {
+        $id_cliente = $resultado_cliente->fetch_assoc()['id_cliente'];
+
+        // Comprobar si existe en la tabla de favoritos
+        $stmt_check = $conexion->prepare("SELECT id_favorito FROM lista_favoritos WHERE id_cliente = ? AND id_producto = ?");
+        $stmt_check->bind_param("ii", $id_cliente, $id_producto);
+        $stmt_check->execute();
+        if ($stmt_check->get_result()->num_rows > 0) {
+            $es_favorito = true;
+        }
+        $stmt_check->close();
+    }
+    $stmt_cliente->close();
+}
+
 // 3. Calcular el promedio.
 $puntuacion_promedio = ($total_reseñas > 0) ? round($suma_puntuaciones / $total_reseñas, 1) : 0;
 // 6. ¡AHORA SÍ! Cerramos la conexión al final de todo el PHP.
@@ -114,7 +142,7 @@ $conexion->close();
                 <button><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
             <!-- Favoritos -->
-            <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
+            <a href="../user/pages/favoritos.php"><button class="icon-btn"><i class="fa-solid fa-heart"></i></button></a>
             <!-- Carrito -->
             <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
         </div>
@@ -134,15 +162,24 @@ $conexion->close();
                 <h1><?php echo htmlspecialchars($producto['nombre_producto']); ?></h1>
                 <div class="product-rating">
                     <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="far fa-star"></i> 
+                        <?php
+                            // Redondea el promedio para mostrar las estrellas
+                            $rating_redondeado = round($puntuacion_promedio);
+
+                            // Dibuja las estrellas (llenas y vacías)
+                            for ($i = 1; $i <= 5; $i++) {
+                                if ($i <= $rating_redondeado) {
+                                    echo '<i class="fas fa-star"></i>'; // Estrella llena
+                                } else {
+                                    echo '<i class="far fa-star"></i>'; // Estrella vacía
+                                }
+                            }
+                        ?>
                     </div>
-                    <span>(150 Reseñas)</span>
+                    <span>(<?php echo $total_reseñas; ?> Reseñas)</span>
+                        
                     <?php if ($producto['stock'] > 0): ?>
-                        <span class="stock-status" style="color: #00B517;">| En Stock</span>
+                        <span class="stock-status">| En Stock</span>
                     <?php else: ?>
                         <span class="stock-status" style="color: #DB4444;">| Agotado</span>
                     <?php endif; ?>
@@ -155,6 +192,10 @@ $conexion->close();
         <button class="quantity-btn" id="decrease-qty">-</button>
         <input type="text" class="quantity-input" id="quantity" value="1" readonly>
         <button class="quantity-btn" id="increase-qty">+</button>
+            <button class="wishlist-btn <?php if ($es_favorito) echo 'active'; ?>" 
+            onclick="toggleFavorito(<?php echo $producto['id_producto']; ?>, this)">
+        <i class="fa-heart <?php echo $es_favorito ? 'fas' : 'far'; ?>"></i>
+    </button>
     </div>
 
     <?php if (isset($_SESSION['id_usuario'])): ?>
@@ -217,31 +258,46 @@ $conexion->close();
 
         <div class="reviews-content-wrapper">
             <div class="review-form-container">
-                <h4>Deja tu valoración</h4>
-                <form id="review-form">
-                    <input type="hidden" name="id_producto" value="<?php echo $id_producto_actual; ?>">
-                    <div class="form-group">
-                        <label for="nombre_usuario">Tu Nombre:</label>
-                        <input type="text" id="nombre_usuario" name="nombre_usuario" required>
+    <h3 class="review-form-title">Escribe tu propia reseña</h3>
+
+    <?php 
+    // Verificamos si la variable de sesión del usuario existe
+    if (isset($_SESSION['id_usuario'])): 
+    ?>
+
+        <form id="review-form">
+            <input type="hidden" name="id_producto" value="<?php echo $id_producto_actual; ?>">
+            
+            <div class="form-group rating-group">
+                <div class="form-group">
+                    <label>Puntuación:</label>
+                    <div class="star-rating">
+                        <input type="radio" id="star5" name="puntuacion" value="5" required><label for="star5" title="5 estrellas">★</label>
+                        <input type="radio" id="star4" name="puntuacion" value="4"><label for="star4" title="4 estrellas">★</label>
+                        <input type="radio" id="star3" name="puntuacion" value="3"><label for="star3" title="3 estrellas">★</label>
+                        <input type="radio" id="star2" name="puntuacion" value="2"><label for="star2" title="2 estrellas">★</label>
+                        <input type="radio" id="star1" name="puntuacion" value="1"><label for="star1" title="1 estrella">★</label>
                     </div>
-                    <div class="form-group">
-                        <label>Puntuación:</label>
-                        <div class="star-rating">
-                            <input type="radio" id="star5" name="puntuacion" value="5" required><label for="star5" title="5 estrellas">★</label>
-                            <input type="radio" id="star4" name="puntuacion" value="4"><label for="star4" title="4 estrellas">★</label>
-                            <input type="radio" id="star3" name="puntuacion" value="3"><label for="star3" title="3 estrellas">★</label>
-                            <input type="radio" id="star2" name="puntuacion" value="2"><label for="star2" title="2 estrellas">★</label>
-                            <input type="radio" id="star1" name="puntuacion" value="1"><label for="star1" title="1 estrella">★</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="comentario">Tu Reseña:</label>
-                        <textarea id="comentario" name="comentario" rows="4"></textarea>
-                    </div>
-                    <button type="submit">Enviar Reseña</button>
-                </form>
-                <div id="review-form-message" style="margin-top: 15px;"></div>
+                </div>
+
+            <div class="form-group">
+                <label for="comentario">Tu Reseña:</label>
+                <textarea id="comentario" name="comentario" rows="4" placeholder="Cuéntanos qué te pareció el producto..."></textarea>
             </div>
+
+            <button type="submit" class="submit-review-btn">Enviar Reseña</button>
+        </form>
+
+    <?php else: ?>
+
+        <div class="login-prompt">
+            <p>Debes iniciar sesión para poder dejar una reseña.</p>
+            <a href="/shopnext/ShopNext-Beta/views/auth/login.php" class="login-link-btn">Iniciar Sesión</a>
+        </div>
+
+    <?php endif; ?>
+
+</div>
 
             <div class="reviews-list">
                 <h4>Comentarios de otros clientes</h4>
@@ -299,6 +355,7 @@ $conexion->close();
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../../public/js/reviews.js"></script>
 <script src="../../public/js/alertas.js"></script>
-<script src="../../public/js/cart/carrito.js"></script> 
+<script src="../../public/js/cart/carrito.js"></script>
+<script src="/shopnext/ShopNext-Beta/public/js/user/favoritos.js"></script>
 </body>
 </html>

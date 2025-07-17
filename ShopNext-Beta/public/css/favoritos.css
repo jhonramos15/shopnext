@@ -326,8 +326,8 @@ main.wishlist-container {
 
 .move-all-btn {
     padding: 10px 20px;
-    background-color: #fff;
-    color: #333;
+    background-color: #121212;
+    color: #FEFEFE;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-weight: 500;
@@ -336,7 +336,7 @@ main.wishlist-container {
 }
 
 .move-all-btn:hover {
-    background-color: #333;
+    background-color: #8E06C2;
     color: #fff;
 }
 
@@ -399,7 +399,7 @@ main.wishlist-container {
     height: 32px;
     cursor: pointer;
     font-size: 16px;
-    color: #333;
+    color: #121212;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -407,7 +407,7 @@ main.wishlist-container {
 }
 
 .delete-btn:hover {
-    background-color: #DB4444;
+    background-color: #8E06C2;
     color: white;
 }
 
@@ -452,12 +452,12 @@ main.wishlist-container {
 .product-price {
     font-size: 16px;
     font-weight: 600;
-    color: #DB4444;
+    color: #8E06C2;
     margin-bottom: 8px;
 }
 
 .product-rating .fa-star {
-    color: #FFAD33;
+    color: #121212;
     font-size: 14px;
 }
 
