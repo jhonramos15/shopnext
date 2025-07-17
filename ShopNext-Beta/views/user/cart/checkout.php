@@ -152,6 +152,6 @@ foreach ($items_del_carrito as $item) {
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="../../../public/js/cart/checkout.js"></script>
 </body>
 </html>

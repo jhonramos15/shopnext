@@ -1,28 +1,24 @@
 <?php
-// public/producto-detalle.php
 session_start();
 
-// 1. Obtener el ID del producto desde la URL. Si no hay ID, detenemos.
+// 1. Obtener el ID del producto de la URL.
 $id_producto = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id_producto === 0) {
-    // Puedes redirigir a una página 404 si quieres
     die("Error: Producto no especificado.");
 }
 
-// 2. Conexión a la base de datos
+// 2. Abrir la conexión a la base de datos (UNA SOLA VEZ).
 $conexion = new mysqli("localhost", "root", "", "shopnexs");
 if ($conexion->connect_error) {
     die("Falló la conexión: " . $conexion->connect_error);
 }
+$conexion->set_charset("utf8mb4");
 
-// 3. Consulta para obtener los detalles del producto y el nombre del vendedor
-$sql_producto = "SELECT 
-                    p.*, 
-                    v.nombre AS nombre_vendedor
+// 3. CONSULTA 1: Obtener detalles del producto y vendedor.
+$sql_producto = "SELECT p.*, v.nombre AS nombre_vendedor
                  FROM producto p
                  JOIN vendedor v ON p.id_vendedor = v.id_vendedor
                  WHERE p.id_producto = ?";
-
 $stmt = $conexion->prepare($sql_producto);
 $stmt->bind_param("i", $id_producto);
 $stmt->execute();
@@ -31,12 +27,44 @@ $resultado = $stmt->get_result();
 if ($resultado->num_rows === 0) {
     die("Este producto no existe o no está disponible.");
 }
-// Guardamos los datos del producto en una variable
 $producto = $resultado->fetch_assoc();
 $stmt->close();
+
+// --- OBTENER RESEÑAS Y ESTADÍSTICAS ---
+$id_producto_actual = $producto['id_producto'];
+
+// 1. Obtener todas las reseñas.
+$sql_reseñas = "SELECT nombre_usuario, puntuacion, comentario, DATE_FORMAT(fecha_creacion, '%d/%m/%Y') AS fecha_formateada 
+                FROM resenas WHERE id_producto = ? ORDER BY fecha_creacion DESC";
+$stmt_reseñas = $conexion->prepare($sql_reseñas);
+$stmt_reseñas->bind_param("i", $id_producto_actual);
+$stmt_reseñas->execute();
+$reseñas = $stmt_reseñas->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt_reseñas->close();
+
+// 2. Obtener estadísticas de puntuación.
+$puntuaciones = [5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0];
+$total_reseñas = 0;
+$suma_puntuaciones = 0;
+
+$sql_stats = "SELECT puntuacion, COUNT(id_resena) as conteo FROM resenas WHERE id_producto = ? GROUP BY puntuacion";
+$stmt_stats = $conexion->prepare($sql_stats);
+$stmt_stats->bind_param("i", $id_producto_actual);
+$stmt_stats->execute();
+$resultado_stats = $stmt_stats->get_result();
+
+while ($fila = $resultado_stats->fetch_assoc()) {
+    $puntuaciones[$fila['puntuacion']] = $fila['conteo'];
+    $total_reseñas += $fila['conteo'];
+    $suma_puntuaciones += $fila['puntuacion'] * $fila['conteo'];
+}
+$stmt_stats->close();
+
+// 3. Calcular el promedio.
+$puntuacion_promedio = ($total_reseñas > 0) ? round($suma_puntuaciones / $total_reseñas, 1) : 0;
+// 6. ¡AHORA SÍ! Cerramos la conexión al final de todo el PHP.
 $conexion->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -89,8 +117,6 @@ $conexion->close();
             <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
             <!-- Carrito -->
             <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
-            <!-- Iniciar Sesión -->
-            <a href="../auth/login.php" class="login-btn">Iniciar Sesión</a>
         </div>
     </div>
 </header>
@@ -104,7 +130,6 @@ $conexion->close();
                     <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($producto['ruta_imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre_producto']); ?>" class="main-image">
                 </div>
             </div>
-
             <div class="product-details">
                 <h1><?php echo htmlspecialchars($producto['nombre_producto']); ?></h1>
                 <div class="product-rating">
@@ -126,13 +151,18 @@ $conexion->close();
                 <p class="product-description"><?php echo htmlspecialchars($producto['descripcion']); ?></p>
 
                 <div class="actions">
-                    <div class="quantity-selector">
-                        <button class="quantity-btn" id="decrease-qty">-</button>
-                        <input type="text" class="quantity-input" id="quantity" value="1" readonly>
-                        <button class="quantity-btn" id="increase-qty">+</button>
-                    </div>
-                    <a href="../user/cart/carrito.php?producto_id=<?php echo $producto['id_producto']; ?>" class="buy-btn">Comprar Ahora</a>
-                </div>
+    <div class="quantity-selector">
+        <button class="quantity-btn" id="decrease-qty">-</button>
+        <input type="text" class="quantity-input" id="quantity" value="1" readonly>
+        <button class="quantity-btn" id="increase-qty">+</button>
+    </div>
+
+    <?php if (isset($_SESSION['id_usuario'])): ?>
+        <a href="javascript:void(0);" onclick="agregarAlCarrito(<?php echo $producto['id_producto']; ?>)" class="buy-btn">Comprar Ahora</a>
+    <?php else: ?>
+        <a href="javascript:void(0);" onclick="mostrarAlertaLogin()" class="buy-btn">Comprar Ahora</a>
+    <?php endif; ?>
+</div>
                 <div class="delivery-info">
                     <div class="delivery-option">
                         <i class="fas fa-truck"></i>
@@ -154,7 +184,89 @@ $conexion->close();
                     </div>
             </div>
         </section>
-    </main>
+
+    <section class="reviews-section">
+        <hr>
+        <h3>Valoraciones del Producto</h3>
+
+        <?php if ($total_reseñas > 0): ?>
+            <div class="rating-summary">
+                <div class="rating-bars">
+                    <?php for ($i = 5; $i >= 1; $i--): ?>
+                        <div class="rating-bar-item">
+                            <span><?php echo $i; ?></span>
+                            <i class="fas fa-star"></i>
+                            <div class="bar-container">
+                                <div class="bar" style="width: <?php echo ($puntuaciones[$i] / $total_reseñas) * 100; ?>%;"></div>
+                            </div>
+                            <span class="count"><?php echo $puntuaciones[$i]; ?></span>
+                        </div>
+                    <?php endfor; ?>
+                </div>
+                <div class="rating-average">
+                    <div class="average-score"><?php echo number_format($puntuacion_promedio, 1); ?></div>
+                    <div class="average-stars">
+                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                            <i class="fa-star <?php echo ($i <= $puntuacion_promedio) ? 'fas' : 'far'; ?>"></i>
+                        <?php endfor; ?>
+                    </div>
+                    <div class="total-reviews"><?php echo $total_reseñas; ?> valoraciones</div>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <div class="reviews-content-wrapper">
+            <div class="review-form-container">
+                <h4>Deja tu valoración</h4>
+                <form id="review-form">
+                    <input type="hidden" name="id_producto" value="<?php echo $id_producto_actual; ?>">
+                    <div class="form-group">
+                        <label for="nombre_usuario">Tu Nombre:</label>
+                        <input type="text" id="nombre_usuario" name="nombre_usuario" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Puntuación:</label>
+                        <div class="star-rating">
+                            <input type="radio" id="star5" name="puntuacion" value="5" required><label for="star5" title="5 estrellas">★</label>
+                            <input type="radio" id="star4" name="puntuacion" value="4"><label for="star4" title="4 estrellas">★</label>
+                            <input type="radio" id="star3" name="puntuacion" value="3"><label for="star3" title="3 estrellas">★</label>
+                            <input type="radio" id="star2" name="puntuacion" value="2"><label for="star2" title="2 estrellas">★</label>
+                            <input type="radio" id="star1" name="puntuacion" value="1"><label for="star1" title="1 estrella">★</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="comentario">Tu Reseña:</label>
+                        <textarea id="comentario" name="comentario" rows="4"></textarea>
+                    </div>
+                    <button type="submit">Enviar Reseña</button>
+                </form>
+                <div id="review-form-message" style="margin-top: 15px;"></div>
+            </div>
+
+            <div class="reviews-list">
+                <h4>Comentarios de otros clientes</h4>
+                <?php if (empty($reseñas)): ?>
+                    <p>Este producto aún no tiene valoraciones. ¡Sé el primero!</p>
+                <?php else: ?>
+                    <?php foreach ($reseñas as $resena): ?>
+                        <div class="review-item">
+                            <div class="review-header">
+                                <strong><?php echo htmlspecialchars($resena['nombre_usuario']); ?></strong>
+                                <span class="review-date"><?php echo $resena['fecha_formateada']; ?></span>
+                            </div>
+                            <div class="review-stars">
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <span class="star <?php echo ($i <= $resena['puntuacion']) ? 'filled' : ''; ?>">★</span>
+                                <?php endfor; ?>
+                            </div>
+                            <p><?php echo nl2br(htmlspecialchars($resena['comentario'])); ?></p>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    </section>
+</main>
 <footer class="footer-contact">
   <div class="footer-section">
     <img src="../../public/img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
@@ -184,5 +296,9 @@ $conexion->close();
     </ul>
   </div>
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="../../public/js/reviews.js"></script>
+<script src="../../public/js/alertas.js"></script>
+<script src="../../public/js/cart/carrito.js"></script> 
 </body>
 </html>

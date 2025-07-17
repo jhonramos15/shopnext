@@ -53,6 +53,8 @@ const mensajes = {
     // Carrito
     login_required: ['info', 'Inicia Sesión', 'Necesitas iniciar sesión como cliente para poder comprar.'],
     added_to_cart: ['success', '¡Producto Añadido!', 'El producto ha sido añadido a tu carrito de compras.'],
+    login_requerido_compra: ['info', 'Inicia Sesión', 'Necesitas iniciar sesión para poder comprar.'],
+    added_to_cart: ['success', '¡Producto Añadido!', 'El producto se ha añadido a tu carrito.'],    
 
 
     // Contacto

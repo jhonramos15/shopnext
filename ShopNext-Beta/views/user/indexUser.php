@@ -11,10 +11,10 @@ if ($conexion->connect_error) {
 }
 
 // Consulta para obtener los productos (la misma que usamos en el index principal)
-$sql_productos = "SELECT 
-                    p.id_producto, 
-                    p.nombre_producto, 
-                    p.precio, 
+$sql_productos = "SELECT
+                    p.id_producto,
+                    p.nombre_producto,
+                    p.precio,
                     p.ruta_imagen
                   FROM producto p
                   WHERE p.stock > 0
@@ -22,8 +22,36 @@ $sql_productos = "SELECT
                   LIMIT 8";
 
 $resultado_productos = $conexion->query($sql_productos);
-?>
 
+// --- OBTENER FAVORITOS DEL USUARIO ---
+$favoritos_usuario = [];
+if (isset($_SESSION['id_usuario'])) {
+    $id_usuario_actual = $_SESSION['id_usuario'];
+    $id_cliente = null;
+
+    // Obtenemos el id_cliente del usuario
+    $stmt_cliente = $conexion->prepare("SELECT id_cliente FROM cliente WHERE id_usuario = ?");
+    $stmt_cliente->bind_param("i", $id_usuario_actual);
+    $stmt_cliente->execute();
+    $resultado_cliente = $stmt_cliente->get_result();
+
+    if ($resultado_cliente->num_rows > 0) {
+        $id_cliente = $resultado_cliente->fetch_assoc()['id_cliente'];
+        $stmt_cliente->close();
+
+        // Obtenemos todos los id_producto que el cliente marcó como favoritos
+        $stmt_favoritos = $conexion->prepare("SELECT id_producto FROM lista_favoritos WHERE id_cliente = ?");
+        $stmt_favoritos->bind_param("i", $id_cliente);
+        $stmt_favoritos->execute();
+        $resultado_favoritos = $stmt_favoritos->get_result();
+        while ($favorito = $resultado_favoritos->fetch_assoc()) {
+            $favoritos_usuario[] = $favorito['id_producto'];
+        }
+        $stmt_favoritos->close();
+    }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -75,7 +103,7 @@ $resultado_productos = $conexion->query($sql_productos);
         <input type="text" placeholder="¿Qué estás buscando?">
         <button><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
-      <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
+      <a href="/shopnext/ShopNext-Beta/views/user/pages/favoritos.php"><button class="icon-btn"><i class="fa-solid fa-heart"></i></button></a>
       <a href="/shopnext/ShopNext-Beta/views/user/cart/carrito.php" class="header-icon">
         <i class="fa-solid fa-cart-shopping" style="color: #121212;"></i>
       </a>
@@ -179,40 +207,75 @@ $resultado_productos = $conexion->query($sql_productos);
     </div>            
   </div>
 </section>
-    <main>
-        <section class="flash-sales">
-            <div class="title-container">
-                <h2><span class="flash">Flash</span> <span class="sales">Sales</span></h2>
-            </div>
-            <div class="products-container" id="products-container">
-                <div class="products" id="products">
-                    <?php
-                    if ($resultado_productos && $resultado_productos->num_rows > 0) {
-                        while ($fila = $resultado_productos->fetch_assoc()) {
-                    ?>
-              <div class="product">
-                <div class="product-image-wrapper">
-                  <a href="/shopnext/ShopNext-Beta/views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>">
-                    <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>">
-                  </a>
-                  <form class="add-to-cart-form">
-                    <input type="hidden" name="id_producto" value="<?php echo $fila['id_producto']; ?>">
-                    <button type="submit" class="add-to-cart-btn">Añadir al carrito</button>
-                  </form>
-                </div>
-                <a href="/shopnext/ShopNext-Beta/views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>" class="product-link">
-                  <p class="product-title"><?php echo htmlspecialchars($fila['nombre_producto']); ?></p>
-                </a>
-                <p class="price">$<?php echo number_format($fila['precio'], 0); ?></p>
-                <p class="rating">★★★★★ (75)</p>
-              </div>
-                    <?php
+    <section class="flash-sales">
+        <div class="title-container">
+            <h2><span class="flash">Últimos</span> <span class="sales">Productos</span></h2>
+        </div>
+        <div class="products-container" id="products-container">
+            <div class="products" id="products">
+                <?php
+                 // 1. Preparamos un array para guardar los IDs de los productos favoritos del usuario.
+                $favoritos_usuario = [];
+
+                // 2. Solo si el usuario ha iniciado sesión, buscamos sus favoritos.
+                if (isset($_SESSION['id_usuario'])) {
+                    $id_usuario_actual = $_SESSION['id_usuario'];
+                    $id_cliente = null;
+
+                    // Obtenemos el id_cliente del usuario
+                    $stmt_cliente = $conexion->prepare("SELECT id_cliente FROM cliente WHERE id_usuario = ?");
+                    $stmt_cliente->bind_param("i", $id_usuario_actual);
+                    $stmt_cliente->execute();
+                    $resultado_cliente = $stmt_cliente->get_result();
+
+                    if ($resultado_cliente->num_rows > 0) {
+                        $id_cliente = $resultado_cliente->fetch_assoc()['id_cliente'];
+                        $stmt_cliente->close();
+
+                        // Obtenemos todos los id_producto que el cliente marcó como favoritos
+                        $stmt_favoritos = $conexion->prepare("SELECT id_producto FROM lista_favoritos WHERE id_cliente = ?");
+                        $stmt_favoritos->bind_param("i", $id_cliente);
+                        $stmt_favoritos->execute();
+                        $resultado_favoritos = $stmt_favoritos->get_result();
+                        while ($favorito = $resultado_favoritos->fetch_assoc()) {
+                            $favoritos_usuario[] = $favorito['id_producto'];
                         }
-                    } else {
-                        echo "<p>No hay productos disponibles.</p>";
+                        $stmt_favoritos->close();
                     }
-                    $conexion->close();
-                    ?>
+                }
+if ($resultado_productos && $resultado_productos->num_rows > 0) {
+    while ($fila = $resultado_productos->fetch_assoc()) {
+        // Esta línea verifica si el producto actual está en la lista de favoritos
+        $es_favorito = in_array($fila['id_producto'], $favoritos_usuario);
+?>
+<div class="product">
+    <div class="icons">
+        <i class="fas fa-heart favorite-icon <?php if ($es_favorito) echo 'active'; ?>" onclick="toggleFavorito(<?php echo $fila['id_producto']; ?>, this)"></i>
+        <a href="/shopnext/ShopNext-Beta/views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>"><i class="fas fa-eye"></i></a>
+    </div>
+
+    <div class="product-image-wrapper">
+        <a href="/shopnext/ShopNext-Beta/views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>">
+            <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>">
+        </a>
+        <form class="add-to-cart-form">
+            <input type="hidden" name="id_producto" value="<?php echo $fila['id_producto']; ?>">
+            <button type="submit" class="add-to-cart-btn">Añadir al carrito</button>
+        </form>
+    </div>
+    <a href="/shopnext/ShopNext-Beta/views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>" class="product-link">
+      <p class="product-title"><?php echo htmlspecialchars($fila['nombre_producto']); ?></p>
+    </a>
+    <p class="price">$<?php echo number_format($fila['precio'], 0); ?></p>
+    <p class="rating">★★★★★ (75)</p>
+</div>
+<?php
+    }
+} else {
+    echo "<p>No hay productos disponibles.</p>";
+}
+$conexion->close();
+?>
                 </div> 
             </div>
       </section>
@@ -666,5 +729,6 @@ $resultado_productos = $conexion->query($sql_productos);
 <script src="../../public/js/dropdown.js"></script>
 <script src="../../public/js/index.js"></script> 
 <script src="../../public/js/carruselUser.js"></script> 
+<script src="/shopnext/ShopNext-Beta/public/js/user/favoritos.js"></script>
 </body>
 </html>

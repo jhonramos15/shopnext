@@ -200,7 +200,7 @@ if ($id_carrito > 0) {
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../../../public/js/alertas.js"></script>
-<script src="../../../public/js/cart/carritoVista.js"></script>
+<script src="../../../public/js/cart/carrito.js"></script>
 <script src="../../../public/js/dropdown.js"></script>
 
 </body>

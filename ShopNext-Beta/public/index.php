@@ -92,11 +92,15 @@ $resultado_mas_vendidos = $conexion->query($sql_mas_vendidos);
     </nav>
 
     <!-- Buscador -->
-    <div class="header-icons">
-      <div class="buscador">
-        <input type="text" placeholder="¿Qué estás buscando?">
-        <button><i class="fa-solid fa-magnifying-glass"></i></button>
-      </div>
+<div class="header-icons">
+  
+  <form id="search-form" class="buscador">
+    <div style="position: relative;">
+        <input type="text" id="search-input" name="query" placeholder="¿Qué estás buscando?" autocomplete="off">
+        <div id="search-results" class="search-results-container"></div>
+    </div>
+    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+  </form>
       <a href="../views/auth/login.php"><button class="icon-btn"><i class="fa-solid fa-heart"></i></button></a>
       <a href="../views/auth/login.php"><button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button></a>
       <a href="../views/auth/login.php" class="login-btn">Iniciar Sesión</a>
@@ -409,5 +413,6 @@ $resultado_mas_vendidos = $conexion->query($sql_mas_vendidos);
 <script src="js/cart/carrito.js"></script>
 <script src="js/index.js"></script>
 <script src="js/menuHamburguer.js"></script>
+<script src="js/search.js"></script> 
 </body>
 </html>

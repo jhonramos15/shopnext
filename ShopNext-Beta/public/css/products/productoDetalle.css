@@ -440,6 +440,252 @@ section {
     cursor: pointer;
 }
 
+.review-form-container {
+    background-color: #ffffff;
+    padding: 30px; /* Más espaciado interno */
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    margin-top: 40px; /* Más espacio para separarlo de la línea */
+}
+
+.review-form-container h4 {
+    font-size: 1.2rem; /* Título un poco más grande */
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+#review-form .form-group {
+    margin-bottom: 20px;
+}
+
+#review-form label {
+    display: block;
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+#review-form input[type="text"],
+#review-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#review-form input[type="text"]:focus,
+#review-form textarea:focus {
+    outline: none;
+    border-color: #8E06C2;
+    box-shadow: 0 0 0 3px rgba(142, 6, 194, 0.15); /* Sombra suave al enfocar */
+}
+
+#review-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+#review-form .star-rating {
+    display: flex;
+    flex-direction: row-reverse; /* Importante para el efecto hover */
+    justify-content: flex-end;   /* Alinea las estrellas a la izquierda */
+    gap: 5px;                    /* Espacio entre estrellas */
+}
+
+.reviews-content-wrapper {
+    background-color: #ffffff;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    margin-top: 30px; /* Separa este bloque del resumen de arriba */
+}
+
+/* Ajustamos el contenedor del formulario para que no tenga estilos repetidos */
+.review-form-container {
+    background-color: transparent; /* Quitamos el fondo */
+    border: none;                  /* Quitamos el borde */
+    padding: 0;                    /* Quitamos el padding */
+    margin: 0;                     /* Quitamos el margen */
+}
+
+
+/* Oculta los botones de radio originales */
+#review-form .star-rating input[type="radio"] {
+    display: none;
+}
+
+/* Estilo de las estrellas (las etiquetas <label>) */
+#review-form .star-rating label {
+    font-size: 2.2rem;     /* Las hace más grandes */
+    color: #e0e0e0;        /* Color de estrella vacía (gris claro) */
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+/* La magia: cambia el color al pasar el mouse o al seleccionar */
+#review-form .star-rating label:hover,
+#review-form .star-rating label:hover ~ label,
+#review-form .star-rating input[type="radio"]:checked ~ label {
+    color: #8E06C2; /* Amarillo estándar para estrellas seleccionadas */
+}
+
+/* Estrellas interactivas para el formulario */
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse; /* Esto es clave para el efecto hover */
+    justify-content: flex-end; /* Alinea las estrellas a la izquierda */
+    gap: 5px;
+}
+
+.star-rating input[type="radio"] {
+    display: none; /* Oculta los círculos de los radio buttons */
+}
+
+.star-rating label {
+    font-size: 2.2rem; /* Estrellas más grandes */
+    color: #e0e0e0; /* Color de estrella vacía */
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+/* Efecto hover: al pasar sobre una estrella, esa y las anteriores se iluminan */
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input[type="radio"]:checked ~ label {
+    color: #ffc107; /* Amarillo para estrellas seleccionadas/hover */
+}
+/* Botón de envío */
+#review-form button[type="submit"] {
+    background-color: #8E06C2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+}
+
+#review-form button[type="submit"]:hover {
+    background-color: #700B97; /* Un tono más oscuro para el hover */
+}
+
+#review-form button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Mensaje de respuesta del formulario (éxito o error) */
+#review-form-message {
+    margin-top: 15px;
+    font-weight: 500;
+}
+
+.reviews-section {
+    max-width: 900px;
+    margin: 40px auto;
+    font-family: 'Poppins', sans-serif;
+}
+
+.rating-summary {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+
+/* Lado derecho: Puntuación promedio */
+.rating-average {
+    flex: 1;
+    text-align: center;
+    border-left: 1px solid #e0e0e0;
+    padding-left: 40px;
+}
+.average-score {
+    font-size: 4rem;
+    font-weight: 600;
+    color: #333;
+}
+.average-stars .fas {
+    font-size: 1.2rem;
+    color: #8E06C2;
+}
+.total-reviews {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+/* Lado izquierdo: Barras de progreso */
+.rating-bars {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.rating-bar-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+.rating-bar-item .fa-star {
+    color: #8E06C2;
+}
+.bar-container {
+    flex-grow: 1;
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.bar {
+    height: 100%;
+    background-color: #8E06C2;
+    border-radius: 4px;
+}
+.rating-bar-item .count {
+    min-width: 20px;
+    text-align: right;
+    color: #6c757d;
+}
+
+/* Estilos para los comentarios individuales */
+.review-item {
+    border-bottom: 1px solid #eee;
+    padding: 20px 0;
+}
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.review-date {
+    font-size: 0.8em;
+    color: #888;
+}
+.review-stars .star {
+    font-size: 16px;
+    color: #ccc;
+}
+.review-stars .star.filled {
+    color: #8E06C2;
+}
+.review-item p {
+    margin-top: 10px;
+    line-height: 1.6;
+}
 
 /* footer*/
 
