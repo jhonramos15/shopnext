@@ -46,7 +46,7 @@ if ($resultado->num_rows === 1) {
         } elseif ($usuario['rol'] === 'vendedor') {
             header("Location: ../views/dashboard/vendedorView.php");
         } else {
-            header("Location: ../views/user/indexUser.php");
+            header("Location: ../public/index.php");
         }
         exit;
 

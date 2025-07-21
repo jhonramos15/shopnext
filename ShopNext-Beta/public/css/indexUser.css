@@ -119,8 +119,34 @@ section {
 .header-icons {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px; /* Aumentamos un poco el espacio para mejor visualización */
 }
+
+/* Estilo para los iconos (corazón, carrito y lupa) */
+.header-icons .icon-btn,
+.header-icons > a { /* Esto aplica a los iconos cuando son enlaces */
+  background: none;
+  border: none;
+  font-size: 17px; /* Un poco más grandes */
+  cursor: pointer;
+  color: #121212; /* Color negro para los íconos */
+  text-decoration: none; /* Se asegura que los iconos no tengan subrayado */
+}
+
+/* Botón de iniciar sesión (sin subrayado) */
+.login-btn {
+  text-decoration: none; /* Quita la línea de abajo */
+  font-weight: 500;
+  color: #121212;
+  transition: color 0.3s;
+}
+
+/* Opcional: un efecto hover para el botón de Iniciar Sesión */
+.login-btn:hover {
+  color: #8E06C2; /* Cambia a color púrpura al pasar el mouse */
+  text-decoration: none; /* Se asegura de que no aparezca la línea al pasar el mouse */
+}
+
 
 /* Contenedor del buscador */
 .buscador {
@@ -1092,74 +1118,253 @@ section {
   box-shadow: 0 5px 15px;
 }
 
+/* Sección de Speakers JBL */
+
+.music-experience {
+    background-color: #000;
+    color: #FAFAFA;
+    padding: 60px 40px;
+    overflow: hidden;
+    position: relative;
+    max-width: 1200px; 
+    margin: 30px auto; 
+    border-radius: 10px;
+}
+
+.promo-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.promo-content {
+    flex: 1;
+    z-index: 2;
+}
+
+.promo-category {
+    color: #8A2BE2; /* Verde neón para un toque moderno */
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.promo-content h2 {
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 32px;
+}
+
+.promo-countdown {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.time-box {
+    width: 62px;
+    height: 62px;
+    background-color: white;
+    color: black;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.time-box span {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.time-box small {
+    font-size: 11px;
+    line-height: 1;
+}
+
+.promo-button {
+    background-color: #8E06C2; /* Morado de tu marca */
+    color: white;
+    padding: 16px 48px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.promo-button:hover {
+    background-color: #6a0592;
+}
+
+.promo-image {
+    flex: 1;
+    text-align: center;
+}
+
+.promo-image img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* --- RESPONSIVE PARA LA SECCIÓN --- */
+@media (max-width: 992px) {
+    .promo-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    .promo-countdown {
+        justify-content: center;
+    }
+    .promo-image {
+        margin-top: 40px;
+    }
+}
+
+@media (max-width: 576px) {
+    .promo-content h2 {
+        font-size: 32px;
+    }
+    .promo-countdown {
+        gap: 10px;
+    }
+}
+
 /* Seccion de proximamente */
 
-.contenedor-destacados {
-  display: grid;
-  gap: 20px;
-  grid-template-areas:
-    "ps5 coleccion"
-    "ps5 altavoces"
-    "ps5 perfume";
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  padding: 30px;
+.new-arrivals .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-.tarjeta {
-  position: relative;
-  overflow: hidden;
-  border-radius: 10px;
+.new-arrivals .featured-text {
+    color: #8E06C2;
+    font-weight: 600;
+    margin-bottom: 8px;
 }
 
-.tarjeta img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
+.new-arrivals h2 {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #000;
 }
 
-.tarjeta:hover img {
-  transform: scale(1.05);
+.arrivals-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    height: 600px;
 }
 
-.tarjeta .contenido {
-  position: absolute;
-  bottom: 15px;
-  left: 15px;
-  color: white;
+/* --- CAMBIO IMPORTANTE AQUÍ --- */
+/* Aplicamos los estilos solo a las tarjetas dentro de .arrivals-grid */
+.arrivals-grid .product-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    background-color: #000;
 }
 
-.tarjeta .contenido h3 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: bold;
+/* Selector más específico para la imagen para que no se deforme */
+.arrivals-grid .product-card .product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* LA CORRECCIÓN DEFINITIVA */
+    padding: 20px;       /* Añadimos un poco de aire alrededor de la imagen */
+    transition: transform 0.3s ease;
+}
+/* ---------------------------------- */
+
+.arrivals-grid .product-card:hover .product-image {
+    transform: scale(1.05);
 }
 
-.tarjeta .contenido p {
-  margin: 5px 0;
-  font-size: 14px;
+.arrivals-grid .product-card .product-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 25px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    color: #fff;
 }
 
-.tarjeta .contenido a {
-  color: white;
-  text-decoration: underline;
-  font-size: 14px;
+.arrivals-grid .product-card .product-info h3 {
+    font-size: 24px;
+    margin: 0 0 5px 0;
 }
 
-/* Responsivo */
-@media (max-width: 768px) {
-  .contenedor-destacados {
-    grid-template-areas:
-      "ps5"
-      "coleccion"
-      "altavoces"
-      "perfume";
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-  }
+.arrivals-grid .product-card .product-info p {
+    font-size: 14px;
+    margin: 0 0 15px 0;
+    color: #e0e0e0;
 }
 
+.arrivals-grid .product-card .product-info span {
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 2px solid #8E06C2;
+    padding-bottom: 2px;
+    color: #fff;
+}
+
+/* Asignación de áreas en la cuadrícula */
+.large-card {
+    grid-row: 1 / 3;
+    grid-column: 1 / 2;
+}
+
+.top-right-card {
+    grid-row: 1 / 2;
+    grid-column: 2 / 3;
+}
+
+.bottom-right-wrapper {
+    grid-row: 2 / 3;
+    grid-column: 2 / 3;
+    display: flex;
+    gap: 20px;
+}
+
+.bottom-right-wrapper .product-card {
+    flex: 1;
+}
+
+/* Responsividad */
+@media (max-width: 900px) {
+    .arrivals-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        height: auto;
+    }
+    .large-card, .top-right-card, .bottom-right-wrapper {
+        grid-row: auto;
+        grid-column: auto;
+    }
+    .large-card {
+        height: 400px;
+    }
+}
+
+@media (max-width: 600px) {
+    .bottom-right-wrapper {
+        flex-direction: column;
+    }
+    .large-card {
+        height: 300px;
+    }
+}
+
+.arrivals-grid .product-card .product-image {
+    object-fit: contain !important; /* ¡Forzamos a que la imagen mantenga su proporción! */
+    padding: 20px;                  /* Añadimos un poco de aire para que no toque los bordes */
+}
 /* Estadisticas cerca del footer */
 
 .stats-container {

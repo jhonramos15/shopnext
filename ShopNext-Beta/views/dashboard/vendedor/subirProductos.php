@@ -10,7 +10,6 @@ $_SESSION['last_activity'] = time();
 
 $nombre_vendedor = $_SESSION['nombre_vendedor'] ?? 'Vendedor';
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -53,60 +52,75 @@ $nombre_vendedor = $_SESSION['nombre_vendedor'] ?? 'Vendedor';
 
         <main class="main">
             <header class="header">
-                <h1>Sube un Nuevo Producto</h1>
+                <h1>Nuevo Producto</h1>
             </header>
 
             <div class="form-container">
                 <form action="../../../controllers/uploads/uploadProduct.php" method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="titulo">Título del Producto <span class="required">*</span></label>
-                        <input type="text" id="titulo" name="titulo" placeholder="Ej: Camisa de Algodón Slim Fit" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="categoria">Categoría <span class="required">*</span></label>
-                        <select id="categoria" name="categoria" required>
-                            <option value="" disabled selected>Selecciona una categoría</option>
-                            <option value="Ropa Masculina">Ropa Masculina</option>
-                            <option value="Ropa Femenina">Ropa Femenina</option>
-                            <option value="Computadores">Computadores</option>
-                            <option value="Celulares">Celulares</option>
-                            <option value="Videojuegos">Videojuegos</option>
-                            <option value="Deportes">Deportes</option>
-                            <option value="Hogar & Belleza">Hogar & Belleza</option>
-                        </select>
-                    </div>
+                    <div class="new-product-section">
+                        <div class="details-column">
+                            <div class="form-group">
+                                <label for="titulo">TÍTULO <span class="required">*</span></label>
+                                <input type="text" id="titulo" name="titulo" placeholder="Créale un nombre corto a tu producto." required>
+                                <small class="form-hint">Entre 5 y 100 carácteres alfanuméricos</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="categoria">CATEGORÍA <span class="required">*</span></label>
+                                <select id="categoria" name="categoria" required>
+                                    <option value="" disabled selected>Añade tu producto a una categoría existente</option>
+                                    <option value="Ropa Masculina">Ropa Masculina</option>
+                                    <option value="Ropa Femenina">Ropa Femenina</option>
+                                    <option value="Computadores">Computadores</option>
+                                    <option value="Celulares">Celulares</option>
+                                    <option value="Videojuegos">Videojuegos</option>
+                                    <option value="Deportes">Deportes</option>
+                                    <option value="Hogar & Belleza">Hogar & Belleza</option>
+                                </select>
+                                <a href="#" class="category-add"><i data-lucide="plus-circle"></i>Añadir categoría</a>
+                            </div>
 
-                    <div class="form-group">
-                        <label for="descripcion">Descripción <span class="required">*</span></label>
-                        <textarea id="descripcion" name="descripcion" rows="4" placeholder="Describe las características principales de tu producto." required></textarea>
-                    </div>
+                            <div class="form-group">
+                                <label for="descripcion">DESCRIPCIÓN <span class="required">*</span></label>
+                                <textarea id="descripcion" name="descripcion" rows="6" placeholder="Dale una descripción breve a tu producto." required></textarea>
+                            </div>
 
-                    <div class="price-stock-container">
-                        <div class="form-group">
-                            <label for="precio">Precio <span class="required">*</span></label>
-                            <input type="number" id="precio" name="precio" placeholder="0.00" step="0.01" required>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="precio">PRECIO <span class="required">*</span></label>
+                                    <div class="input-with-icon">
+                                        <i data-lucide="dollar-sign"></i>
+                                        <input type="number" id="precio" name="precio" placeholder="Máximo 10 carácteres" step="0.01" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="stock">STOCK <span class="required">*</span></label>
+                                    <div class="input-with-icon">
+                                        <i data-lucide="boxes"></i>
+                                        <input type="number" id="stock" name="stock" placeholder="Cantidad disponible" required>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="stock">Stock <span class="required">*</span></label>
-                            <input type="number" id="stock" name="stock" placeholder="0" required>
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label>Imágenes del Producto <span class="required">*</span></label>
-                        <div class="image-upload-box">
-                            <input type="file" id="imagen" name="imagen[]" accept="image/png, image/jpeg, image/webp" required>
-                            <div class="upload-content">
-                                <i data-lucide="image-plus"></i>
-                                <p><span>Seleccionar archivo</span> o arrástralo aquí.</p>
-                                <small>PNG, JPG, WEBP de hasta 10MB</small>
+                        <div class="image-upload-section">
+                            <label>IMAGEN <span class="required">*</span></label>
+                            <small class="form-hint">Añade hasta 10 imágenes de tu producto.</small>
+                            <div class="image-upload-box">
+                                <input type="file" id="imagen" name="imagen[]" accept="image/png, image/jpeg, image/webp" required multiple>
+                                <div class="upload-content">
+                                    <i data-lucide="image-plus"></i>
+                                    <p><span>Seleccionar archivo</span> o arrástralo aquí.</p>
+                                    <small>PNG, JPG, WEBP de hasta 10MB</small>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-actions">
-                        <button class="submit-button" type="submit" name="subir_producto">Subir Producto</button>
+                        <button class="submit-button" type="submit" name="subir_producto">
+                            <span>Subir Producto</span>
+                        </button>
                     </div>
                 </form>
             </div>

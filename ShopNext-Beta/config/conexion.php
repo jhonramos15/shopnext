@@ -1,11 +1,27 @@
 <?php
-// Activar errores para depuración (quítalo en producción)
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+class Database {
+    private $host = "localhost";
+    private $db_name = "shopnexs"; // Corregí el nombre de 'shopnext' a 'shopnexs' como en tu archivo.
+    private $username = "root";
+    private $password = "";
+    public $conn;
 
-// Conexión a la base de datos
-$conexion = new mysqli("localhost", "root", "", "shopnexs");
-if ($conexion->connect_error) {
-    die("Conexión fallida: " . $conexion->connect_error);
+    public function getConnection() {
+        $this->conn = null;
+        try {
+            // Esta es la conexión PDO que usaremos en todo el proyecto
+            $this->conn = new PDO(
+                "mysql:host={$this->host};dbname={$this->db_name}",
+                $this->username,
+                $this->password
+            );
+            $this->conn->exec("set names utf8");
+        } catch (PDOException $e) {
+            // En lugar de solo mostrar el error, detenemos la ejecución para evitar problemas de seguridad.
+            die("Error de conexión: No se pudo conectar a la base de datos. " . $e->getMessage());
+        }
+
+        return $this->conn;
+    }
 }
 ?>

@@ -1,5 +1,5 @@
 <?php
-// public/index.php (Unificado)
+// Conexión base de datos
 session_start();
 $conexion = new mysqli("localhost", "root", "", "shopnexs");
 if ($conexion->connect_error) { die("Falló la conexión: " . $conexion->connect_error); }
@@ -8,29 +8,29 @@ if ($conexion->connect_error) { die("Falló la conexión: " . $conexion->connect
 $usuario_logueado = isset($_SESSION['id_usuario']);
 $favoritos_usuario = [];
 
-// --- SI EL USUARIO ESTÁ LOGUEADO, BUSCAMOS SUS FAVORITOS ---
+// Si el usuario está logueado, buscar favoritos
 if ($usuario_logueado) {
-    $id_usuario_actual = $_SESSION['id_usuario'];
-    $stmt_cliente = $conexion->prepare("SELECT id_cliente FROM cliente WHERE id_usuario = ?");
-    $stmt_cliente->bind_param("i", $id_usuario_actual);
-    $stmt_cliente->execute();
-    $resultado_cliente = $stmt_cliente->get_result();
+  $id_usuario_actual = $_SESSION['id_usuario'];
+  $stmt_cliente = $conexion->prepare("SELECT id_cliente FROM cliente WHERE id_usuario = ?");
+  $stmt_cliente->bind_param("i", $id_usuario_actual);
+  $stmt_cliente->execute();
+  $resultado_cliente = $stmt_cliente->get_result();
 
-    if ($resultado_cliente->num_rows > 0) {
-        $id_cliente = $resultado_cliente->fetch_assoc()['id_cliente'];
-        $stmt_favoritos = $conexion->prepare("SELECT id_producto FROM lista_favoritos WHERE id_cliente = ?");
-        $stmt_favoritos->bind_param("i", $id_cliente);
-        $stmt_favoritos->execute();
-        $resultado_favoritos = $stmt_favoritos->get_result();
-        while ($favorito = $resultado_favoritos->fetch_assoc()) {
-            $favoritos_usuario[] = $favorito['id_producto'];
-        }
-        $stmt_favoritos->close();
+  if ($resultado_cliente->num_rows > 0) {
+    $id_cliente = $resultado_cliente->fetch_assoc()['id_cliente'];
+    $stmt_favoritos = $conexion->prepare("SELECT id_producto FROM lista_favoritos WHERE id_cliente = ?");
+    $stmt_favoritos->bind_param("i", $id_cliente);
+    $stmt_favoritos->execute();
+    $resultado_favoritos = $stmt_favoritos->get_result();
+    while ($favorito = $resultado_favoritos->fetch_assoc()) {
+      $favoritos_usuario[] = $favorito['id_producto'];
     }
-    $stmt_cliente->close();
+    $stmt_favoritos->close();
+  }
+$stmt_cliente->close();
 }
 
-// --- CONSULTA DE PRODUCTOS (Funciona para ambos casos) ---
+// Consulta de productos
 $sql_productos = "SELECT
                     p.id_producto, p.nombre_producto, p.precio, p.ruta_imagen,
                     AVG(r.puntuacion) as average_rating,
@@ -41,51 +41,66 @@ $sql_productos = "SELECT
                   GROUP BY p.id_producto
                   ORDER BY p.id_producto DESC";
 $resultado_productos = $conexion->query($sql_productos);
+
+// --- OBTENER LOS 4 PRODUCTOS MÁS VENDIDOS ---
+$sql_mas_vendidos = "SELECT
+                        p.id_producto, p.nombre_producto, p.precio, p.ruta_imagen,
+                        SUM(dp.cantidad) AS total_vendido
+                     FROM producto p
+                     JOIN detalle_pedido dp ON p.id_producto = dp.id_producto
+                     GROUP BY p.id_producto
+                     ORDER BY total_vendido DESC
+                     LIMIT 4"; // Limitamos a los 4 más vendidos
+
+$resultado_mas_vendidos = $conexion->query($sql_mas_vendidos);
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="icon" href="img/icon_principal.ico" type="image/x-icon">
-    <!-- Swiper CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <title>ShopNext | Inicio</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="css/indexUser.css">
+  <link rel="icon" href="img/icon_principal.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <title>ShopNext | Inicio</title>
 </head>
 <body>
 <header>
+  <!-- Header Oscuro -->
   <div class="header-top">
     <p>Rebajas de Verano: ¡50 % de Descuento!</p>
     <h2>¡Compra Ahora!</h2>
   </div>
-
+  <!-- Logo Principal -->
   <div class="header-main">
     <div class="logo">
       <a href="/shopnext/ShopNext-Beta/public/index.php"><img src="/shopnext/ShopNext-Beta/public/img/logo.svg" alt="ShopNext"></a>
     </div>
-
+    <!-- Secciones -->
     <nav class="nav-links">
       <a href="/shopnext/ShopNext-Beta/public/index.php">Inicio</a>
-      <?php if ($usuario_logueado): ?>
+       <?php if ($usuario_logueado): ?> <!-- Si el usuario está logueado, le muestra productos en vez de Registro y Acerca de -->
         <a href="#productos">Productos</a>
         <a href="/shopnext/ShopNext-Beta/views/user/pages/contact.php">Contacto</a>
       <?php else: ?>
         <a href="/shopnext/ShopNext-Beta/views/auth/signUp.html">Regístrate</a>
         <a href="/shopnext/ShopNext-Beta/views/pages/contact.html">Contacto</a>
+        <a href="/shopnext/ShopNext-Beta/views/pages/aboutUs.html">Acerca de</a>
       <?php endif; ?>
     </nav>
-
+    <!-- Buscador -->
     <div class="header-icons">
       <div class="buscador">
         <input type="text" placeholder="¿Qué estás buscando?">
         <button><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
-
+      <!-- Favoritos y Carrito, logueados -->
       <?php if ($usuario_logueado): ?>
         <a href="/shopnext/ShopNext-Beta/views/user/pages/favoritos.php" title="Favoritos"><i class="fa-solid fa-heart"></i></a>
         <a href="/shopnext/ShopNext-Beta/views/user/cart/carrito.php" title="Carrito"><i class="fa-solid fa-cart-shopping"></i></a>
+        <!-- Ícono de usuario, solo si está logueado -->
         <div class="user-menu-container">
           <i class="fas fa-user user-icon" onclick="toggleDropdown()"></i>
           <div class="dropdown-content" id="dropdownMenu">
@@ -94,14 +109,16 @@ $resultado_productos = $conexion->query($sql_productos);
             <a href="/shopnext/ShopNext-Beta/controllers/logout.php">Cerrar Sesión</a>
           </div>
         </div>
+        <!-- Favoritos y Carrito, no logueados -->
       <?php else: ?>
-        <a href="/shopnext/ShopNext-Beta/views/auth/login.php"><i class="fa-solid fa-heart"></i></a>
-        <a href="/shopnext/ShopNext-Beta/views/auth/login.php"><i class="fa-solid fa-cart-shopping"></i></a>
+        <a href="/shopnext/ShopNext-Beta/views/auth/login.php" title="Favoritos"><i class="fa-solid fa-heart"></i></a>
+        <a href="/shopnext/ShopNext-Beta/views/auth/login.php" title="Carrito"><i class="fa-solid fa-cart-shopping"></i></a>
         <a href="/shopnext/ShopNext-Beta/views/auth/login.php" class="login-btn">Iniciar Sesión</a>
       <?php endif; ?>
     </div>
   </div>
 </header>
+<!-- Separador entre secciones -->
 <section></section>
 <!-- Carrusel -->
 <div class="swiper mySwiper">
@@ -159,194 +176,262 @@ $resultado_productos = $conexion->query($sql_productos);
   <p class="etiqueta">Productos por Sección</p>
   <h2 class="titulo">Todas nuestras secciones</h2>
 
-<div class="contenedor-categorias">
+  <div class="contenedor-categorias" id="categorias">
     <div class="categoria">
-      <a href="../views/pages/products/category.php?name=Ropa Femenina"><i class="fa-solid fa-person-dress"></i></a>
+      <a href="../views/pages/products/womansection.html"><i class="fa-solid fa-person-dress"></i></a>
       <p>Ropa Femenina</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/category.php?name=Ropa Masculina"><i class="fa-solid fa-person"></i></a>
+      <a href="../views/pages/products/mensection.html"><i class="fa-solid fa-person"></i></a>
       <p>Ropa Masculina</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/category.php?name=Computadores"><i class="fa-solid fa-computer"></i></a>
+      <a href="../views/pages/products/computersections.php"><i class="fa-solid fa-computer"></i></a>
       <p>Computadores</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/category.php?name=Videojuegos"><i class="fas fa-gamepad"></i></a>
+      <a href="../views/pages/products/videogamessection.html"><i class="fas fa-gamepad"></i></a>
       <p>Videojuegos</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/category.php?name=Deportes"><i class="fa-solid fa-baseball-bat-ball"></i></a>
+      <a href="../views/pages/products/sportsecion.html"><i class="fa-solid fa-baseball-bat-ball"></i></a>
       <p>Deportes</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/category.php?name=Hogar & Belleza"><i class="fa-solid fa-star-of-life"></i></a>
+      <a href="../views/pages/products/homesections.html"><i class="fa-solid fa-star-of-life"></i></a>
       <p>Hogar & Belleza</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/category.php?name=Celulares"><i class="fa-solid fa-mobile-button"></i></a>
+      <a href="../views/pages/products/phonesections.html"><i class="fa-solid fa-mobile-button"></i></a>
       <p>Celulares</p>
-    </div>
-    </div>             
-  </div>        
+    </div>            
   </div>
 </section>
-<!-- Flash Sales (Ventas Relámpago) -->
-<section>
-  <div class="flash-sales">
-    <div class="flash-header">
-      <div class="title-container">
-        <h2><span class="flash">Últimos</span> <span class="sales">Productos</span></h2>
-      </div>
-      <!-- Botones de Flash Sales -->
-      <div class="scroll-controls">
-        <button class="scroll-btn" id="scrollLeftBtn">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="scroll-btn" id="scrollRightBtn">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
+<!-- Últimos Productos -->
+<section class="latest-products-section">
+  <div class="section-header">
+    <div class="title-container">
+      <span class="title-badge"></span>
+      <h2>
+        <span class="title-part-1">Últimos</span>
+        <span class="title-part-2">Productos</span>
+      </h2>
     </div>
   </div>
+    
+  <div class="products-grid">
+    <?php
+      if ($resultado_productos && $resultado_productos->num_rows > 0) {
+      $resultado_productos->data_seek(0); 
+      while ($fila = $resultado_productos->fetch_assoc()) {
+      $es_favorito = in_array($fila['id_producto'], $favoritos_usuario);
+    ?>
 
-  <div class="products-container" id="products-container">
-    <div class="products" id="products">
-        <?php
-        if ($resultado_productos && $resultado_productos->num_rows > 0) {
-            while ($fila = $resultado_productos->fetch_assoc()) {
-        ?>
-              <div class="product">
-                <div class="product-image-wrapper">
-                  <a href="../views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>">
-                    <img src="uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>">
-                  </a>
-                  <form class="add-to-cart-form">
-                    <input type="hidden" name="id_producto" value="<?php echo $fila['id_producto']; ?>">
-                    <button type="submit" class="add-to-cart-btn">Añadir al carrito</button>
-                  </form>
-                </div>
-                <a href="../views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>" class="product-link">
-                  <p class="product-title"><?php echo htmlspecialchars($fila['nombre_producto']); ?></p>
-                </a>
-                <p class="price">$<?php echo number_format($fila['precio'], 0); ?></p>
-                <p class="rating">★★★★★ (75)</p>
-              </div>
-        <?php
+    <div class="product-card">
+      <div class="product-image-wrapper">
+        <div class="product-card-icons">
+          <button class="icon-btn favorite-icon <?php if ($es_favorito) echo 'active'; ?>"
+            title="Añadir a favoritos" 
+            onclick="toggleFavorito(<?php echo $fila['id_producto']; ?>, this)">
+            <i class="fa-heart <?php echo $es_favorito ? 'fas' : 'far'; ?>"></i>
+          </button>
+          <a href="/shopnext/ShopNext-Beta/views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>" class="icon-btn" title="Vista rápida">
+            <i class="far fa-eye"></i>
+          </a>
+        </div>
+        <a href="/shopnext/ShopNext-Beta/views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>">
+          <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>">
+        </a>
+        <button class="add-to-cart-btn" onclick="agregarAlCarrito(<?php echo $fila['id_producto']; ?>)">
+          <i class="fas fa-shopping-cart"></i> Añadir al Carrito
+        </button>
+      </div>
+      <div class="product-details">
+        <h3><?php echo htmlspecialchars($fila['nombre_producto']); ?></h3>
+        <p class="product-price">$<?php echo number_format($fila['precio'], 0, ',', '.'); ?></p>
+        <div class="product-rating">
+          <?php
+            // Redondea el promedio de calificación para mostrar las estrellas
+            $rating = !is_null($fila['average_rating']) ? round($fila['average_rating']) : 0;
+            $review_count = $fila['review_count'];
+            // Dibuja las estrellas (llenas y vacías)
+            for ($i = 1; $i <= 5; $i++) {
+              if ($i <= $rating) {
+                echo '<i class="fas fa-star"></i>'; // Estrella llena
+              } else {
+                echo '<i class="far fa-star"></i>'; // Estrella vacía
+              }
             }
-        } else {
-            echo "<p>No hay productos disponibles en este momento.</p>";
-        }
-        $conexion->close();
-        ?>
-    </div> 
-</div>
-<section></section>
-
-    <!-- Secciones Destacadas -->
+          ?>
+          <span class="review-count">(<?php echo $review_count; ?>)</span>
+        </div>
+      </div>
+    </div>
+      <?php
+    } 
+    } else {
+    echo "<p>No hay productos disponibles.</p>";
+    }
+    $conexion->close();
+    ?>
+  </div>
+</section>
+<!-- Secciones Destacadas -->
 <div class="categoria-seccion">
   <h2 class="titulo">Categorías destacadas</h2>
-<div class="categoria-grid">
-  <a href="../views/pages/products/phonesections.html" class="categoria-item">
-    <div class="icon"><i class="fas fa-mobile-alt"></i></div>
-    <p>Teléfonos</p>
-  </a>
-  <a href="../views/pages/products/computersections.html" class="categoria-item">
-    <div class="icon"><i class="fas fa-laptop"></i></div>
-    <p>Computadores</p>
-  </a>
-  <a href="audifonos.html" class="categoria-item">
-    <div class="icon"><i class="fas fa-headphones"></i></div>
-    <p>Audífonos</p>
-  </a>
-  <a href="videojuegos.html" class="categoria-item">
-    <div class="icon"><i class="fas fa-gamepad"></i></div>
-    <p>Videojuegos</p>
-  </a>
-</div>
+  <div class="categoria-grid">
+    <a href="../views/pages/products/phonesections.html" class="categoria-item">
+      <div class="icon"><i class="fas fa-mobile-alt"></i></div>
+      <p>Teléfonos</p>
+    </a>
+    <a href="../views/pages/products/computersections.html" class="categoria-item">
+      <div class="icon"><i class="fas fa-laptop"></i></div>
+      <p>Computadores</p>
+    </a>
+    <a href="audifonos.html" class="categoria-item">
+      <div class="icon"><i class="fas fa-headphones"></i></div>
+      <p>Audífonos</p>
+    </a>
+    <a href="videojuegos.html" class="categoria-item">
+      <div class="icon"><i class="fas fa-gamepad"></i></div>
+      <p>Videojuegos</p>
+    </a>
+  </div>
 </div>
 <section></section>
-<section class="flash-sales"> <div class="section-header">
-        <div class="badge">
-            <span>Este Mes</span>
-        </div>
-        <div class="title-container">
-            <h2 class="title">Productos Más Vendidos</h2>
-        </div>
-        <div class="arrows-wrapper">
-            <button class="arrow-btn"><i data-lucide="arrow-left"></i></button>
-            <button class="arrow-btn"><i data-lucide="arrow-right"></i></button>
-        </div>
+<section class="latest-products-section">
+  <div class="section-header">
+    <div class="title-container">
+      <span class="title-badge"></span>
+      <h2>
+        <span class="title-part-1">Productos</span>
+        <span class="title-part-2">Más Vendidos</span>
+      </h2>
     </div>
-
-    <div class="products-container">
-        <div class="products">
-            <?php
-            if ($resultado_mas_vendidos && $resultado_mas_vendidos->num_rows > 0) {
-                while ($fila = $resultado_mas_vendidos->fetch_assoc()) {
-            ?>
-                    <div class="product">
-                        <div class="product-image-wrapper">
-                            <a href="views/pages/producto-detalle.php?id=<?php echo $fila['id_producto']; ?>">
-                                <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>">
-                            </a>
-                            <form action="/shopnext/ShopNext-Beta/controllers/carritoController.php" method="POST" class="add-to-cart-form">
-                                <input type="hidden" name="id_producto" value="<?php echo $fila['id_producto']; ?>">
-                                <button type="submit" class="add-to-cart-btn">Añadir al carrito</button>
-                            </form>
-                        </div>
-                        <p class="product-title"><?php echo htmlspecialchars($fila['nombre_producto']); ?></p>
-                        <p class="price">$<?php echo number_format($fila['precio'], 0); ?></p>
-                    </div>
-            <?php
-                }
-            } else {
-                echo "<p style='text-align:center; width:100%;'>Aún no hay suficientes ventas para mostrar los productos más vendidos.</p>";
-            }
-            ?>
-        </div>
+  </div>  
+  <div class="products-grid">
+  <?php
+    // Verificamos si la consulta de más vendidos trajo resultados
+    if ($resultado_mas_vendidos && $resultado_mas_vendidos->num_rows > 0) {
+    while ($fila = $resultado_mas_vendidos->fetch_assoc()) {
+    $es_favorito = in_array($fila['id_producto'], $favoritos_usuario);
+  ?>
+      
+  <div class="product-card">
+    <div class="product-image-wrapper">
+      <div class="product-card-icons">
+        <button class="icon-btn favorite-icon <?php if ($es_favorito) echo 'active'; ?>" 
+          title="Añadir a favoritos" 
+          onclick="toggleFavorito(<?php echo $fila['id_producto']; ?>, this.querySelector('i'))">
+          <i class="fa-heart <?php echo $es_favorito ? 'fas' : 'far'; ?>"></i>
+        </button>
+        <a href="/shopnext/ShopNext-Beta/views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>" class="icon-btn" title="Vista rápida">
+          <i class="far fa-eye"></i>
+        </a>
+      </div>
+      <a href="/shopnext/ShopNext-Beta/views/pages/productoDetalle.php?id=<?php echo $fila['id_producto']; ?>">
+        <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>">
+      </a>
+      <button class="add-to-cart-btn" onclick="agregarAlCarrito(<?php echo $fila['id_producto']; ?>)">
+        <i class="fas fa-shopping-cart"></i> Añadir al Carrito
+      </button>
     </div>
+    <div class="product-details">
+      <h3><?php echo htmlspecialchars($fila['nombre_producto']); ?></h3>
+      <p class="product-price">$<?php echo number_format($fila['precio'], 0, ',', '.'); ?></p>
+    </div>
+  </div>
+  <?php
+    } // Fin del bucle while
+    } else {
+    // Este mensaje se mostrará si no hay ventas suficientes
+    echo "<p>Aún no hay suficientes ventas para mostrar los productos más vendidos.</p>";
+    }
+  ?>
 </section>
+<!-- Separador -->
 <section></section>
-
-<div class="contenedor-destacados">
-  <div class="tarjeta" style="grid-area: ps5;">
-    <img src="img/ps5-slim.jpeg" alt="PlayStation 5">
-    <div class="contenido">
-      <h3>PlayStation 5</h3>
-      <p>Versión en blanco y negro disponible ahora.</p>
-      <a href="#">Comprar Ahora</a>
+  <section class="music-experience">
+  <div class="promo-container">
+    <div class="promo-content">
+    <p class="promo-category">Categorías</p>
+      <h2>Mejora Tu Experiencia Musical</h2>
+      <div class="promo-countdown">
+        <div class="time-box">
+          <span id="promo-days">00</span>
+          <small>Días</small>
+        </div>
+        <div class="time-box">
+          <span id="promo-hours">00</span>
+          <small>Horas</small>
+        </div>
+        <div class="time-box">
+          <span id="promo-minutes">00</span>
+          <small>Minutos</small>
+        </div>
+        <div class="time-box">
+          <span id="promo-seconds">00</span>
+          <small>Segundos</small>
+        </div>
+      </div>
+      <a href="#" class="promo-button">¡Comprar Ahora!</a>
+    </div>
+    <div class="promo-image">
+      <img src="img/jbl_speakers.png" alt="JBL Speaker">
     </div>
   </div>
+</section>
 
-  <div class="tarjeta" style="grid-area: coleccion;">
-    <img src="img/women-pub.png" alt="Colección Femenina">
-    <div class="contenido">
-      <h3>Colección Femenina</h3>
-      <p>Estilo exclusivo para ella.</p>
-      <a href="#">Comprar Ahora</a>
+<section class="new-arrivals">
+  <div class="container">
+    <p class="featured-text">Destacado</p>
+    <h2>Nuevos Lanzamientos</h2>
+    <div class="arrivals-grid">
+      <div class="product-card large-card">
+        <a href="#" class="product-link">
+          <img src="img/ps5-slim.jpeg" alt="PlayStation 5" class="product-image" style="object-fit: contain !important; padding: 20px;">
+          <div class="product-info">
+            <h3>PlayStation 5</h3>
+            <p>La versión en Blanco y Negro de la PS5 ya está a la venta.</p>
+            <span>Comprar Ahora</span>
+          </div>
+        </a>
+      </div>
+      <div class="product-card top-right-card">
+        <a href="#" class="product-link">
+          <img src="img/women-pub.png" alt="Colección de Mujer" class="product-image">
+          <div class="product-info">
+            <h3>Colección de Mujer</h3>
+            <p>Colecciones destacadas que te dan otra vibra.</p>
+            <span>Comprar Ahora</span>
+          </div>
+        </a>
+      </div>
+      <div class="bottom-right-wrapper">
+        <div class="product-card">
+          <a href="#" class="product-link">
+            <img src="img/speaker-pub.png" alt="Altavoces Inteligentes" class="product-image">
+            <div class="product-info">
+              <h3>Altavoces</h3>
+              <p>Altavoces inalámbricos de Amazon.</p>
+              <span>Comprar Ahora</span>
+            </div>
+          </a>
+        </div>
+        <div class="product-card">
+          <a href="#" class="product-link">
+            <img src="img/gucci-pub.png" alt="Perfume Gucci" class="product-image">
+            <div class="product-info">
+              <h3>Perfume</h3>
+              <p>GUCCI INTENSE OUD EDP.</p>
+              <span>Comprar Ahora</span>
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
-
-  <div class="tarjeta" style="grid-area: altavoces;">
-    <img src="img/speaker-pub.png" alt="Altavoces">
-    <div class="contenido">
-      <h3>Altavoces</h3>
-      <p>Altavoces inalámbricos Amazon.</p>
-      <a href="#">Comprar Ahora</a>
-    </div>
-  </div>
-
-  <div class="tarjeta" style="grid-area: perfume;">
-    <img src="img/gucci-pub.png" alt="Perfume">
-    <div class="contenido">
-      <h3>Perfume</h3>
-      <p>GUCCI INTENSE OUD EDP.</p>
-      <a href="#">Comprar Ahora</a>
-    </div>
-  </div>
-</div>
+</section>
 <section></section>
 <!-- Categoria de beneficios cerca al footer -->
 <div class="benefits-container">
@@ -402,12 +487,16 @@ $resultado_productos = $conexion->query($sql_productos);
   </div>
 </footer>
 <!-- Swiper JS -->
+
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script src="js/alertas.js"></script> 
 <script src="js/cart/carrito.js"></script>
-<script src="js/index.js"></script>
+<script src="js/user/favoritos.js"></script> 
+<script src="js/dropdown.js"></script>      
 <script src="js/menuHamburguer.js"></script>
 <script src="js/search.js"></script> 
+<script src="js/index.js"></script> 
 </body>
 </html>
