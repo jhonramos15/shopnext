@@ -80,7 +80,8 @@ if ($id_carrito > 0) {
 
     <!-- Nav Menú -->
     <nav class="nav-links" id="navMenu">
-      <a href="#">Productos</a>
+      <a href="../../../public/index.php">Inicio</a>
+      <a href="../../pages/products/category.php">Productos</a>
       <a href="../pages/contact.php">Contacto</a>
     </nav>
 
@@ -94,13 +95,21 @@ if ($id_carrito > 0) {
       <a href="../pages/favoritos.php"><button class="icon-btn"><i class="fa-solid fa-heart"></i></button></a>
       <!-- Ícono de usuario -->
         <div class="user-menu-container">
-          <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
-          <div class="dropdown-content" id="dropdownMenu">
-            <a href="../../pages/account.php">Perfil</a>
-            <a href="../../user/pages/pedidos.php">Pedidos</a>
-            <a href="../../../controllers/logout.php">Cerrar sesión</a>
-          </div>
-        </div>   
+            <i class="fas fa-user user-icon"></i>
+            
+            <div class="dropdown-content" id="dropdownMenu">
+              <a href="/shopnext/ShopNext-Beta/views/pages/account.php">
+                <i class="fas fa-user-circle"></i> <span>Mi Perfil</span>
+              </a>
+              <a href="/shopnext/ShopNext-Beta/views/user/pages/pedidos.php">
+                <i class="fas fa-box"></i> <span>Mis Pedidos</span>
+              </a>
+              <hr>
+              <a href="/shopnext/ShopNext-Beta/controllers/logout.php" class="logout-link">
+                <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
+              </a>
+            </div>
+        </div> 
     </div>
   </div>
 </header>
@@ -154,7 +163,7 @@ if ($id_carrito > 0) {
 
     <div class="cart-bottom">
     <div class="cart-actions">
-        <a href="../indexUser.php" class="btn btn-outline">Volver a la Tienda</a>
+        <a href="../../../public/index.php" class="btn btn-outline">Volver a la Tienda</a>
         <button type="button" class="btn btn-danger" onclick="vaciarCarrito()">Vaciar Carrito</button>
     </div>
     

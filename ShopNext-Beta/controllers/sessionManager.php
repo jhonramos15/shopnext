@@ -1,6 +1,6 @@
 <?php
 class sessionManager {
-    private $timeout = 900; // Tiempo de expiración en segundos (15 min)
+    private $timeout = 100; // Tiempo de expiración en segundos (15 min)
 
     public function __construct($timeout = 900) {
         $this->timeout = $timeout;
@@ -31,7 +31,7 @@ class sessionManager {
         if (isset($_SESSION['last_activity'])) {
             if (time() - $_SESSION['last_activity'] > $this->timeout) {
                 $this->logout();
-                header("Location: ../views/auth/login.php?timeout=1");
+                header("Location: /shopnext/ShopNext-Beta/views/auth/login.html?timeout=1");
                 exit;
             } else {
                 $_SESSION['last_activity'] = time(); // Renueva la actividad

@@ -1,27 +1,19 @@
 <?php
-class Database {
-    private $host = "localhost";
-    private $db_name = "shopnexs"; // Corregí el nombre de 'shopnext' a 'shopnexs' como en tu archivo.
-    private $username = "root";
-    private $password = "";
-    public $conn;
+// Configuración de la base de datos
+$servidor = "localhost";
+$usuario_db = "root";
+$contrasena_db = "";
+$nombre_db = "shopnexs";
 
-    public function getConnection() {
-        $this->conn = null;
-        try {
-            // Esta es la conexión PDO que usaremos en todo el proyecto
-            $this->conn = new PDO(
-                "mysql:host={$this->host};dbname={$this->db_name}",
-                $this->username,
-                $this->password
-            );
-            $this->conn->exec("set names utf8");
-        } catch (PDOException $e) {
-            // En lugar de solo mostrar el error, detenemos la ejecución para evitar problemas de seguridad.
-            die("Error de conexión: No se pudo conectar a la base de datos. " . $e->getMessage());
-        }
+// Crear la conexión
+$conexion = mysqli_connect($servidor, $usuario_db, $contrasena_db, $nombre_db);
 
-        return $this->conn;
-    }
+// Verificar si la conexión falló
+if (!$conexion) {
+    // Detener todo y mostrar un error claro si la conexión no se puede establecer
+    die("Error de conexión fallido: " . mysqli_connect_error());
 }
+
+// Establecer el juego de caracteres a UTF-8 (esencial para tildes y ñ)
+mysqli_set_charset($conexion, "utf8");
 ?>

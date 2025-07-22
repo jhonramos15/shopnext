@@ -39,7 +39,8 @@ $sql_productos = "SELECT
                   LEFT JOIN resenas r ON p.id_producto = r.id_producto
                   WHERE p.stock > 0
                   GROUP BY p.id_producto
-                  ORDER BY p.id_producto DESC";
+                  ORDER BY p.id_producto DESC
+                  LIMIT 8";
 $resultado_productos = $conexion->query($sql_productos);
 
 // --- OBTENER LOS 4 PRODUCTOS MÁS VENDIDOS ---
@@ -61,7 +62,7 @@ $resultado_mas_vendidos = $conexion->query($sql_mas_vendidos);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link rel="stylesheet" href="css/indexUser.css">
+  <link rel="stylesheet" href="css/index.css">
   <link rel="icon" href="img/icon_principal.ico" type="image/x-icon">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <title>ShopNext | Inicio</title>
@@ -82,7 +83,7 @@ $resultado_mas_vendidos = $conexion->query($sql_mas_vendidos);
     <nav class="nav-links">
       <a href="/shopnext/ShopNext-Beta/public/index.php">Inicio</a>
        <?php if ($usuario_logueado): ?> <!-- Si el usuario está logueado, le muestra productos en vez de Registro y Acerca de -->
-        <a href="#productos">Productos</a>
+        <a href="/shopnext/ShopNext-Beta/views/pages/products/category.php">Productos</a>
         <a href="/shopnext/ShopNext-Beta/views/user/pages/contact.php">Contacto</a>
       <?php else: ?>
         <a href="/shopnext/ShopNext-Beta/views/auth/signUp.html">Regístrate</a>
@@ -92,22 +93,31 @@ $resultado_mas_vendidos = $conexion->query($sql_mas_vendidos);
     </nav>
     <!-- Buscador -->
     <div class="header-icons">
-      <div class="buscador">
-        <input type="text" placeholder="¿Qué estás buscando?">
-        <button><i class="fa-solid fa-magnifying-glass"></i></button>
-      </div>
+      <form class="buscador" id="search-form">
+        <input type="text" id="search-input" placeholder="¿Qué estás buscando?">
+        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </form>
+      <div id="search-results"></div>
       <!-- Favoritos y Carrito, logueados -->
       <?php if ($usuario_logueado): ?>
         <a href="/shopnext/ShopNext-Beta/views/user/pages/favoritos.php" title="Favoritos"><i class="fa-solid fa-heart"></i></a>
         <a href="/shopnext/ShopNext-Beta/views/user/cart/carrito.php" title="Carrito"><i class="fa-solid fa-cart-shopping"></i></a>
         <!-- Ícono de usuario, solo si está logueado -->
         <div class="user-menu-container">
-          <i class="fas fa-user user-icon" onclick="toggleDropdown()"></i>
-          <div class="dropdown-content" id="dropdownMenu">
-            <a href="/shopnext/ShopNext-Beta/views/pages/account.php">Mi Perfil</a>
-            <a href="/shopnext/ShopNext-Beta/views/user/pages/pedidos.php">Mis Pedidos</a>
-            <a href="/shopnext/ShopNext-Beta/controllers/logout.php">Cerrar Sesión</a>
-          </div>
+            <i class="fas fa-user user-icon"></i>
+            
+            <div class="dropdown-content" id="dropdownMenu">
+              <a href="/shopnext/ShopNext-Beta/views/pages/account.php">
+                <i class="fas fa-user-circle"></i> <span>Mi Perfil</span>
+              </a>
+              <a href="/shopnext/ShopNext-Beta/views/user/pages/pedidos.php">
+                <i class="fas fa-box"></i> <span>Mis Pedidos</span>
+              </a>
+              <hr>
+              <a href="/shopnext/ShopNext-Beta/controllers/logout.php" class="logout-link">
+                <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
+              </a>
+            </div>
         </div>
         <!-- Favoritos y Carrito, no logueados -->
       <?php else: ?>
@@ -272,32 +282,39 @@ $resultado_mas_vendidos = $conexion->query($sql_mas_vendidos);
     } else {
     echo "<p>No hay productos disponibles.</p>";
     }
-    $conexion->close();
     ?>
   </div>
 </section>
+<section></section>
 <!-- Secciones Destacadas -->
-<div class="categoria-seccion">
-  <h2 class="titulo">Categorías destacadas</h2>
-  <div class="categoria-grid">
-    <a href="../views/pages/products/phonesections.html" class="categoria-item">
-      <div class="icon"><i class="fas fa-mobile-alt"></i></div>
-      <p>Teléfonos</p>
-    </a>
-    <a href="../views/pages/products/computersections.html" class="categoria-item">
-      <div class="icon"><i class="fas fa-laptop"></i></div>
-      <p>Computadores</p>
-    </a>
-    <a href="audifonos.html" class="categoria-item">
-      <div class="icon"><i class="fas fa-headphones"></i></div>
-      <p>Audífonos</p>
-    </a>
-    <a href="videojuegos.html" class="categoria-item">
-      <div class="icon"><i class="fas fa-gamepad"></i></div>
-      <p>Videojuegos</p>
-    </a>
-  </div>
-</div>
+<section class="seccion-categorias">
+    
+    <div class="category-header-simple">
+        <div class="title-badge"></div>
+        <div class="title-text">
+            <p class="category-subtitle">Este Mes</p>
+            <h2 class="category-title">Explora por Categoría</h2>
+        </div>
+    </div>
+
+    <div class="categoria-grid">
+        <a href="/shopnext/ShopNext-Beta/views/pages/products/phonesections.php" class="categoria-item">
+            <div class="icon"><i class="fas fa-mobile-alt"></i></div>
+            <p>Teléfonos</p>
+        </a>
+        <a href="/shopnext/ShopNext-Beta/views/pages/products/computersections.php" class="categoria-item">
+            <div class="icon"><i class="fas fa-laptop"></i></div>
+            <p>Computadores</p>
+        </a>
+        <a href="#" class="categoria-item"> <div class="icon"><i class="fas fa-headphones"></i></div>
+            <p>Audífonos</p>
+        </a>
+        <a href="/shopnext/ShopNext-Beta/views/pages/products/videogamessection.php" class="categoria-item">
+            <div class="icon"><i class="fas fa-gamepad"></i></div>
+            <p>Videojuegos</p>
+        </a>
+    </div>
+</section>
 <section></section>
 <section class="latest-products-section">
   <div class="section-header">
@@ -493,8 +510,7 @@ $resultado_mas_vendidos = $conexion->query($sql_mas_vendidos);
 
 <script src="js/alertas.js"></script> 
 <script src="js/cart/carrito.js"></script>
-<script src="js/user/favoritos.js"></script> 
-<script src="js/dropdown.js"></script>      
+<script src="js/user/favoritos.js"></script>   
 <script src="js/menuHamburguer.js"></script>
 <script src="js/search.js"></script> 
 <script src="js/index.js"></script> 

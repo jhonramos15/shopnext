@@ -1,22 +1,58 @@
 <?php
-// views/pages/account.php
 session_start();
-require_once __DIR__ . '/../../controllers/authGuardCliente.php'; // Guardián de seguridad
 
-// Conexión y obtención de los datos actuales del cliente
-$conexion = new mysqli("localhost", "root", "", "shopnexs");
+// Guardián para asegurar que el usuario esté logueado
+if (!isset($_SESSION['id_usuario'])) {
+    header("Location: /shopnext/ShopNext-Beta/views/auth/login.php");
+    exit;
+}
+
+require_once __DIR__ . '/../../config/conexion.php';
+
 $id_usuario_actual = $_SESSION['id_usuario'];
+$rol = $_SESSION['rol'] ?? 'cliente'; // Asumimos cliente si no hay rol
 
-$stmt = $conexion->prepare(
-    "SELECT u.correo_usuario, c.nombre, c.telefono, c.genero, c.fecha_nacimiento, c.foto_perfil 
-     FROM usuario u 
-     JOIN cliente c ON u.id_usuario = c.id_usuario 
-     WHERE u.id_usuario = ?"
-);
-$stmt->bind_param("i", $id_usuario_actual);
-$stmt->execute();
-$usuario = $stmt->get_result()->fetch_assoc();
-$stmt->close();
+// Se inicializa un array con valores por defecto para evitar errores.
+$datos_perfil = [
+    'nombre' => 'N/A',
+    'correo_usuario' => 'N/A',
+    'telefono' => '',
+    'genero' => '',
+    'fecha_nacimiento' => '',
+    'foto_perfil' => 'default_avatar.png'
+];
+$nombre_a_mostrar = 'Usuario';
+
+// Cargar datos según el rol
+switch ($rol) {
+    case 'cliente':
+        $stmt = $conexion->prepare("SELECT c.nombre, u.correo_usuario, c.telefono, c.genero, c.fecha_nacimiento, c.foto_perfil FROM cliente c JOIN usuario u ON c.id_usuario = u.id_usuario WHERE u.id_usuario = ?");
+        $stmt->bind_param("i", $id_usuario_actual);
+        $stmt->execute();
+        $resultado = $stmt->get_result()->fetch_assoc();
+        // Si se encuentra un resultado, se fusiona con los datos por defecto
+        if ($resultado) $datos_perfil = array_merge($datos_perfil, $resultado);
+        $nombre_a_mostrar = $datos_perfil['nombre'];
+        break;
+
+    case 'vendedor':
+        // El vendedor no tiene todos los campos, por eso se usan los valores por defecto
+        $stmt = $conexion->prepare("SELECT v.nombre, u.correo_usuario, v.telefono FROM vendedor v JOIN usuario u ON v.id_usuario = u.id_usuario WHERE u.id_usuario = ?");
+        $stmt->bind_param("i", $id_usuario_actual);
+        $stmt->execute();
+        $resultado = $stmt->get_result()->fetch_assoc();
+        if ($resultado) $datos_perfil = array_merge($datos_perfil, $resultado);
+        $nombre_a_mostrar = $datos_perfil['nombre'];
+        break;
+        
+    case 'admin':
+        $nombre_a_mostrar = 'Administrador';
+        break;
+}
+
+if (isset($stmt)) {
+    $stmt->close();
+}
 $conexion->close();
 ?>
 

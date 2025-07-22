@@ -365,4 +365,89 @@ section {
   color: #666;
 }
 
-/* ... El resto de los estilos responsive y del footer se mantienen igual ... */
+/* footer*/
+
+footer,
+.footer-contact {
+  margin-top: 0;
+  padding: 40px 20px;
+  font-family: 'Poppins', sans-serif;
+  background-color: #121212;
+  color: white;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+.footer-section {
+  flex: 1 1 200px;
+  max-width: 250px;
+  padding: 20px;
+  background-color: #121212;
+}
+
+.footer-section h3 {
+  margin-bottom: 10px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 10px;
+}
+
+.footer-section a {
+  text-decoration: none;
+  color: #f1f1f1;
+}
+
+.footer-section a:hover {
+  text-decoration: underline;
+}
+
+/* Logo */
+.footer-logo {
+  max-width: 150px;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px auto;
+}
+
+/* Íconos sociales */
+.social-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.social-icons li {
+  list-style: none;
+}
+
+.social-icons img {
+  width: 28px;
+  height: 28px;
+  background: white;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-contact {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-section {
+    max-width: 100%;
+  }
+
+  .social-icons {
+    justify-content: center;
+  }
+}

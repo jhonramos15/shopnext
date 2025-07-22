@@ -1,25 +1,23 @@
+// Espera a que todo el contenido del DOM esté cargado
 document.addEventListener('DOMContentLoaded', function() {
-    const userMenuContainer = document.querySelector('.user-menu-container');
-    if (userMenuContainer) {
-        const userIcon = userMenuContainer.querySelector('.user-icon');
-        const dropdownMenu = userMenuContainer.querySelector('.dropdown-content');
 
-        if (userIcon && dropdownMenu) {
-            userIcon.addEventListener('click', function(event) {
-                // Detiene la propagación para que el clic no cierre el menú inmediatamente
-                event.stopPropagation(); 
-                dropdownMenu.classList.toggle('show');
-            });
-        }
+    const userIcon = document.querySelector('.user-icon');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    // Si el ícono de usuario existe, le asignamos el evento de clic
+    if (userIcon) {
+        userIcon.addEventListener('click', function(event) {
+            // Evita que el clic se propague al 'window' y cierre el menú inmediatamente
+            event.stopPropagation(); 
+            dropdownMenu.classList.toggle('show');
+        });
     }
 
-    // Cierra el menú si se hace clic en cualquier otro lugar de la página
-    window.addEventListener('click', function() {
-        const allDropdowns = document.querySelectorAll('.dropdown-content');
-        allDropdowns.forEach(menu => {
-            if (menu.classList.contains('show')) {
-                menu.classList.remove('show');
-            }
-        });
+    // Cierra el menú si se hace clic fuera de él
+    window.addEventListener('click', function(event) {
+        // Si el menú está abierto y no se hizo clic dentro de él
+        if (dropdownMenu.classList.contains('show') && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.classList.remove('show');
+        }
     });
 });

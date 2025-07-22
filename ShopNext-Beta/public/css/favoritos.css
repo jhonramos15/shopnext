@@ -129,24 +129,26 @@ section {
   overflow: hidden;
 }
 
-/* Input del buscador */
+/* --- Estilos para el Buscador --- */
+.buscador {
+  display: flex;
+  align-items: center;
+}
+
 .buscador input {
   border: 1px solid #ccc;
   padding: 6px 10px;
-  width: 100%;
   background: #f5f5f5;
   border-radius: 5px 0 0 5px;
+  border-right: none; /* Evita el doble borde */
 }
 
-/* Botón del buscador */
 .buscador button {
   padding: 6px 10px;
   cursor: pointer;
   border: 1px solid #ccc;
   background: #f5f5f5;
   border-radius: 0 5px 5px 0;
-  position: relative;
-  right: 1px;
 }
 
 /* Íconos como favoritos y carrito */
@@ -465,6 +467,29 @@ main.wishlist-container {
     color: #888;
     font-size: 13px;
     margin-left: 5px;
+}
+
+/* --- Estilos para la Imagen del Producto en la Lista --- */
+
+/* Contenedor de la imagen */
+.product-item .product-image {
+    width: 90px;           /* Un tamaño fijo para el contenedor */
+    height: 90px;          /* Un tamaño fijo para el contenedor */
+    flex-shrink: 0;        /* Evita que el contenedor se deforme */
+    margin-right: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;      /* Bordes redondeados */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;      /* IMPORTANTE: Recorta cualquier cosa que se salga */
+}
+
+/* La imagen en sí */
+.product-item .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;   /* CLAVE: Asegura que la imagen quepa sin deformarse */
 }
 
 /* footer*/

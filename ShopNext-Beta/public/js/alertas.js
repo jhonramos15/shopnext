@@ -58,7 +58,10 @@ const mensajes = {
 
 
     // Contacto
-    ticket_enviado: ['success', '¡Ticket Enviado!', 'Gracias por contactarnos. Tu mensaje ha sido recibido.']    
+    ticket_enviado: ['success', '¡Ticket Enviado!', 'Gracias por contactarnos. Tu mensaje ha sido recibido.'],
+    
+    // Corredor de Pagos
+    compra_exitosa: ['success', '¡Compra Exitosa!', 'Hemos recibido tu pedido correctamente. Revisa tu correo para ver el comprobante.'],
   };
 
   const key = status || error;

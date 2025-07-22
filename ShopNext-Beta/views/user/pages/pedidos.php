@@ -148,5 +148,18 @@ if ($id_cliente !== null) {
     </footer>
 <script src="../../../public/js/dropdown.js"></script>
 <script src="../../../public/js/menuHamburguer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script src="/shopnext/ShopNext-Beta/public/js/alertas.js"></script> 
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('status') === 'compra_exitosa') {
+                mostrarAlerta('¡Compra exitosa!', 'Tu pedido ha sido procesado y pronto será enviado.', 'success');
+            }
+        });
+    </script>
+    
 </body>
 </html>

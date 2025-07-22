@@ -1,10 +1,10 @@
 <?php
-// 1. Incluimos el controlador
+// 1. Incluimos el controlador de productos
 require_once __DIR__ . '/../../../controllers/product/productController.php';
 
-// 2. Creamos una instancia del controlador y obtenemos los productos
+// 2. Creamos una instancia del controlador y obtenemos los productos de la categoría "Hogar & Belleza"
 $productController = new ProductController();
-$products = $productController->getProductsByCategory('Computadores');
+$products = $productController->getProductsByCategory('Hogar & Belleza');
 ?>
 
 <!DOCTYPE html>
@@ -12,11 +12,10 @@ $products = $productController->getProductsByCategory('Computadores');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../../public/css/products/stylescomputers.css">
-    <link rel="stylesheet" href="../../../public/css/indexUser.css">
+    <link rel="stylesheet" href="../../../public/css/products/styleshome.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="icon" href="../../../public/img/icon_principal.ico" type="image/x-icon">
-    <title>Computadores | ShopNext</title>
+    <title>Hogar | ShopNext</title>
 </head>
 <body>
 <header>
@@ -63,57 +62,60 @@ $products = $productController->getProductsByCategory('Computadores');
     </div>
   </div>
 </header>
-<!-- Sección publicitaria -->
-<section class="seccion-computadores">
-  <div class="contenido-computadores">
-    <h2>LAS MEJORES OFERTAS EN PORTATILES</h2>
+<!--seccion publicitaria-->
+<section class="seccion-hogar">
+  <div class="contenido-hogar">
+    <p class="subtitulo">RENUEVA TUS ESPACIOS</p>
+    <h2 class="titulo">TODO PARA <span>EL HOGAR</span></h2>
   </div>
-  <img src="../../../public/img/products/publicidadmsi.png" alt="Monitor Samsung" class="img-computador-izquierda">
-  <img src="../../../public/img/products/publicidadasus.png" alt="Laptop Asus" class="img-computador-derecha">
+  <img src="../../../public/img/products/fondopublicitario.png" alt="Imagen Hogar" class="img-hogar">
 </section>
+
+
 
 <!-- Slider de marcas -->
 <section class="seccion-marcas">
-  <h2>LASS MEJORES MARCAS</h2>
+  <h2>LAS MEJORES MARCAS</h2>
   <div class="contenedor-marcas">
-    <div class="marca"><img src="../../../public/img/products/logoacer.png" alt="Apple"></div>
-    <div class="marca"><img src="../../../public/img/products/logoapple.png" alt="Samsung"></div>
-    <div class="marca"><img src="../../../public/img/products/logoasus.png" alt="Xiaomi"></div>
-    <div class="marca"><img src="../../../public/img/products/logodell.png" alt="Motorola"></div>
-    <div class="marca"><img src="../../../public/img/products/logohp.png" alt="Tecno"></div>
-    <div class="marca"><img src="../../../public/img/products/logolenovo.png" alt="Realme"></div>
-    <div class="marca"><img src="../../../public/img/products/logomsi.png" alt="Vivo"></div>
+    <div class="marca"><img src="../../../public/img/products/logoemma.png" alt="Apple"></div>
+    <div class="marca"><img src="../../../public/img/products/logorta.png" alt="Samsung"></div>
+    <div class="marca"><img src="../../../public/img/products/logorimax.png" alt="Xiaomi"></div>
+    <div class="marca"><img src="../../../public/img/products/logoiko.png" alt="Motorola"></div>
+    <div class="marca"><img src="../../../public/img/products/logosentry.png" alt="Tecno"></div>
+    <div class="marca"><img src="../../../public/img/products/logocorona.png" alt="Realme"></div>
+    <div class="marca"><img src="../../../public/img/products/logouniversal.png" alt="Vivo"></div>
   </div>
 </section>
+
+
 
 <section class="section-telefonos">
-  <h2>Portatiles</h2>
+  <h2>Productos de Hogar & Belleza</h2>
   <div class="product-grid">
-
-    <?php
-    if (!empty($products)) {
-        foreach ($products as $product) {
-            // Se usa la misma estructura y clases CSS que en index.php
-            echo '<div class="product-card">';
-            // El enlace ahora lleva a la página de detalle del producto
-            echo '  <a href="../productoDetalle.php?id=' . $product['id_producto'] . '" class="product-link">';
-            // La ruta de la imagen se ajusta para que funcione desde esta ubicación
-            echo '    <img src="../../../public/uploads/products/' . htmlspecialchars($product['ruta_imagen']) . '" alt="' . htmlspecialchars($product['nombre_producto']) . '" class="product-image">';
-            echo '    <div class="product-info">';
-            echo '      <h3 class="product-name">' . htmlspecialchars($product['nombre_producto']) . '</h3>';
-            echo '      <p class="product-price">$' . number_format($product['precio'], 0, ',', '.') . '</p>';
-            echo '    </div>';
-            echo '  </a>';
-            // Se añade el botón de favoritos (wishlist)
-            echo '  <button class="wishlist-btn" data-product-id="' . $product['id_producto'] . '"><i class="fa-regular fa-heart"></i></button>';
-            echo '</div>';
-        }
-    } else {
-        echo '<p>No hay productos disponibles en esta sección por el momento.</p>';
-    }
-    ?>
+    <?php if (!empty($products)): ?>
+      <?php foreach ($products as $product): ?>
+        <div class="product">
+          <div class="icons">
+            <i class="fas fa-heart"></i>
+            <i class="fas fa-eye"></i>
+          </div>
+          <div class="product-image-wrapper">
+            <a href="../productoDetalle.php?id=<?php echo $product['id_producto']; ?>">
+              <img src="../../../public/uploads/products/<?php echo htmlspecialchars($product['ruta_imagen']); ?>" alt="<?php echo htmlspecialchars($product['nombre_producto']); ?>">
+            </a>
+            <button class="add-to-cart-btn">Añadir al carrito</button>
+          </div>
+          <p><?php echo htmlspecialchars($product['nombre_producto']); ?></p>
+          <p class="price">$<?php echo number_format($product['precio'], 0, ',', '.'); ?></p>
+          <p class="rating">★★★★★ (_)</p>
+        </div>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <p>No hay productos disponibles en esta categoría en este momento.</p>
+    <?php endif; ?>
   </div>
 </section>
+
 <!-- Footer -->
 <footer class="footer-contact">
   <div class="footer-section">
@@ -144,6 +146,5 @@ $products = $productController->getProductsByCategory('Computadores');
     </ul>
   </div>
 </footer>
-<script src="../../../public/js/menuHamburguer.js"></script>
 </body>
 </html>

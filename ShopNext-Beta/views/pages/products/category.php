@@ -1,18 +1,66 @@
 <?php
-// Conexión a la base de datos
-$conexion = new mysqli("localhost", "root", "", "shopnexs");
-if ($conexion->connect_error) {
-    die("Falló la conexión: " . $conexion->connect_error);
+// Incluimos la conexión a la base de datos.
+require_once __DIR__ . '/../../../config/conexion.php';
+
+class ProductController {
+    private $conn;
+
+    public function __construct() {
+        $database = new Database();
+        $this->conn = $database->getConnection();
+    }
+
+    /**
+     * Obtiene los productos filtrando por el nombre de la categoría.
+     */
+    public function getProductsByCategory($categoryName) {
+        $query = "SELECT 
+                    id_producto, 
+                    nombre_producto, 
+                    descripcion, 
+                    precio, 
+                    stock, 
+                    ruta_imagen 
+                  FROM 
+                    producto
+                  WHERE 
+                    categoria = :category_name AND stock > 0";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':category_name', $categoryName);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Obtiene TODOS los productos de la base de datos.
+     */
+    public function getAllProducts() {
+        // La consulta ahora no tiene un WHERE para categoría, así que trae todo.
+        $query = "SELECT 
+                    id_producto, 
+                    nombre_producto, 
+                    descripcion, 
+                    precio, 
+                    stock, 
+                    ruta_imagen 
+                  FROM 
+                    producto
+                  WHERE 
+                    stock > 0"; // Opcional: para no mostrar productos agotados.
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
+// 2. Creamos una instancia del controlador y obtenemos TODOS los productos
+$productController = new ProductController();
+$products = $productController->getAllProducts(); // <- Esta es la función clave
 
-// Obtener la categoría de la URL y evitar inyección SQL
-$categoria_actual = isset($_GET['name']) ? $conexion->real_escape_string($_GET['name']) : 'Todos';
-
-// Consulta para obtener los productos de la categoría seleccionada
-$sql_productos = "SELECT id_producto, nombre_producto, precio, ruta_imagen FROM producto WHERE categoria = '{$categoria_actual}' AND stock > 0 ORDER BY id_producto DESC";
-$resultado_productos = $conexion->query($sql_productos);
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -21,7 +69,7 @@ $resultado_productos = $conexion->query($sql_productos);
     <link rel="stylesheet" href="../../../public/css/products/category.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="icon" href="../../../public/img/icon_principal.ico" type="image/x-icon">
-    <title><?php echo htmlspecialchars($categoria_actual); ?> | ShopNext</title>
+    <title>Todos los Productos | ShopNext</title>
 </head>
 <body>
 <header>
@@ -78,31 +126,36 @@ $resultado_productos = $conexion->query($sql_productos);
 </header>
 </section>
 
-<section class="section-telefonos">
-  <h2><?php echo htmlspecialchars($categoria_actual); ?></h2>
-  <div class="product-grid" id="products-container">
-    <?php if ($resultado_productos && $resultado_productos->num_rows > 0): ?>
-        <?php while ($fila = $resultado_productos->fetch_assoc()): ?>
+<main class="main-content">
+    <section class="section-productos">
+      <h2>Nuestro Catálogo Completo</h2>
+      <p class="subtitulo-catalogo">Explora todos los productos que tenemos para ti en un solo lugar.</p>
+      <div class="product-grid">
+        <?php if (!empty($products)): ?>
+          <?php foreach ($products as $product): ?>
             <div class="product">
-                <div class="product-image-wrapper">
-                    <a href="../productoDetalle.php?id=<?php echo $fila['id_producto']; ?>">
-                        <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($fila['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($fila['nombre_producto']); ?>">
-                    </a>
-                    <form class="add-to-cart-form">
-                        <input type="hidden" name="id_producto" value="<?php echo $fila['id_producto']; ?>">
-                        <button class="add-to-cart-btn" type="submit">Añadir al carrito</button>
-                    </form>
-                </div>
-                <p><?php echo htmlspecialchars($fila['nombre_producto']); ?></p>
-                <p class="price">$<?php echo number_format($fila['precio'], 0); ?></p>
-                <p class="rating">★★★★★ (82)</p>
+              <div class="icons">
+                <i class="fas fa-heart"></i>
+                <i class="fas fa-eye"></i>
+              </div>
+              <div class="product-image-wrapper">
+                <a href="../productoDetalle.php?id=<?php echo $product['id_producto']; ?>">
+                  <img src="../../../public/uploads/products/<?php echo htmlspecialchars($product['ruta_imagen']); ?>" alt="<?php echo htmlspecialchars($product['nombre_producto']); ?>">
+                </a>
+                <button class="add-to-cart-btn">Añadir al carrito</button>
+              </div>
+              <p><?php echo htmlspecialchars($product['nombre_producto']); ?></p>
+              <p class="price">$<?php echo number_format($product['precio'], 0, ',', '.'); ?></p>
+              <p class="rating">★★★★★ (_)</p>
             </div>
-        <?php endwhile; ?>
-    <?php else: ?>
-        <p>No hay productos disponibles en esta categoría.</p>
-    <?php endif; $conexion->close(); ?>
-  </div>
-</section>
+          <?php endforeach; ?>
+        <?php else: ?>
+          <p>No hay productos disponibles en este momento.</p>
+        <?php endif; ?>
+      </div>
+    </section>
+</main>
+
 <footer class="footer-contact">
   <div class="footer-section">
     <img src="../../../public/img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
