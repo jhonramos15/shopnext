@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-07-2025 a las 23:03:44
+-- Tiempo de generación: 22-07-2025 a las 21:55:04
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -142,7 +142,19 @@ INSERT INTO `detalle_pedido` (`id_detalle`, `id_pedido`, `id_producto`, `cantida
 (23, 13, 21, 1, 100000.00),
 (24, 13, 22, 1, 20000.00),
 (25, 14, 22, 6, 20000.00),
-(26, 14, 23, 6, 294999.00);
+(26, 14, 23, 6, 294999.00),
+(27, 15, 23, 2, 294999.00),
+(28, 15, 19, 1, 10000.00),
+(29, 15, 18, 1, 22222.00),
+(30, 17, 19, 1, 10000.00),
+(31, 18, 23, 1, 294999.00),
+(32, 19, 23, 1, 294999.00),
+(34, 21, 22, 1, 20000.00),
+(35, 22, 22, 1, 20000.00),
+(36, 23, 17, 1, 1000002.00),
+(37, 24, 21, 1, 100000.00),
+(38, 25, 18, 1, 22222.00),
+(39, 26, 13, 1, 100000.00);
 
 -- --------------------------------------------------------
 
@@ -171,17 +183,6 @@ CREATE TABLE `lista_favoritos` (
   `fecha_agregado` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `lista_favoritos`
---
-
-INSERT INTO `lista_favoritos` (`id_favorito`, `id_cliente`, `id_producto`, `fecha_agregado`) VALUES
-(34, 48, 23, '2025-07-17 16:50:37'),
-(35, 48, 21, '2025-07-17 16:57:50'),
-(36, 48, 20, '2025-07-17 16:58:13'),
-(37, 48, 22, '2025-07-17 16:58:14'),
-(38, 48, 19, '2025-07-17 16:58:16');
-
 -- --------------------------------------------------------
 
 --
@@ -207,25 +208,36 @@ CREATE TABLE `pedido` (
   `id_cliente` int(11) NOT NULL,
   `id_vendedor` int(11) NOT NULL,
   `fecha` date NOT NULL,
-  `estado` enum('pendiente','procesado','enviado','entregado','cancelado') DEFAULT 'pendiente'
+  `estado` enum('pendiente','procesado','enviado','entregado','cancelado') DEFAULT 'pendiente',
+  `total` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `pedido`
 --
 
-INSERT INTO `pedido` (`id_pedido`, `id_cliente`, `id_vendedor`, `fecha`, `estado`) VALUES
-(4, 48, 6, '2025-07-14', 'pendiente'),
-(5, 48, 6, '2025-07-14', 'cancelado'),
-(6, 48, 6, '2025-07-15', 'procesado'),
-(7, 48, 6, '2025-07-15', 'entregado'),
-(8, 48, 6, '2025-07-15', 'entregado'),
-(9, 56, 6, '2025-07-16', 'procesado'),
-(10, 56, 6, '2025-07-16', 'pendiente'),
-(11, 48, 6, '2025-07-17', 'pendiente'),
-(12, 48, 6, '2025-07-17', 'pendiente'),
-(13, 48, 6, '2025-07-17', 'pendiente'),
-(14, 48, 6, '2025-07-17', 'enviado');
+INSERT INTO `pedido` (`id_pedido`, `id_cliente`, `id_vendedor`, `fecha`, `estado`, `total`) VALUES
+(4, 48, 6, '2025-07-14', 'pendiente', 0.00),
+(5, 48, 6, '2025-07-14', 'cancelado', 0.00),
+(6, 48, 6, '2025-07-15', 'procesado', 0.00),
+(7, 48, 6, '2025-07-15', 'entregado', 0.00),
+(8, 48, 6, '2025-07-15', 'entregado', 0.00),
+(9, 56, 6, '2025-07-16', 'procesado', 0.00),
+(10, 56, 6, '2025-07-16', 'pendiente', 0.00),
+(11, 48, 6, '2025-07-17', 'pendiente', 0.00),
+(12, 48, 6, '2025-07-17', 'pendiente', 0.00),
+(13, 48, 6, '2025-07-17', 'pendiente', 0.00),
+(14, 48, 6, '2025-07-17', 'enviado', 0.00),
+(15, 48, 6, '2025-07-21', 'pendiente', 0.00),
+(17, 48, 6, '2025-07-21', 'pendiente', 10000.00),
+(18, 48, 6, '2025-07-21', 'pendiente', 294999.00),
+(19, 48, 6, '2025-07-21', 'pendiente', 294999.00),
+(21, 48, 6, '2025-07-21', 'pendiente', 0.00),
+(22, 48, 6, '2025-07-21', 'pendiente', 0.00),
+(23, 48, 6, '2025-07-21', 'pendiente', 0.00),
+(24, 48, 6, '2025-07-21', 'pendiente', 0.00),
+(25, 48, 6, '2025-07-21', 'pendiente', 0.00),
+(26, 48, 6, '2025-07-21', 'pendiente', 0.00);
 
 -- --------------------------------------------------------
 
@@ -265,17 +277,18 @@ CREATE TABLE `producto` (
 INSERT INTO `producto` (`id_producto`, `nombre_producto`, `descripcion`, `precio`, `stock`, `categoria`, `id_vendedor`, `ruta_imagen`) VALUES
 (11, 'Comida Animal', 'Comida', 10000.00, 200, 'Otra', 6, 'prod_686de925a2795.png'),
 (12, 'Zapatos', 'OK', 200000.00, 200, 'Deporte', 6, 'prod_686f0e31509ed.png'),
-(13, 'Monitor', 'Monitor', 100000.00, 18, 'Videojuegos', 6, 'prod_686f53accdc0e.png'),
+(13, 'Monitor', 'Monitor', 100000.00, 17, 'Videojuegos', 6, 'prod_686f53accdc0e.png'),
 (14, 'Curology', 'Curology', 10000.00, 12, 'Otro', 6, 'prod_687006e76b79f.png'),
 (15, 'Bolso Gucci xd', 'Bolso', 23456789.00, 117, 'Ropa Femenina', 6, 'prod_6870070bcfaed.png'),
 (16, 'GTA VI', 'JUegazo', 2000000.00, 1, 'Videojuegos', 6, 'prod_68767b14395a0.webp'),
-(17, 'Ideapad Gaming', 'Computador portatil', 1000002.00, 10, 'Computadores', 6, 'prod_6877a5d0a1b0d.png'),
-(18, 'Chaqueta Verde Oscura', 'Chaqueta oscura', 22222.00, 11, 'Ropa Masculina', 6, 'prod_6877a5f7e2893.png'),
-(19, 'Silla', 'Silla del 2009', 10000.00, 99, 'Hogar & Belleza', 6, 'prod_6877a62adec7a.png'),
+(17, 'Ideapad Gaming', 'Computador portatil', 1000002.00, 9, 'Computadores', 6, 'prod_6877a5d0a1b0d.png'),
+(18, 'Chaqueta Verde Oscura', 'Chaqueta oscura', 22222.00, 9, 'Ropa Masculina', 6, 'prod_6877a5f7e2893.png'),
+(19, 'Silla', 'Silla del 2009', 10000.00, 97, 'Hogar & Belleza', 6, 'prod_6877a62adec7a.png'),
 (20, 'Cámara', 'Camara', 20393.00, 6, 'Celulares', 6, 'prod_6877a6530c56d.png'),
-(21, 'Play Station 5', 'PS5', 100000.00, 19, 'Videojuegos', 6, 'prod_68780ff13b935.png'),
-(22, 'Altavoces JBL', 'Altavoces', 20000.00, 92, 'Deportes', 6, 'prod_687811bded356.jpg'),
-(23, 'Parlantes JBL', 'Parlantes deportes', 294999.00, 190, 'Deportes', 6, 'prod_687812348c98d.jpg');
+(21, 'Play Station 5', 'PS5', 100000.00, 18, 'Videojuegos', 6, 'prod_68780ff13b935.png'),
+(22, 'Altavoces JBL', 'Altavoces', 20000.00, 90, 'Deportes', 6, 'prod_687811bded356.jpg'),
+(23, 'Parlantes JBL', 'Parlantes deportes', 294999.00, 186, 'Deportes', 6, 'prod_687812348c98d.jpg'),
+(24, 'sj', 'dj', 199999.00, 200, 'Computadores', 6, 'prod_687b37da0b836.png');
 
 -- --------------------------------------------------------
 
@@ -289,14 +302,6 @@ CREATE TABLE `producto_carrito` (
   `id_producto` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `producto_carrito`
---
-
-INSERT INTO `producto_carrito` (`id_producto_carrito`, `id_carrito`, `id_producto`, `cantidad`) VALUES
-(28, 1, 23, 1),
-(29, 1, 16, 1);
 
 -- --------------------------------------------------------
 
@@ -329,7 +334,8 @@ INSERT INTO `resenas` (`id_resena`, `id_producto`, `id_cliente`, `nombre_usuario
 (8, 23, NULL, 'fgg', 5, 'buenisimo', '2025-07-17 13:20:04'),
 (9, 23, 48, 'BransCliente', 2, 'hola', '2025-07-17 15:00:25'),
 (10, 23, 48, 'BransCliente', 5, 'Ok', '2025-07-17 15:09:11'),
-(11, 17, 48, 'BransCliente', 5, '10/10 muy bueno', '2025-07-17 15:51:29');
+(11, 17, 48, 'BransCliente', 5, '10/10 muy bueno', '2025-07-17 15:51:29'),
+(12, 12, 48, 'BransCliente', 5, '', '2025-07-21 21:12:27');
 
 -- --------------------------------------------------------
 
@@ -586,7 +592,7 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `detalle_pedido`
 --
 ALTER TABLE `detalle_pedido`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT de la tabla `envio`
@@ -598,7 +604,7 @@ ALTER TABLE `envio`
 -- AUTO_INCREMENT de la tabla `lista_favoritos`
 --
 ALTER TABLE `lista_favoritos`
-  MODIFY `id_favorito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id_favorito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT de la tabla `pago`
@@ -610,7 +616,7 @@ ALTER TABLE `pago`
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
@@ -622,19 +628,19 @@ ALTER TABLE `pedidos`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de la tabla `producto_carrito`
 --
 ALTER TABLE `producto_carrito`
-  MODIFY `id_producto_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id_producto_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT de la tabla `resenas`
 --
 ALTER TABLE `resenas`
-  MODIFY `id_resena` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_resena` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `tickets`

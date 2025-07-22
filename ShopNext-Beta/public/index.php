@@ -188,11 +188,11 @@ $resultado_mas_vendidos = $conexion->query($sql_mas_vendidos);
 
   <div class="contenedor-categorias" id="categorias">
     <div class="categoria">
-      <a href="../views/pages/products/womansection.html"><i class="fa-solid fa-person-dress"></i></a>
+      <a href="../views/pages/products/womansection.php"><i class="fa-solid fa-person-dress"></i></a>
       <p>Ropa Femenina</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/mensection.html"><i class="fa-solid fa-person"></i></a>
+      <a href="../views/pages/products/mensection.php"><i class="fa-solid fa-person"></i></a>
       <p>Ropa Masculina</p>
     </div>
     <div class="categoria">
@@ -200,19 +200,19 @@ $resultado_mas_vendidos = $conexion->query($sql_mas_vendidos);
       <p>Computadores</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/videogamessection.html"><i class="fas fa-gamepad"></i></a>
+      <a href="../views/pages/products/videogamessection.php"><i class="fas fa-gamepad"></i></a>
       <p>Videojuegos</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/sportsecion.html"><i class="fa-solid fa-baseball-bat-ball"></i></a>
+      <a href="../views/pages/products/sportsections.php"><i class="fa-solid fa-baseball-bat-ball"></i></a>
       <p>Deportes</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/homesections.html"><i class="fa-solid fa-star-of-life"></i></a>
+      <a href="../views/pages/products/homesections.php"><i class="fa-solid fa-star-of-life"></i></a>
       <p>Hogar & Belleza</p>
     </div>
     <div class="categoria">
-      <a href="../views/pages/products/phonesections.html"><i class="fa-solid fa-mobile-button"></i></a>
+      <a href="../views/pages/products/phonesections.php"><i class="fa-solid fa-mobile-button"></i></a>
       <p>Celulares</p>
     </div>            
   </div>

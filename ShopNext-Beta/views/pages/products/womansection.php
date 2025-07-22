@@ -1,8 +1,8 @@
 <?php
-// 1. Incluimos el controlador de productos
+// La vista solo necesita al controlador. Nada más.
 require_once __DIR__ . '/../../../controllers/product/productController.php';
 
-// 2. Creamos una instancia del controlador y obtenemos los productos de la categoría "Ropa Femenina"
+// Esto ya funcionará porque el controlador se encarga del resto.
 $productController = new ProductController();
 $products = $productController->getProductsByCategory('Ropa Femenina');
 ?>
