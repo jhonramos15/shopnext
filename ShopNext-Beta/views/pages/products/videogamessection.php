@@ -2,18 +2,17 @@
 // 1. Incluimos el controlador de productos
 require_once __DIR__ . '/../../../controllers/product/productController.php';
 
-// 2. Creamos una instancia del controlador y obtenemos los productos de la categoría "Videojuegos"
+// 2. Creamos una instancia del controlador y obtenemos los productos de la categoría "Ropa Masculina"
 $productController = new ProductController();
 $products = $productController->getProductsByCategory('Videojuegos');
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../../public/css/products/stylesvideogames.css">
+    <link rel="stylesheet" href="../../../public/css/products/stylesmen.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="icon" href="../../../public/img/icon_principal.ico" type="image/x-icon">
     <title>Videojuegos | ShopNext</title>
@@ -21,8 +20,8 @@ $products = $productController->getProductsByCategory('Videojuegos');
 <body>
 <header>
   <div class="header-top">
-    <p>OFERTAS DE VERANO</p>
-    <h2>¡Hasta 60% de Descuento en Títulos Seleccionados!</h2>
+    <p>Nueva Colección de Verano</p>
+    <h2>¡Descúbrela Ahora!</h2>
     <select>
       <option value="es">Español</option>
       <option value="en">English</option>
@@ -40,29 +39,27 @@ $products = $productController->getProductsByCategory('Videojuegos');
     </div>
 
     <nav class="nav-links" id="navMenu">
-      <a href="#">PlayStation 5</a>
-      <a href="#">Xbox Series X</a>
-      <a href="#">Nintendo Switch</a>
-      <a href="#">PC Gaming</a>
+      <a href="../../../public/index.php">Inicio</a>
+      <a href="category.php">Productos</a>
+      <a href="../../user/pages/contact.php">Contacto</a>
     </nav>
 
     <div class="header-icons">
-      <div class="buscador">
-        <input type="text" placeholder="Buscar juegos, consolas...">
-        <button><i class="fa-solid fa-magnifying-glass"></i></button>
-      </div>
-      <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
-      <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
-      <a href="#" class="login-btn">Iniciar Sesión</a>
+      <a href="../../user/cart/carrito.php"><button class="icon-btn"><i class="fa-solid fa-heart"></i></button></a>
+      <a href="../../user/pages/favoritos.php"><button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button></a>
     </div>
   </div>
 </header>
 
-<section class="seccion-videojuegos">
-  <div class="contenido-juegos">
-    <h2>DOMINA EL JUEGO</h2>
-    <p>Los últimos lanzamientos y las mejores consolas te esperan.</p>
-  </div>
+<div class="header-top custom-header-banner">
+    <div class="banner-text-content">
+        <p>DOMINA EL JUEGO</p>
+        <h2>Los últimos lanzamientos y las mejores consolas te esperan.</h2>
+    </div>
+    <div class="banner-image-right">
+        <img src="../../../public/img/header-videogames.png" alt="Header videojuegos">
+    </div>
+</div>
 </section>
 
 <section class="seccion-marcas">
@@ -76,7 +73,13 @@ $products = $productController->getProductsByCategory('Videojuegos');
 </section>
 
 <section class="section-videojuegos">
-  <h2>Videojuegos y Accesorios</h2>
+<section class="section-mujer">
+        <div class="container-title">
+            <div class="title">
+                <span class="title-line"></span>
+                <h1><span class="black-text">Las mejores</span> <span class="purple-text">consolas te esperan</span></h1>
+            </div>
+        </div>
   <div class="product-grid">
     <?php if (!empty($products)): ?>
       <?php foreach ($products as $product): ?>

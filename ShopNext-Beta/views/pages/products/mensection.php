@@ -20,8 +20,8 @@ $products = $productController->getProductsByCategory('Ropa Masculina');
 <body>
 <header>
   <div class="header-top">
-    <p>Tendencias de Temporada</p>
-    <h2>Estilo que Define</h2>
+    <p>Nueva Colección de Verano</p>
+    <h2>¡Descúbrela Ahora!</h2>
     <select>
       <option value="es">Español</option>
       <option value="en">English</option>
@@ -39,30 +39,27 @@ $products = $productController->getProductsByCategory('Ropa Masculina');
     </div>
 
     <nav class="nav-links" id="navMenu">
-      <a href="#">Camisas</a>
-      <a href="#">Pantalones</a>
-      <a href="#">Chaquetas</a>
-      <a href="#">Ofertas</a>
+      <a href="../../../public/index.php">Inicio</a>
+      <a href="category.php">Productos</a>
+      <a href="../../user/pages/contact.php">Contacto</a>
     </nav>
 
     <div class="header-icons">
-      <div class="buscador">
-        <input type="text" placeholder="Buscar camisas, jeans...">
-        <button><i class="fa-solid fa-magnifying-glass"></i></button>
-      </div>
-      <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
-      <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
-      <a href="#" class="login-btn">Iniciar Sesión</a>
+      <a href="../../user/cart/carrito.php"><button class="icon-btn"><i class="fa-solid fa-heart"></i></button></a>
+      <a href="../../user/pages/favoritos.php"><button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button></a>
     </div>
   </div>
 </header>
 
-<section class="seccion-moda-hombre">
-  <div class="contenido-moda">
-    <h2>ESTILO PARA EL HOMBRE MODERNO</h2>
-    <p>Define tu look con nuestras últimas colecciones.</p>
-  </div>
-</section>
+<div class="header-top custom-header-banner">
+    <div class="banner-text-content">
+        <p>Tendencias de Temporada</p>
+        <h2>Estilo que Define</h2>
+    </div>
+    <div class="banner-image-right">
+        <img src="../../../public/img/modelo-masculino-izquierda.jpg" alt="Modelo masculino">
+    </div>
+</div>
 
 <section class="seccion-marcas">
   <h2>NUESTRAS MARCAS</h2>
@@ -77,7 +74,13 @@ $products = $productController->getProductsByCategory('Ropa Masculina');
 </section>
 
 <section class="section-hombre">
-  <h2>Ropa y Accesorios para Hombre</h2>
+<section class="section-mujer">
+        <div class="container-title">
+            <div class="title">
+                <span class="title-line"></span>
+                <h1><span class="black-text">Ropa y</span> <span class="purple-text">Accesorios para Hombre</span></h1>
+            </div>
+        </div>
   <div class="product-grid">
     <?php if (!empty($products)): ?>
       <?php foreach ($products as $product): ?>

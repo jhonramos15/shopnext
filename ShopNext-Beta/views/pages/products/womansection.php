@@ -39,30 +39,35 @@ $products = $productController->getProductsByCategory('Ropa Femenina');
     </div>
 
     <nav class="nav-links" id="navMenu">
-      <a href="#">Novedades</a>
-      <a href="#">Vestidos</a>
-      <a href="#">Blusas</a>
-      <a href="#">Ofertas</a>
+      <a href="../../../public/index.php">Inicio</a>
+      <a href="category.php">Productos</a>
+      <a href="../../user/pages/contact.php">Contacto</a>
     </nav>
 
     <div class="header-icons">
-      <div class="buscador">
-        <input type="text" placeholder="Buscar vestidos, jeans...">
-        <button><i class="fa-solid fa-magnifying-glass"></i></button>
-      </div>
-      <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
-      <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
-      <a href="#" class="login-btn">Iniciar Sesión</a>
+      <a href="../../user/cart/carrito.php"><button class="icon-btn"><i class="fa-solid fa-heart"></i></button></a>
+      <a href="../../user/pages/favoritos.php"><button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button></a>
     </div>
   </div>
 </header>
 
-<section class="seccion-moda-femenina">
-  <div class="contenido-moda">
-    <h2>DESCUBRE TU ESTILO</h2>
-    <p>Las últimas tendencias para la mujer moderna.</p>
-  </div>
-</section>
+<main>
+    <section class="main-jet-section">
+        <div class="jet-image-container">
+            <img src="../../../public/img/modelo-izquierda.jpg" alt="Mujer con chaqueta elegante">
+        </div>
+        
+        <div class="jet-content">
+            <h1>DESCUBRE TU ESTILO</h1>
+            <p>Las últimas tendencias para la mujer moderna.</p>
+        </div>
+        
+        <div class="jet-image-container">
+            <img src="../../../public/img/modelo-derecha.jpg" alt="Accesorios de moda">
+        </div>
+    </section>
+
+    </main>
 
 <section class="seccion-marcas">
   <h2>NUESTRAS MARCAS</h2>
@@ -77,7 +82,13 @@ $products = $productController->getProductsByCategory('Ropa Femenina');
 </section>
 
 <section class="section-mujer">
-  <h2>Ropa y Accesorios para Mujer</h2>
+        <div class="container-title">
+            <div class="title">
+                <span class="title-line"></span>
+                <h1><span class="black-text">Ropa y</span> <span class="purple-text">Accesorios para Mujer</span></h1>
+            </div>
+        </div>
+
   <div class="product-grid">
     <?php if (!empty($products)): ?>
       <?php foreach ($products as $product): ?>

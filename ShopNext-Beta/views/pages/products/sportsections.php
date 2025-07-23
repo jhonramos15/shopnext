@@ -12,16 +12,16 @@ $products = $productController->getProductsByCategory('Deportes');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../../public/css/products/stylessports.css">
+    <link rel="stylesheet" href="../../../public/css/products/stylesmen.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="icon" href="../../../public/img/icon_principal.ico" type="image/x-icon">
-    <title>Deportes | ShopNext</title>
+    <title>Videojuegos | ShopNext</title>
 </head>
 <body>
 <header>
   <div class="header-top">
-    <p>Rebajas de Verano: ¡50 % de Descuento!</p>
-    <h2>¡Compra Ahora!</h2>
+    <p>Nueva Colección de Verano</p>
+    <h2>¡Descúbrela Ahora!</h2>
     <select>
       <option value="es">Español</option>
       <option value="en">English</option>
@@ -31,7 +31,7 @@ $products = $productController->getProductsByCategory('Deportes');
   <div class="header-main">
     <div class="logo-menu">
       <div class="logo">
-        <a href="../../../public/index.html"><img src="../../../public/img/logo.svg" alt="ShopNext"></a>
+        <a href="#"><img src="../../../public/img/logo.svg" alt="ShopNext"></a>
       </div>
       <button class="hamburger" onclick="toggleMenu()">
         <i class="fa-solid fa-bars"></i>
@@ -39,27 +39,26 @@ $products = $productController->getProductsByCategory('Deportes');
     </div>
 
     <nav class="nav-links" id="navMenu">
-      <a href="../../../public/index.html">Inicio</a>
-      <a href="../../auth/signUp.html">Regístrate</a>
-      <a href="../contact.html">Contacto</a>
-      <a href="../aboutUs.html">Acerca de</a>
+      <a href="../../../public/index.php">Inicio</a>
+      <a href="category.php">Productos</a>
+      <a href="../../user/pages/contact.php">Contacto</a>
     </nav>
 
     <div class="header-icons">
-      <div class="buscador">
-        <input type="text" placeholder="¿Qué estás buscando?">
-        <button><i class="fa-solid fa-magnifying-glass"></i></button>
-      </div>
-      <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
-      <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
-      <a href="../auth/login.php" class="login-btn">Iniciar Sesión</a>
+      <a href="../../user/cart/carrito.php"><button class="icon-btn"><i class="fa-solid fa-heart"></i></button></a>
+      <a href="../../user/pages/favoritos.php"><button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button></a>
     </div>
   </div>
 </header>
-<section class="seccion-deportes">
-  <div class="contenido-deportes">
-    <h2>SUPERA TUS LÍMITES CON EL MEJOR EQUIPO</h2>
-  </div>
+<div class="header-top custom-header-banner">
+    <div class="banner-text-content">
+        <p>SUPERA TUS LÍMITES</p>
+        <h2>El mejor equipo para tí.</h2>
+    </div>
+    <div class="banner-image-right">
+        <img src="../../../public/img/header-sports.png" alt="Header deportes">
+    </div>
+</div>
 </section>
 
 <section class="seccion-marcas">
