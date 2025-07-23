@@ -62,8 +62,6 @@ $resultado_productos = $conexion->query($sql_productos);
                     <i data-lucide="chevron-down" class="profile-arrow"></i>
                 </div>
                 <div class="profile-dropdown" id="profileDropdownMenu">
-                    <a href="#perfil"><i data-lucide="user"></i><span>Mi Perfil</span></a>
-                    <a href="#configuracion"><i data-lucide="settings"></i><span>Configuración</span></a>
                     <a href="../../../controllers/logout.php"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
                 </div>
             </div>
@@ -72,12 +70,6 @@ $resultado_productos = $conexion->query($sql_productos);
         <main class="main">
             <header class="header">
                 <h1>Todos los Productos</h1>
-                 <div class="header-search-container">
-                    <div class="input-icon header-search">
-                        <i data-lucide="search"></i>
-                        <input type="text" placeholder="Buscar..." />
-                    </div>
-                </div>
             </header>
 
             <section class="cards" id="productos-cards">
@@ -157,7 +149,7 @@ $resultado_productos = $conexion->query($sql_productos);
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>lucide.createIcons();</script>
-    <script src="../../../public/js/admin/main.js"></script>
+    <script src="../../../public/js/main.js"></script>
     <script src="../../../public/js/admin/productos.js"></script>
 </body>
 </html>

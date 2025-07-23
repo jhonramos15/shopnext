@@ -87,8 +87,6 @@ $query_resultado = $conexion->query($sql_vendedores);
                     <i data-lucide="chevron-down" class="profile-arrow"></i>
                 </div>
                 <div class="profile-dropdown" id="profileDropdownMenu">
-                    <a href="#perfil"><i data-lucide="user"></i><span>Mi Perfil</span></a>
-                    <a href="#configuracion"><i data-lucide="settings"></i><span>Configuración</span></a>
                     <a href="../../../controllers/logout.php"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
                 </div>
             </div>

@@ -115,8 +115,6 @@ $conexion->close(); // Cerrar la conexión
                 <i data-lucide="chevron-down" class="profile-arrow"></i>
             </div>
             <div class="profile-dropdown" id="profileDropdownMenu">
-                <a href="../pages/account.php"><i data-lucide="user"></i><span>Mi Perfil</span></a>
-                <a href="#configuracion"><i data-lucide="settings"></i><span>Configuración</span></a>
                 <a href="../../controllers/logout.php"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
             </div>
         </div>
@@ -125,12 +123,6 @@ $conexion->close(); // Cerrar la conexión
     <main class="main">
         <header class="header">
             <h1>Hola, Brayan 👋</h1>
-            <div class="header-search-container">
-                <div class="input-icon header-search">
-                    <i data-lucide="search"></i>
-                    <input type="text" placeholder="Buscar..." />
-                </div>
-            </div>
         </header>
 
         <div class="dashboard-content">

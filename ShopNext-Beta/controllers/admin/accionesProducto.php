@@ -1,10 +1,9 @@
 <?php
-// controllers/admin/accionesProducto.php
 header('Content-Type: application/json');
 
 session_start();
 
-// Doble guardián: verifica que sea una petición POST y que el usuario sea admin
+// Verifica que sea una petición POST y que el usuario sea admin
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'admin') {
     http_response_code(403); // Forbidden
     echo json_encode(['success' => false, 'error' => 'Acceso denegado.']);
@@ -29,7 +28,7 @@ if ($conexion->connect_error) {
     exit;
 }
 
-// --- Lógica para eliminar el producto ---
+// Lógica para eliminar el producto
 // Primero, eliminamos las referencias en `producto_carrito` para evitar errores de clave foránea
 $stmt_carrito = $conexion->prepare("DELETE FROM producto_carrito WHERE id_producto = ?");
 $stmt_carrito->bind_param("i", $id_producto);

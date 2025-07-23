@@ -62,9 +62,7 @@ $resultado_pedidos = $stmt->get_result();
               <i data-lucide="chevron-down" class="profile-arrow"></i>
           </div>
           <div class="profile-dropdown" id="profileDropdownMenu">
-              <a href="#perfil"><i data-lucide="user"></i><span>Mi Perfil</span></a>
-              <a href="#configuracion"><i data-lucide="settings"></i><span>Configuración</span></a>
-              <a href="#../../../controllers/logout.php"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
+              <a href="../../../controllers/logout.php"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
           </div>
       </div>
     </aside>
@@ -72,12 +70,6 @@ $resultado_pedidos = $stmt->get_result();
     <main class="main">
       <header class="header" id="pedidos-header">
         <h1>Gestión de Pedidos</h1>
-        <div class="header-search-container">
-            <div class="input-icon header-search">
-                <i data-lucide="search"></i>
-                <input type="text" placeholder="Buscar pedido por ID, cliente..." />
-            </div>
-        </div>
       </header>
 
       <section class="cards" id="pedidos-cards">

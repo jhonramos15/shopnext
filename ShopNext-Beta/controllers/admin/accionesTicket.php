@@ -1,5 +1,4 @@
 <?php
-// controllers/admin/accionesTicket.php
 header('Content-Type: application/json');
 session_start();
 
@@ -10,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_SESSION['id_usuario']) || 
     exit;
 }
 
+// Conexión base de datos
 $conexion = new mysqli("localhost", "root", "", "shopnexs");
 if ($conexion->connect_error) {
     http_response_code(500);

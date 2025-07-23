@@ -81,8 +81,6 @@ $resultado_pedidos = $conexion->query($pedidos_recientes_query);
           <i data-lucide="chevron-down" class="profile-arrow"></i>
         </div>
         <div id="profileDropdownMenu" class="profile-dropdown">
-          <a href="#mi-perfil"><i data-lucide="user"></i>Mi Perfil</a> 
-          <a href="#configuracion"><i data-lucide="settings"></i>Configuración</a>
           <a href="../../../controllers/logout.php"><i data-lucide="log-out"></i>Cerrar Sesión</a>
         </div>
       </div>
@@ -91,12 +89,6 @@ $resultado_pedidos = $conexion->query($pedidos_recientes_query);
     <main class="main">
   <header class="header">
     <h1>Hola, Brayan 👋</h1>
-    <div class="header-search-container">
-      <div class="input-icon header-search">
-        <i data-lucide="search"></i>
-        <input type="text" placeholder="Buscar..." />
-      </div>
-    </div>
   </header>
 
             <section class="cards" id="ingresos-cards">
@@ -166,5 +158,6 @@ $resultado_pedidos = $conexion->query($pedidos_recientes_query);
     lucide.createIcons();
   </script>
   <script src="../../../public/js/admin/productos.js"></script>
+    <script src="../../../public/js/main.js"></script>
 </body>
 </html>

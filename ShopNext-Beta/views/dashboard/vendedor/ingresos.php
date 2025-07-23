@@ -101,8 +101,6 @@ $resultado_ventas = $stmt_ventas->get_result();
           <i data-lucide="chevron-down" class="profile-arrow"></i>
         </div>
         <div id="profileDropdownMenu" class="profile-dropdown">
-          <a href="#mi-perfil"><i data-lucide="user"></i>Mi Perfil</a> 
-          <a href="#configuracion"><i data-lucide="settings"></i>Configuración</a>
           <a href="../../../controllers/logout.php"><i data-lucide="log-out"></i>Cerrar Sesión</a>
         </div>
       </div>
