@@ -1,26 +1,26 @@
 <?php
-class Database {
-    private $host = 'localhost';
-    private $db_name = 'shopnexs';
-    private $username = 'root';
-    private $password = '';
-    private $conn;
+class Conexion {
+    private $servidor = "localhost";
+    private $usuario = "root";
+    private $contrasena = ""; // Deja vacío si no usas contraseña en XAMPP
+    private $base_de_datos = "shopnexs"; // Asegúrate que el nombre sea correcto
+    private $charset = "utf8";
+    public $conectar;
 
-    // Al crear el objeto, se conecta a la BD
     public function __construct() {
-        $this->conn = null;
+        // Oculta errores de mysqli para manejarlos nosotros
+        mysqli_report(MYSQLI_REPORT_STRICT | MYSQLI_REPORT_ERROR);
         try {
-            $this->conn = new PDO('mysql:host=' . $this->host . ';dbname=' . $this->db_name, $this->username, $this->password);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->conn->exec('set names utf8');
-        } catch(PDOException $exception) {
-            echo 'Error de Conexión: ' . $exception->getMessage();
+            $this->conectar = new mysqli($this->servidor, $this->usuario, $this->contrasena, $this->base_de_datos);
+            $this->conectar->set_charset($this->charset);
+        } catch (mysqli_sql_exception $e) {
+            // Muestra un error claro si la conexión falla
+            die("Error crítico de conexión a la base de datos: " . $e->getMessage());
         }
     }
 
-    // Método para obtener la conexión PDO
-    public function getConnection() {
-        return $this->conn;
+    public function getConexion() {
+        return $this->conectar;
     }
 }
 ?>

@@ -7,6 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_SESSION['id_usuario']) || 
     exit;
 }
 
+
 $id_producto = intval($_POST['id_producto']);
 $nombre = $_POST['nombre_producto'];
 $descripcion = $_POST['descripcion'];

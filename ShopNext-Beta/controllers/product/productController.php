@@ -1,40 +1,50 @@
 <?php
+// controllers/product/productController.php
 
-// 1. Incluimos la conexión.
+// ¡ESTA ES LA RUTA CORREGIDA!
+// __DIR__ -> /controllers/product
+// ../../ -> / (la raíz del proyecto)
+// Ahora encuentra /config/conexion.php
 require_once __DIR__ . '/../../config/conexion.php';
 
-// 2. Definimos la clase del controlador.
 class ProductController {
-    private $db;
+    private $conn;
 
     public function __construct() {
-        $database = new Database();
-        $this->db = $database->getConnection();
+        $database = new Conexion();
+        $this->conn = $database->conectar();
     }
 
-    /**
-     * Obtiene los productos filtrando por el nombre de la categoría.
-     * Esta es la versión final y correcta.
-     */
-    public function getProductsByCategory($categoryName) {
+    public function getAllProducts() {
+        $query = "SELECT * FROM producto";
+        $stmt = $this->conn->prepare($query);
         
-        // ¡CONSULTA FINAL Y CORRECTA!
-        // Busca en la tabla 'producto' y filtra por la columna 'categoria'.
-        $sql = "SELECT * FROM producto WHERE categoria = :categoryName";
-
-        try {
-            $stmt = $this->db->prepare($sql);
-            
-            // Vinculamos el nombre de la categoría que queremos buscar.
-            $stmt->bindParam(':categoryName', $categoryName); 
-            
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        } catch (PDOException $e) {
-            // Si algo falla, lo sabremos.
-            die("ERROR EN LA CONSULTA: " . $e->getMessage());
+        if ($stmt === false) {
+            die('Error al preparar la consulta: ' . $this->conn->error);
         }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $products = $result->fetch_all(MYSQLI_ASSOC);
+        
+        $stmt->close();
+        return $products;
+    }
+
+    public function getProductsByCategory($categoryName) {
+        $stmt = $this->conn->prepare("SELECT * FROM producto WHERE categoria = ?");
+        
+        if ($stmt === false) {
+            die('Error al preparar la consulta: ' . $this->conn->error);
+        }
+
+        $stmt->bind_param("s", $categoryName);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $products = $result->fetch_all(MYSQLI_ASSOC);
+        
+        $stmt->close();
+        return $products;
     }
 }
 ?>

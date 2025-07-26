@@ -1,15 +1,52 @@
 <?php
 session_start();
-// Guardián para proteger la página
-require_once __DIR__ . '/../../../controllers/authGuardCliente.php';
 
-// Conexión a la BD
-$conexion = new mysqli("localhost", "root", "", "shopnexs");
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
+// ===== AÑADE ESTE BLOQUE AL INICIO DE TODO =====
+session_start();
+
+// Si no existe la sesión del usuario, redirigirlo al login
+if (!isset($_SESSION['user_id'])) {
+    // Puedes añadir un mensaje para que el usuario sepa por qué fue redirigido
+    header("Location: ../../auth/login.php?redirect=checkout");
+    exit();
+}
+// ===============================================
+
+// El resto de tu código HTML y PHP de la página de checkout continúa aquí abajo
+require_once('../../../config/conexion.php');
+// ...etc.
+
+// Esto elimina CUALQUIER error de 'require_once' o de archivos corruptos.
+class ConexionCheckout {
+    private $host = "localhost";
+    private $usuario = "root";
+    private $password = "";
+    private $db = "shopnexs";
+
+    public function conectar() {
+        mysqli_report(MYSQLI_REPORT_OFF);
+        $conexion = new mysqli($this->host, $this->usuario, $this->password, $this->db);
+
+        if ($conexion->connect_error) {
+            die("Error REAL de la Base de Datos: (" . $conexion->connect_errno . ") " . $conexion->connect_error);
+        }
+        
+        $conexion->set_charset("utf8");
+        return $conexion;
+    }
+}
+// --- FIN DE LA CLASE DE CONEXIÓN ---
+
+// PASO 2: Usamos la clase que acabamos de definir.
+$db = new ConexionCheckout();
+$conexion = $db->conectar();
+
+if (!$conexion) {
+    // Si este mensaje aparece ahora, el problema es 100% del servidor MySQL.
+    die("Error Inesperado: La conexión falló incluso estando en el mismo archivo.");
 }
 
-// Obtenemos el id_cliente para buscar su carrito
+// PASO 3: El resto de tu código para el carrito
 $id_usuario = $_SESSION['id_usuario'];
 $stmt_cliente = $conexion->prepare("SELECT id_cliente FROM cliente WHERE id_usuario = ?");
 $stmt_cliente->bind_param("i", $id_usuario);
@@ -17,7 +54,6 @@ $stmt_cliente->execute();
 $cliente_res = $stmt_cliente->get_result();
 $id_cliente = ($cliente_res->num_rows > 0) ? $cliente_res->fetch_assoc()['id_cliente'] : 0;
 
-// Obtenemos el id_carrito
 $id_carrito = 0;
 if ($id_cliente > 0) {
     $stmt_carrito = $conexion->prepare("SELECT id_carrito FROM carrito WHERE id_cliente = ?");
@@ -27,7 +63,6 @@ if ($id_cliente > 0) {
     $id_carrito = ($carrito_res->num_rows > 0) ? $carrito_res->fetch_assoc()['id_carrito'] : 0;
 }
 
-// Obtenemos los productos del carrito
 $items_del_carrito = [];
 if ($id_carrito > 0) {
     $sql_items = "SELECT p.nombre_producto, p.precio, p.ruta_imagen, pc.cantidad
@@ -41,7 +76,6 @@ if ($id_carrito > 0) {
     $items_del_carrito = $resultado_items->fetch_all(MYSQLI_ASSOC);
 }
 
-// Calcular el total
 $total_pedido = 0;
 foreach ($items_del_carrito as $item) {
     $total_pedido += $item['precio'] * $item['cantidad'];

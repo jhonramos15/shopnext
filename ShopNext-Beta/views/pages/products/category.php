@@ -1,65 +1,17 @@
 <?php
-// Incluimos la conexión a la base de datos.
-require_once __DIR__ . '/../../../config/conexion.php';
+session_start();
 
-class ProductController {
-    private $conn;
+// PASO 1: Construimos la ruta absoluta y correcta, incluyendo la carpeta 'product'.
+$project_root = $_SERVER['DOCUMENT_ROOT'] . '/shopnext/ShopNext-Beta/';
+require_once $project_root . 'controllers/product/productController.php';
 
-    public function __construct() {
-        $database = new Database();
-        $this->conn = $database->getConnection();
-    }
+// --- El resto del código ahora funcionará ---
 
-    /**
-     * Obtiene los productos filtrando por el nombre de la categoría.
-     */
-    public function getProductsByCategory($categoryName) {
-        $query = "SELECT 
-                    id_producto, 
-                    nombre_producto, 
-                    descripcion, 
-                    precio, 
-                    stock, 
-                    ruta_imagen 
-                  FROM 
-                    producto
-                  WHERE 
-                    categoria = :category_name AND stock > 0";
-        
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':category_name', $categoryName);
-        $stmt->execute();
-        
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Obtiene TODOS los productos de la base de datos.
-     */
-    public function getAllProducts() {
-        // La consulta ahora no tiene un WHERE para categoría, así que trae todo.
-        $query = "SELECT 
-                    id_producto, 
-                    nombre_producto, 
-                    descripcion, 
-                    precio, 
-                    stock, 
-                    ruta_imagen 
-                  FROM 
-                    producto
-                  WHERE 
-                    stock > 0"; // Opcional: para no mostrar productos agotados.
-        
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-}
-// 2. Creamos una instancia del controlador y obtenemos TODOS los productos
+// PASO 2: Creamos la instancia del controlador.
 $productController = new ProductController();
-$products = $productController->getAllProducts(); // <- Esta es la función clave
 
+// PASO 3: Obtenemos los productos.
+$products = $productController->getAllProducts();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -98,10 +50,9 @@ $products = $productController->getAllProducts(); // <- Esta es la función clav
 
     <!-- Nav Menú -->
     <nav class="nav-links" id="navMenu">
-      <a href="../user/indexUser.php">Inicio</a>
-      <a href="../auth/signUp.html">Regístrate</a>
-      <a href="contact.html">Contacto</a>
-      <a href="aboutUs.html">Acerca de</a>
+      <a href="../../../public/index.php">Inicio</a>
+      <a href="../../user/cart/carrito.php">Carrito</a>
+      <a href="../../user/pages/contact.php">Contacto</a>
     </nav>
 
     <!-- Buscador -->

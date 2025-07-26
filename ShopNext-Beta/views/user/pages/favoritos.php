@@ -69,8 +69,9 @@ $conexion->close();
 
     <!-- Nav Menú -->
     <nav class="nav-links" id="navMenu">
-      <a href="../indexUser.php">Inicio</a>
+      <a href="../../../public/index.php">Inicio</a>
       <a href="pedidos.php">Pedidos</a>
+      <a href="contact.php">Contacto</a>
     </nav>
 
     <!-- Buscador -->

@@ -82,7 +82,7 @@ if ($id_cliente !== null) {
       </button>
     </div>
     <nav class="nav-links" id="navMenu">
-      <a href="../indexUser.php">Inicio</a>
+      <a href="../../../public/index.php">Inicio</a>
       <a href="contact.php">Contacto</a>
     </nav>
     <div class="icons">

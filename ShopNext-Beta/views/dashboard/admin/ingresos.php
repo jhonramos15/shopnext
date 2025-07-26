@@ -157,7 +157,7 @@ $resultado_pedidos = $conexion->query($pedidos_recientes_query);
    <script>
     lucide.createIcons();
   </script>
-  <script src="../../../public/js/admin/productos.js"></script>
+  <script src="../../../public/js/admin/ingresos.js"></script>
     <script src="../../../public/js/main.js"></script>
 </body>
 </html>

@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 // Incluimos el SessionManager para usarlo directamente
 require_once __DIR__ . '/../core/init.php';
 require_once __DIR__ . '/../config/conexion.php'; // Para la conexión a la base de datos

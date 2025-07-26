@@ -41,7 +41,7 @@ require_once __DIR__ . '/../../../controllers/authGuardCliente.php';
 
     <!-- Nav Menú -->
     <nav class="nav-links" id="navMenu">
-      <a href="../indexUser.php">Inicio</a>
+      <a href="../../../public/index.php">Inicio</a>
       <a href="pedidos.php">Pedidos</a>
     </nav>
 
@@ -52,12 +52,12 @@ require_once __DIR__ . '/../../../controllers/authGuardCliente.php';
         <button><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
       <!-- Favoritos -->
-      <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
+      <a href="favoritos.php"><button class="icon-btn"><i class="fa-solid fa-heart"></i></button></a>
       <!-- Ícono de usuario -->
         <div class="user-menu-container">
           <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
           <div class="dropdown-content" id="dropdownMenu">
-            <a href="../pages/account.php">Perfil</a>
+            <a href="../../pages/account.php">Perfil</a>
             <a href="pedidos.php">Pedidos</a>
             <a href="../../../controllers/logout.php">Cerrar sesión</a>
           </div>
