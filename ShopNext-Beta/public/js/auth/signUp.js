@@ -129,4 +129,127 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+    // --- Control del Modal ---
+    // Primero, encontramos los elementos en la página
+const modal = document.getElementById('vendedorModal');
+const btnAbrirModal = document.getElementById('btnAbrirModalVendedor');
+const spanCerrar = document.querySelector('.modal .close');
+
+// Este 'if' se asegura de que el código solo se ejecute si los elementos existen
+if (modal && btnAbrirModal && spanCerrar) {
+    
+    // ORDEN 1: Cuando se haga clic en el botón, muestra la ventana
+    btnAbrirModal.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // ORDEN 2: Cuando se haga clic en la 'X', oculta la ventana
+    spanCerrar.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // ORDEN 3: Si se hace clic fuera de la ventana, también se oculta
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+}
+
+    // --- Validación del Formulario ---
+    const form = document.getElementById('vendedorForm');
+    const nombre = document.getElementById('nombreVendedor');
+    const telefono = document.getElementById('telefonoVendedor');
+    const direccion = document.getElementById('direccionVendedor');
+    const password = document.getElementById('passwordVendedor');
+
+    // Mensajes de error
+    const errorNombre = document.getElementById('errorNombre');
+    const errorTelefono = document.getElementById('errorTelefono');
+    const errorDireccion = document.getElementById('errorDireccion');
+    const errorPassword = document.getElementById('errorPassword');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Evitar el envío por defecto
+        
+        const esValido = validarFormulario();
+
+        if (esValido) {
+            // Si todo es correcto, enviamos el formulario.
+            // Aquí puedes usar AJAX (fetch) para enviar los datos a tu PHP sin recargar la página.
+            console.log('Formulario válido. Enviando datos...');
+            
+            const formData = new FormData(form);
+
+            fetch('registroVendedorController.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Respuesta del servidor:', data);
+                if(data.success) {
+                    alert('¡Vendedor registrado con éxito!');
+                    modal.style.display = 'none'; // Cierra el modal
+                    form.reset(); // Limpia el formulario
+                } else {
+                    alert('Error en el registro: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ocurrió un error al conectar con el servidor.');
+            });
+
+        } else {
+            console.log('El formulario contiene errores.');
+        }
+    });
+
+    
+
+    function validarFormulario() {
+        let isValid = true;
+        // Limpiar errores previos
+        document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+
+        // 1. Validación de Nombre
+        const nombreRegex = /^[A-Za-z\s]{5,35}$/;
+        if (!nombreRegex.test(nombre.value)) {
+            errorNombre.textContent = 'El nombre debe tener entre 5 y 35 caracteres y solo contener letras.';
+            errorNombre.style.display = 'block';
+            isValid = false;
+        }
+
+        // 2. Validación de Teléfono
+        const telefonoRegex = /^\d{10}$/;
+        if (!telefonoRegex.test(telefono.value)) {
+            errorTelefono.textContent = 'El teléfono debe contener exactamente 10 dígitos numéricos.';
+            errorTelefono.style.display = 'block';
+            isValid = false;
+        }
+
+        // 3. Validación de Dirección
+        if (direccion.value.trim().length < 5) { // Una validación básica para que no esté vacío
+            errorDireccion.textContent = 'La dirección es obligatoria.';
+            errorDireccion.style.display = 'block';
+            isValid = false;
+        }
+
+        // 4. Validación de Contraseña
+        // Mínimo 7, máximo 30, una letra, un número, un caracter especial
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{7,30}$/;
+        if (!passwordRegex.test(password.value)) {
+            errorPassword.textContent = 'La contraseña debe tener entre 7-30 caracteres, incluir al menos un número, una letra y un caracter especial (@$!%*#?&).';
+            errorPassword.style.display = 'block';
+            isValid = false;
+        }
+        
+        return isValid;
+    }
+});
+
 });

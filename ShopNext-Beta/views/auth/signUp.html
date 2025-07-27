@@ -74,10 +74,8 @@
     <button type="submit" class="btn btn-primary">Crear Cuenta</button>
 </form>
 
-                <a href="signUpVendedor.html" class="btn-vendedor">
-                    <i class="fas fa-user-tie"></i>
-                    <span>Crear Cuenta Vendedor</span>
-                </a>
+                
+            <button id="btnAbrirModalVendedor" class="btn-vendedor"><i class="fas fa-user-tie"></i>Registrarse como Vendedor</i></button>
                 <div class="divider">
                     <span>¿Ya tienes una cuenta?</span>
                 </div>
@@ -90,6 +88,37 @@
             <img src="../../public/img/foto-login.png" alt="Sign Up Image">
         </div>
     </div>
+<div id="vendedorModal" class="modal">
+
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Registro de Vendedor</h2>
+    <form id="vendedorForm" novalidate>
+      <div class="input-group">
+        <label for="nombreVendedor">Nombre completo:</label>
+        <input type="text" id="nombreVendedor" name="nombre" required>
+        <p class="error-message" id="errorNombre"></p>
+      </div>
+      <div class="input-group">
+        <label for="telefonoVendedor">Teléfono:</label>
+        <input type="tel" id="telefonoVendedor" name="telefono" required>
+        <p class="error-message" id="errorTelefono"></p>
+      </div>
+      <div class="input-group">
+        <label for="direccionVendedor">Dirección:</label>
+        <input type="text" id="direccionVendedor" name="direccion" required>
+        <p class="error-message" id="errorDireccion"></p>
+      </div>
+      <div class="input-group">
+        <label for="passwordVendedor">Contraseña:</label>
+        <input type="password" id="passwordVendedor" name="password" required>
+        <p class="error-message" id="errorPassword"></p>
+      </div>
+      <button type="submit" class="btn-submit">Registrar Vendedor</button>
+    </form>
+  </div>
+
+</div>
     <script src="../../public/js/signUp.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../../public/js/alertas.js"></script>

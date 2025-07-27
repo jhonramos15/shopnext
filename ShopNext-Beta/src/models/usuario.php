@@ -79,4 +79,67 @@ class Usuario {
         }
     }
 }
+
+class Usuario {
+    private $db; // Tu propiedad para la conexión a la BD
+
+    public function __construct() {
+        // Tu lógica de conexión a la BD, que ya tienes.
+        $this->db = new Database(); // O como lo tengas configurado
+    }
+    
+    // ... (Tus otros métodos: emailExiste, crearCliente, etc.) ...
+    
+    /**
+     * Registra un nuevo vendedor en la base de datos.
+     * @param string $nombre
+     * @param string $telefono
+     * @param string $direccion
+     * @param string $password
+     * @return bool - True si se creó, false en caso de error.
+     */
+    public function crearVendedor($nombre, $telefono, $direccion, $password) {
+        try {
+            // Hashear la contraseña por seguridad
+            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+            $rol = 'vendedor'; // Asignar rol
+
+            // Sentencia SQL sin "quemar", usando marcadores de posición
+            $sql = "INSERT INTO usuarios (nombre, telefono, direccion, password, rol) VALUES (:nombre, :telefono, :direccion, :password, :rol)";
+            
+            $stmt = $this->db->prepare($sql);
+            
+            $stmt->bindParam(':nombre', $nombre);
+            $stmt->bindParam(':telefono', $telefono);
+            $stmt->bindParam(':direccion', $direccion);
+            $stmt->bindParam(':password', $passwordHash);
+            $stmt->bindParam(':rol', $rol);
+            
+            return $stmt->execute();
+
+        } catch (PDOException $e) {
+            // Manejo de errores (puedes registrar el error en un log)
+            error_log('Error en crearVendedor: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Verifica si un número de teléfono ya existe en la base de datos.
+     * @param string $telefono
+     * @return bool - True si existe, false si no.
+     */
+    public function telefonoExiste($telefono) {
+        try {
+            $sql = "SELECT id FROM usuarios WHERE telefono = :telefono";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':telefono', $telefono);
+            $stmt->execute();
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            error_log('Error en telefonoExiste: ' . $e->getMessage());
+            return false;
+        }
+    }
+}
 ?>

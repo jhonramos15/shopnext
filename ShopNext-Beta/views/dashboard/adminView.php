@@ -104,6 +104,7 @@ $conexion->close(); // Cerrar la conexión
             <li><a href="admin/ingresos.php"><i data-lucide="bar-chart-2"></i><span>Ingresos</span></a></li>
             <li><a href="admin/ayuda.php"><i data-lucide="help-circle"></i><span>Ayuda</span></a></li>
             <li><a href="admin/vendedores.php"><i data-lucide="user-check"></i><span>Vendedores</span></a></li>
+            <li><a href="admin/resenas.php"><i data-lucide="star"></i><span>Reseñas</span></a></li>
         </ul>
         <div class="user-profile-container">
             <div class="user" id="userProfileBtn">
