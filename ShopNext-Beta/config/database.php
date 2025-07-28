@@ -7,13 +7,12 @@
 class Database {
     // Parámetros de conexión
     private $host = 'localhost';
-    private $db_name = 'shopnexs'; // <-- Revisa que sea el nombre correcto de tu BD
+    private $db_name = 'shopnexs';
     private $username = 'root';
-    private $password = ''; // <-- Si tienes contraseña, ponla aquí
+    private $password = '';
     public $conn;
 
     /**
-     * Obtiene la conexión a la base de datos.
      * @return mysqli|null Objeto de conexión mysqli o null si falla.
      */
     public function getConnection() {
