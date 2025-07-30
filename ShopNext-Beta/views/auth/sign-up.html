@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Cuenta | ShopNext</title>
-    <link rel="stylesheet" href="../../public/css/signUp.css">
-    <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">  
+    <link rel="stylesheet" href="css/auth/sign-up.css">
+    <link rel="icon" href="img/icon_principal.ico" type="image/x-icon">  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="container reverse">
         <div class="form-column">
             <div class="form-header">
-                <a href="../../public/index.php"><img src="../../public/img/logo.svg" alt="ShopNext Logo" class="logo"></a>
+                <a href="index.php"><img src="img/logo.svg" alt="ShopNext Logo" class="logo"></a>
                 <div class="hamburger-menu">
                     <button id="hamburger-icon" class="hamburger-button"><i class="fas fa-bars"></i></button>
                     <div id="dropdown-content" class="dropdown-content">
-                        <a href="../../public/index.php"><i class="fas fa-home"></i> <span>Inicio</span></a>
+                        <a href="index.php"><i class="fas fa-home"></i> <span>Inicio</span></a>
                         <a href="#"><i class="fas fa-box-open"></i> <span>Productos</span></a>
                         <a href="../pages/aboutUs.html"><i class="fas fa-info-circle"></i> <span>Acerca de</span></a>
                     </div>
@@ -27,8 +27,9 @@
                 <h1>Crea una Cuenta</h1>
                 <p class="subtitle">Ingresa tus detalles para empezar</p>
                 
-<form action="/ShopNext/ShopNext-Beta/controllers/auth/registroController.php" method="POST">
-    <input type="hidden" name="tipo" value="cliente">
+<form id="signup-form">
+    
+    <input type="hidden" name="rol" value="cliente">
 
     <div class="form-row">
         <div class="form-group">
@@ -36,8 +37,8 @@
             <label for="nombre">Nombre Completo</label>
         </div>
         <div class="form-group">
-            <input type="number" id="telefono" name="telefono" placeholder=" " required>
-            <label for="t">Teléfono</label>
+            <input type="tel" id="telefono" name="telefono" placeholder=" " required>
+            <label for="telefono">Teléfono</label>
         </div>
     </div>
     
@@ -63,10 +64,11 @@
 
     <div class="form-group">
         <input type="email" id="correo" name="correo" placeholder=" " required>
-        <label for="email">Email</label>
+        <label for="correo">Email</label>
     </div>
+
     <div class="form-group password-wrapper">
-        <input type="password" id="contrasena" name="clave" placeholder=" " required>
+        <input type="password" id="contrasena" name="password" placeholder=" " required>
         <label for="contrasena">Contraseña</label>
         <i class="fas fa-eye-slash toggle-password"></i>
     </div>
@@ -75,52 +77,48 @@
 </form>
 
                 
-            <button id="btnAbrirModalVendedor" class="btn-vendedor"><i class="fas fa-user-tie"></i>Registrarse como Vendedor</i></button>
+                            <button id="btnAbrirModalVendedor" class="btn-vendedor"><i class="fas fa-user-tie"></i>Registrarse como Vendedor</button>
                 <div class="divider">
                     <span>¿Ya tienes una cuenta?</span>
                 </div>
-                <a href="login.php" class="btn btn-secondary">
-                    Iniciar Sesión
-                </a>
+                <a href="/shopnext/ShopNext-Beta/public/index.php?action=login" class="btn btn-secondary">Iniciar sesión</a>
             </div>
         </div>
         <div class="image-column">
-            <img src="../../public/img/foto-login.png" alt="Sign Up Image">
+            <img src="img/foto-login.png" alt="Sign Up Image">
         </div>
     </div>
-<div id="vendedorModal" class="modal">
-
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>Registro de Vendedor</h2>
-    <form id="vendedorForm" novalidate>
-      <div class="input-group">
-        <label for="nombreVendedor">Nombre completo:</label>
-        <input type="text" id="nombreVendedor" name="nombre" required>
-        <p class="error-message" id="errorNombre"></p>
-      </div>
-      <div class="input-group">
-        <label for="telefonoVendedor">Teléfono:</label>
-        <input type="tel" id="telefonoVendedor" name="telefono" required>
-        <p class="error-message" id="errorTelefono"></p>
-      </div>
-      <div class="input-group">
-        <label for="direccionVendedor">Dirección:</label>
-        <input type="text" id="direccionVendedor" name="direccion" required>
-        <p class="error-message" id="errorDireccion"></p>
-      </div>
-      <div class="input-group">
-        <label for="passwordVendedor">Contraseña:</label>
-        <input type="password" id="passwordVendedor" name="password" required>
-        <p class="error-message" id="errorPassword"></p>
-      </div>
-      <button type="submit" class="btn-submit">Registrar Vendedor</button>
-    </form>
-  </div>
-
-</div>
-    <script src="../../public/js/signUp.js"></script> 
+    <div id="vendedorModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Registro de Vendedor</h2>
+            <p>Completa tus datos para empezar a vender.</p>
+            
+            <form id="vendedorForm">
+                <input type="hidden" name="rol" value="vendedor">
+                <div class="form-group">
+                    <input type="text" id="nombre_vendedor" name="nombre" placeholder=" " required>
+                    <label for="nombre_vendedor">Nombre del Vendedor</label>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="telefono_vendedor" name="telefono" placeholder=" " required>
+                    <label for="telefono_vendedor">Teléfono</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="direccion_vendedor" name="direccion" placeholder=" " required>
+                    <label for="direccion_vendedor">Dirección</label>
+                </div>
+                <div class="form-group password-wrapper">
+                    <input type="password" id="contrasena_vendedor" name="password" placeholder=" " required>
+                    <label for="contrasena_vendedor">Contraseña</label>
+                    <i class="fas fa-eye-slash toggle-password"></i>
+                </div>
+                <button type="submit" class="btn btn-primary">Registrarme como Vendedor</button>
+            </form>
+        </div>
+    </div>
+    <script src="js/auth/sign-up.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="../../public/js/alertas.js"></script>
+    <script src="js/common/alertas.js"></script>
 </body>
 </html>

@@ -1,4 +1,10 @@
 <?php
+
+namespace Config;
+
+// Importamos la clase mysqli del espacio global para que la encuentre
+use mysqli; 
+use Exception;
 /**
  * Clase Database: Gestiona la conexión a la base de datos.
  * Se encarga de establecer y proporcionar la conexión, manteniendo

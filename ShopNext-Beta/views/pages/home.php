@@ -1,58 +1,12 @@
-<?php
-
-// Usaremos namespaces para una mejor organización
-namespace App\Controllers\Shop;
-
-// Importamos las clases que vamos a necesitar
-use App\Core\Database;
-use App\Core\SessionManager;
-use App\Models\ProductModel;
-use App\Models\FavoriteModel;
-
-class HomeController {
-
-    public function index() {
-        // 1. Iniciar la sesión y la conexión a la base de datos
-        $session = new SessionManager();
-        $db = Database::getInstance()->getConnection();
-
-        // 2. Crear instancias de los modelos que necesitamos
-        $productModel = new ProductModel($db);
-        $favoriteModel = new FavoriteModel($db);
-
-        // 3. Obtener los datos usando los modelos
-        $latestProducts = $productModel->getLatestProducts(8);
-        $bestSellingProducts = $productModel->getBestSellingProducts(4);
-
-        $userFavorites = [];
-        if ($session->isLoggedIn()) {
-            $userId = $_SESSION['id_usuario'];
-            $userFavorites = $favoriteModel->getFavoritesByUserId($userId);
-        }
-
-        // 4. Cargar la vista y pasarle los datos
-        // La variable $data se podrá usar dentro de la vista
-        $data = [
-            'latestProducts' => $latestProducts,
-            'bestSellingProducts' => $bestSellingProducts,
-            'userFavorites' => $userFavorites,
-            'isLoggedIn' => $session->isLoggedIn()
-        ];
-
-        // Se carga el archivo de la vista
-        require_once __DIR__ . '/../../../views/shop/home.php';
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link rel="stylesheet" href="css/shop/home.css">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="icon" href="img/icon_principal.ico" type="image/x-icon">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/shop/home.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/base.css">
+    <link rel="icon" href="<?php echo BASE_URL; ?>img/icon_principal.ico">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <title>ShopNext | Inicio</title>
 </head>
@@ -70,15 +24,16 @@ class HomeController {
     </div>
     <!-- Secciones -->
     <nav class="nav-links">
-      <a href="/shopnext/ShopNext-Beta/public/index.php">Inicio</a>
-       <?php if ($usuario_logueado): ?> <!-- Si el usuario está logueado, le muestra productos en vez de Registro y Acerca de -->
-        <a href="/shopnext/ShopNext-Beta/views/pages/products/category.php">Productos</a>
-        <a href="/shopnext/ShopNext-Beta/views/user/pages/contact.php">Contacto</a>
-      <?php else: ?>
-        <a href="/shopnext/ShopNext-Beta/views/auth/signUp.html">Regístrate</a>
-        <a href="/shopnext/ShopNext-Beta/views/pages/contact.html">Contacto</a>
-        <a href="/shopnext/ShopNext-Beta/views/pages/aboutUs.html">Acerca de</a>
-      <?php endif; ?>
+        <a href="/shopnext/ShopNext-Beta/public/index.php">Inicio</a>
+
+        <?php if ($usuario_logueado): ?>
+            <a href="?action=products">Productos</a>
+            <a href="?action=contact">Contacto</a>
+        <?php else: ?>
+            <a href="?action=signup">Regístrate</a>
+            <a href="?=contact">Contacto</a>
+            <a href="?action=about">Acerca de</a>
+        <?php endif; ?>
     </nav>
     <!-- Buscador -->
     <div class="header-icons">
@@ -103,7 +58,7 @@ class HomeController {
                 <i class="fas fa-box"></i> <span>Mis Pedidos</span>
               </a>
               <hr>
-              <a href="/shopnext/ShopNext-Beta/controllers/logout.php" class="logout-link">
+              <a href="index.php?action=logout" class="logout-link">
                 <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
               </a>
             </div>
@@ -216,123 +171,99 @@ class HomeController {
         <span class="title-part-2">Productos</span>
       </h2>
     </div>
-  </div>
-    
+  </div>  
   <div class="our-products">
+    <h2>Nuestros Productos</h2>
     <div class="product-grid">
-      <?php if (!empty($latestProducts)): ?>
-        <?php foreach ($latestProducts as $product): ?>
-          <div class="product-card">
-            <div class="product-image-wrapper">
-              <?php
-                // Construimos la ruta a la imagen
-                $base_url = '/shopnext/ShopNext-Beta/';
-                $image_path = $base_url . 'public/uploads/products/' . htmlspecialchars($product['ruta_imagen']);
-              ?>
-              <img src="<?php echo $image_path; ?>" alt="<?php echo htmlspecialchars($product['nombre_producto']); ?>">
-                  <div class="product-card-icons">
-        <button class="icon-btn" aria-label="Añadir a favoritos">
-            <i class="fa-regular fa-heart"></i>
-        </button>
-        <button class="icon-btn" aria-label="Vista rápida">
-            <i class="fa-regular fa-eye"></i>
-        </button>
-    </div>
-
-    <button class="add-to-cart-btn">
-        <i class="fa-solid fa-cart-shopping"></i>
-        Añadir al Carrito
-    </button>
-    </div>
-
-                    <div class="product-details">
-                        <h3><?php echo htmlspecialchars($product['nombre_producto']); ?></h3>
-                        <div class="product-price">
-                            $<?php echo htmlspecialchars(number_format($product['precio'])); ?>
-                        </div>
-                        </div>
-
-                </div>
-                <?php endforeach; ?>
-        <?php else: ?>
-            <p>No hay productos disponibles.</p>
-        <?php endif; ?>
-    </div>
-</div>
-
-</section>
-<section></section>
-<!-- Secciones Destacadas -->
-<section class="seccion-categorias">
-    
-    <div class="category-header-simple">
-        <div class="title-badge"></div>
-        <div class="title-text">
-            <p class="category-subtitle">Este Mes</p>
-            <h2 class="category-title">Explora por Categoría</h2>
-        </div>
-    </div>
-
-    <div class="categoria-grid">
-        <a href="/shopnext/ShopNext-Beta/views/pages/products/phonesections.php" class="categoria-item">
-            <div class="icon"><i class="fas fa-mobile-alt"></i></div>
-            <p>Teléfonos</p>
-        </a>
-        <a href="/shopnext/ShopNext-Beta/views/pages/products/computersections.php" class="categoria-item">
-            <div class="icon"><i class="fas fa-laptop"></i></div>
-            <p>Computadores</p>
-        </a>
-        <a href="#" class="categoria-item"> <div class="icon"><i class="fas fa-headphones"></i></div>
-            <p>Audífonos</p>
-        </a>
-        <a href="/shopnext/ShopNext-Beta/views/pages/products/videogamessection.php" class="categoria-item">
-            <div class="icon"><i class="fas fa-gamepad"></i></div>
-            <p>Videojuegos</p>
-        </a>
-    </div>
-</section>
-<section></section>
-<section class="best-selling-section">
-    
-    <div class="section-header">
-        <div>
-            <div class="badge2">Este Mes</div>
-            <h2 class="title2">Más Vendidos</h2>
-        </div>
-        </div>
-
-    <div class="products-grid">
-
-        <?php if (!empty($bestSellingProducts)): ?>
-            <?php foreach ($bestSellingProducts as $product): ?>
-
-                <div class="product-card">
+        <?php if (!empty($latestProducts)): ?>
+            <?php foreach ($latestProducts as $product): ?>
+              <div class="product-card">
                     <div class="product-image-wrapper">
                         <?php
                             $base_url = '/shopnext/ShopNext-Beta/';
                             $image_path = $base_url . 'public/uploads/products/' . htmlspecialchars($product['ruta_imagen']);
                         ?>
                         <img src="<?php echo $image_path; ?>" alt="<?php echo htmlspecialchars($product['nombre_producto']); ?>">
-                        
-                        <button class="add-to-cart-btn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                            Añadir al Carrito
-                        </button>
-                    </div>
-
+                        </div>
                     <div class="product-details">
                         <h3><?php echo htmlspecialchars($product['nombre_producto']); ?></h3>
-                        <p class="product-price">$<?php echo htmlspecialchars(number_format($product['precio'])); ?></p>
+                        <div class="product-price">
+                            $<?php echo htmlspecialchars(number_format($product['precio'])); ?>
+                        </div>
                     </div>
                 </div>
 
             <?php endforeach; ?>
         <?php else: ?>
-            <p>Aún no hay suficientes ventas para mostrar los productos más vendidos.</p>
+            <p>No hay productos para mostrar.</p>
         <?php endif; ?>
 
     </div>
-
+</div>
+  </div>
+</section>
+<section></section>
+<!-- Secciones Destacadas -->
+<section class="seccion-categorias">
+  <div class="category-header-simple">
+    <div class="title-badge"></div>
+      <div class="title-text">
+        <p class="category-subtitle">Este Mes</p>
+        <h2 class="category-title">Explora por Categoría</h2>
+      </div>
+    </div>
+    <div class="categoria-grid">
+      <a href="/shopnext/ShopNext-Beta/views/pages/products/phonesections.php" class="categoria-item">
+        <div class="icon"><i class="fas fa-mobile-alt"></i></div>
+        <p>Teléfonos</p>
+      </a>
+      <a href="/shopnext/ShopNext-Beta/views/pages/products/computersections.php" class="categoria-item">
+        <div class="icon"><i class="fas fa-laptop"></i></div>
+        <p>Computadores</p>
+      </a>
+      <a href="#" class="categoria-item"> <div class="icon"><i class="fas fa-headphones"></i></div>
+        <p>Audífonos</p>
+      </a>
+      <a href="/shopnext/ShopNext-Beta/views/pages/products/videogamessection.php" class="categoria-item">
+        <div class="icon"><i class="fas fa-gamepad"></i></div>
+        <p>Videojuegos</p>
+      </a>
+    </div>
+  </div>
+</section>
+<section></section>
+<section class="best-selling-section">
+  <div class="section-header">
+    <div>
+      <div class="badge2">Este Mes</div>
+      <h2 class="title2">Más Vendidos</h2>
+    </div>
+  </div>
+  <div class="products-grid">
+    <?php if (!empty($bestSellingProducts)): ?>
+    <?php foreach ($bestSellingProducts as $product): ?>
+    <div class="product-card">
+      <div class="product-image-wrapper">
+        <?php
+          $base_url = '/shopnext/ShopNext-Beta/';
+          $image_path = $base_url . 'public/uploads/products/' . htmlspecialchars($product['ruta_imagen']);
+        ?>
+        <img src="<?php echo $image_path; ?>" alt="<?php echo htmlspecialchars($product['nombre_producto']); ?>">                
+        <button class="add-to-cart-btn">
+          <i class="fa-solid fa-cart-shopping"></i>
+          Añadir al Carrito
+        </button>
+      </div>
+      <div class="product-details">
+        <h3><?php echo htmlspecialchars($product['nombre_producto']); ?></h3>
+        <p class="product-price">$<?php echo htmlspecialchars(number_format($product['precio'])); ?></p>
+      </div>
+    </div>
+    <?php endforeach; ?>
+    <?php else: ?>
+    <p>Aún no hay suficientes ventas para mostrar los productos más vendidos.</p>
+    <?php endif; ?>
+  </div>
 </section>
 <!-- Separador -->
 <section></section>
@@ -366,7 +297,6 @@ class HomeController {
     </div>
   </div>
 </section>
-
 <section class="new-arrivals">
   <div class="container">
     <p class="featured-text">Destacado</p>
@@ -472,14 +402,12 @@ class HomeController {
   </div>
 </footer>
 <!-- Swiper JS -->
-
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script src="js/common/alertas.js"></script> 
 <script src="js/shop/carrito.js"></script>
 <script src="js/user/favoritos.js"></script>   
-<script src="js/common/menuHamburguer.js"></script>
+<script src="js/common/menu-hamburguer.js"></script>
 <script src="js/shop/search.js"></script> 
 <script src="js/shop/index.js"></script> 
 </body>

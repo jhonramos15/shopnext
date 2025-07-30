@@ -1,52 +1,122 @@
 <?php
-session_start();
 
-// Incluimos el SessionManager para usarlo directamente
-require_once __DIR__ . '/../core/init.php';
-require_once __DIR__ . '/../config/conexion.php'; // Para la conexión a la base de datos
+namespace App\Controllers\Auth;
 
-$session = new SessionManager();
+use App\Models\Usuario;
 
-// Si el usuario ya está logueado, lo redirigimos
-if ($session->isLoggedIn()) {
-    header('Location: /shopnext/ShopNext-Beta/public/index.php');
-    exit;
+class LoginController {
+    
+    private $usuarioModel;
+
+    public function __construct() {
+        $this->usuarioModel = new Usuario();
+    }
+
+    /**
+     * Muestra el formulario de inicio de sesión.
+     * Esta función es llamada por el router cuando la petición es GET.
+     */
+    public function showLoginForm() {
+        // Asegúrate de que init.php ya se haya cargado para tener BASE_URL
+        require_once __DIR__ . '/../../../views/auth/login.php';
+    }
+
+    /**
+     * Procesa los datos del formulario de login.
+     * Esta función es llamada por el router cuando la petición es POST.
+     */
+public function handleLogin() {
+    // Renombramos tu método 'procesar' a 'handleLogin' para más claridad
+    $this->iniciarSesionSegura();
+
+    $correo = $_POST['correo'] ?? '';
+    $clave = $_POST['password'] ?? '';
+
+    if (empty($correo) || empty($clave)) {
+        $this->redirigirConError('vacio');
+    }
+
+    // Llamamos al modelo para que intente autenticar
+    $usuario = $this->usuarioModel->autenticarUsuario($correo, $clave);
+
+    // El resto del código no se ejecutará por ahora, lo cual es correcto para depurar.
+    if (!$usuario) {
+        $this->redirigirConError('credenciales');
+    }
+
+    if ($usuario['verificado'] == 0) {
+        $this->redirigirConError('no_verificado');
+    }
+
+    $this->establecerSesion($usuario);
+    $this->redirigirPorRol($usuario['rol']);
 }
 
-$error = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
+    /**
+     * NUEVO MÉTODO: Cierra la sesión del usuario.
+     * Esto soluciona el error de la pantalla en blanco.
+     */
+    public function logout() {
+        // Inicia la sesión solo para poder destruirla
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
+        // Limpia todas las variables de sesión
+        $_SESSION = [];
 
-    if (empty($email) || empty($password)) {
-        $error = "Por favor, complete todos los campos.";
-    } else {
-        try {
-            $database = new Database();
-            $db = $database->getConnection();
+        // Destruye la sesión completamente
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
+        }
 
-            $stmt = $db->prepare("SELECT id_usuario, nombre_usuario, contrasena FROM usuario WHERE correo_electronico = :email");
-            $stmt->bindParam(':email', $email);
-            $stmt->execute();
+        session_destroy();
 
-            if ($stmt->rowCount() == 1) {
-                $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Redirige a la página de inicio (CON LA CORRECCIÓN)
+        header('Location: index.php?action=login&status=logged_out');
+        // ¡MUY IMPORTANTE! Detiene el script para asegurar la redirección.
+        exit();
+    }
 
-                // Verificamos la contraseña
-                if (password_verify($password, $user['contrasena'])) {
-                    // ¡CORRECCIÓN! Usamos el método login del SessionManager
-                    $session->login($user['id_usuario'], $user['nombre_usuario']);
-                    header('Location: /shopnext/ShopNext-Beta/public/index.php');
-                    exit;
-                } else {
-                    $error = "La contraseña es incorrecta.";
-                }
-            } else {
-                $error = "No se encontró un usuario con ese correo electrónico.";
-            }
-        } catch (PDOException $e) {
-            $error = "Error de conexión: " . $e->getMessage();
+
+    private function iniciarSesionSegura() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
     }
+
+    private function establecerSesion(array $usuario) {
+        session_regenerate_id(true);
+        $_SESSION['id_usuario'] = $usuario['id_usuario'];
+        $_SESSION['rol'] = $usuario['rol'];
+        $_SESSION['last_activity'] = time();
+    }
+
+    private function redirigirConError(string $tipoError) {
+        // Redirige usando BASE_URL para que sea consistente (CON LA CORRECCIÓN)
+        header("Location: " . \BASE_URL . "login?error=" . $tipoError);
+        exit;
+    }
+
+private function redirigirPorRol(string $rol) {
+    // El destino por defecto es el homepage.
+    $destino = 'index.php?action=home';
+
+    if ($rol === 'admin') {
+        // Un admin va a su dashboard.
+        $destino = 'index.php?action=admin-dashboard'; 
+    } elseif ($rol === 'vendedor') {
+        // Un vendedor va a su dashboard.
+        $destino = 'index.php?action=seller-dashboard';
+    }
+    // Para cualquier otro rol (como 'cliente'), no hacemos nada
+    // y se usará el destino por defecto: 'index.php?action=home'.
+    
+    header("Location: " . $destino);
+    exit;
 }
-?>
+}

@@ -1,47 +1,92 @@
 <?php
-// 1. Iniciar la sesión para poder usar variables como $_SESSION['user'] en toda la app.
-session_start();
+/**
+ * ShopNext - Punto de Entrada Único (Router Principal)
+ */
 
-// 2. Cargar archivos esenciales
-// Este 'init.php' podría contener la conexión a la BD, funciones de ayuda, etc.
-require_once __DIR__ . '/../src/core/init.php'; 
+// --- Manejo de CORS para la API ---
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+    header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Max-Age: 86400'); // Cache por 1 día
+}
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
+        header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+    }
+    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
+        header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+    }
+    exit(0);
+}
 
-// 3. Sistema de Enrutamiento Básico
-// Si no se especifica nada, la página por defecto será 'home'.
-$page = $_GET['page'] ?? 'home';
+// 1. Carga la configuración inicial y el autoloader mágico
+require_once __DIR__ . '/../src/core/init.php';
 
-// 4. Cargar el controlador correspondiente
-// Este switch actúa como el "directorio" de tu aplicación.
-// Busca la página solicitada y carga el controlador que se encarga de ella.
+// Importamos TODOS los controladores que vamos a usar en este archivo.
+// Es como poner las herramientas sobre la mesa antes de trabajar.
+use App\Controllers\Auth\LoginController;
+use App\Controllers\Auth\RegistroController;
+use App\Controllers\Shop\HomeController;
+
+
+// 3. Obtenemos la página solicitada de la URL
+$page = $_GET['action'] ?? 'home';
+
+
+// 4. El router ahora sabe qué es cada controlador gracias al 'use'
 switch ($page) {
     case 'home':
-        // Si la URL es ?page=home o no tiene nada, carga el controlador de la página principal.
-        require_once __DIR__ . '/../src/controllers/shop/indexController.php';
-        break;
-
-    case 'products':
-        // Si la URL es ?page=products, carga el controlador que maneja la lista de productos.
-        require_once __DIR__ . '/../src/controllers/product/productController.php';
+        $controller = new HomeController();
+        $controller->home();
         break;
 
     case 'login':
-        // Si la URL es ?page=login, carga el controlador de inicio de sesión.
-        require_once __DIR__ . '/../src/controllers/auth/loginController.php';
+        $controller = new LoginController();
+        // Decide si mostrar el formulario o procesar los datos
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $controller->handleLogin();
+        } else {
+            $controller->showLoginForm();
+        }
         break;
+
+    case 'signup':  // Muestra el formulario de registro
+        $filePath = __DIR__ . '/../views/auth/sign-up.html';
+        
+        if (file_exists($filePath)) {
+            require_once $filePath;
+        } else {
+            // Esto te ayudará a depurar si la ruta sigue mal en el futuro
+            http_response_code(500);
+            echo "Error del servidor: No se encuentra el archivo de la vista de registro.";
+            error_log("Ruta no encontrada: " . $filePath);
+        }
+        break;
+
+    case 'register': // Para PROCESAR los datos del formulario
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $controller = new RegistroController();
+            // ✅ CORRECCIÓN 3: Llamamos al método correcto 'handleRegistration'.
+            $controller->handleRegistration();
+        } else {
+            // No se permite acceder a esta ruta por GET
+            header('Location: index.php?action=signup');
+            exit;
+        }
+        break;
+    case 'logout':
+        $controller = new LoginController();
+        $controller->logout();
+        break;
+
+    // ... (otros casos para 'products', 'cart', etc.)
+
+default:
+    // Establecemos el código de respuesta HTTP correcto para "No Encontrado"
+    http_response_code(404);
     
-    case 'cart':
-        // Si la URL es ?page=cart, carga el controlador del carrito de compras.
-        require_once __DIR__ . '/../src/controllers/shop/cartController.php';
-        break;
-
-    // Puedes añadir todas las páginas que necesites...
-    // case 'contact':
-    //    require_once __DIR__ . '/../src/controllers/contactController.php';
-    //    break;
-
-    default:
-        // Si se pide una página que no existe en nuestro switch, mostramos un error 404.
-        http_response_code(404);
-        require_once __DIR__ . '/../views/error/404.html'; // Muestra una página de error amigable
-        break;
+    // Cargamos nuestra página HTML personalizada para el error 404
+    require __DIR__ . '/../views/error/404.html';
+    break;
 }
+?>
