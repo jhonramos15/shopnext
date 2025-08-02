@@ -1,10 +1,32 @@
 // public/js/user/favoritos.js
 
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Buscamos TODOS los botones de corazón que haya en la página
+    document.querySelectorAll('.add-to-favorites').forEach(button => {
+        // 2. A cada botón, le añadimos un escuchador de clics
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Evitamos que el enlace recargue la página
+
+            const productId = this.dataset.productId;
+            const iconElement = this.querySelector('i'); // Obtenemos el ícono <i> para cambiar su color
+
+            // 3. Llamamos a TU función toggleFavorito con los datos correctos
+            toggleFavorito(productId, iconElement);
+        });
+    });
+});
+
+/**
+ * Tu función para añadir/eliminar favoritos (¡está excelente!)
+ * Solo hemos cambiado la URL del fetch.
+ */
 function toggleFavorito(productoId, iconElement) {
     const formData = new FormData();
     formData.append('id_producto', productoId);
 
-    fetch('/shopnext/ShopNext-Beta/controllers/user/favoritosController.php', {
+    // ✅ ¡ESTE ES EL ÚNICO CAMBIO IMPORTANTE!
+    // Ahora apuntamos al router con una acción clara y fácil de entender.
+    fetch('index.php?action=toggle-favorite', {
         method: 'POST',
         body: formData
     })
@@ -22,8 +44,8 @@ function toggleFavorito(productoId, iconElement) {
                     timer: 2000
                 });
             } else if (data.action === 'removed') {
-                iconElement.classList.remove('active'); // Corazón vuelve a su estado normal
-                 Swal.fire({
+                iconElement.classList.remove('active'); // Corazón vuelve a la normalidad
+                Swal.fire({
                     toast: true,
                     position: 'top-end',
                     icon: 'info',
@@ -33,7 +55,7 @@ function toggleFavorito(productoId, iconElement) {
                 });
             }
         } else {
-            // Si el usuario no ha iniciado sesión u ocurre otro error
+            // Tu lógica de errores (está perfecta)
             if (data.error === 'login_required') {
                 Swal.fire('Inicia Sesión', 'Necesitas una cuenta para añadir a favoritos.', 'warning');
             } else {

@@ -1,49 +1,71 @@
 <?php
-// src/Models/FavoriteModel.php
+// En src/models/FavoritosModel.php
 
 namespace App\Models;
 
-use mysqli;
+use Config\Database;
 
-class FavoriteModel {
-    private $db;
+class FavoritosModel {
+    private $conn;
 
-    public function __construct(mysqli $db) {
-        $this->db = $db;
+    public function __construct() {
+        $database = new Database();
+        $this->conn = $database->getConnection();
     }
 
     /**
-     * Obtiene los IDs de los productos favoritos de un usuario.
-     * @param int $userId El ID del usuario.
-     * @return array
+     * Verifica si un producto ya es favorito de un usuario.
      */
-    public function getFavoritesByUserId(int $userId): array {
-        // Primero, obtenemos el id_cliente a partir del id_usuario
-        $sql_cliente = "SELECT id_cliente FROM cliente WHERE id_usuario = ?";
-        $stmt_cliente = $this->db->prepare($sql_cliente);
-        $stmt_cliente->bind_param("i", $userId);
+    private function yaEsFavorito(int $id_usuario, int $id_producto): bool {
+        // Obtenemos el id_cliente asociado al id_usuario
+        $stmt_cliente = $this->conn->prepare("SELECT id_cliente FROM cliente WHERE id_usuario = ?");
+        $stmt_cliente->bind_param("i", $id_usuario);
         $stmt_cliente->execute();
-        $result_cliente = $stmt_cliente->get_result();
-
-        if ($result_cliente->num_rows === 0) {
-            return []; // El usuario no es un cliente, no puede tener favoritos
+        $resultado_cliente = $stmt_cliente->get_result();
+        
+        if ($resultado_cliente->num_rows === 0) {
+            return false; // Si no hay cliente, no puede tener favoritos
         }
-        $idCliente = $result_cliente->fetch_assoc()['id_cliente'];
+        $id_cliente = $resultado_cliente->fetch_assoc()['id_cliente'];
         $stmt_cliente->close();
 
-        // Ahora, obtenemos los favoritos
-        $sql_favoritos = "SELECT id_producto FROM lista_favoritos WHERE id_cliente = ?";
-        $stmt_favoritos = $this->db->prepare($sql_favoritos);
-        $stmt_favoritos->bind_param("i", $idCliente);
-        $stmt_favoritos->execute();
-        $result_favoritos = $stmt_favoritos->get_result();
-        
-        $favoriteIds = [];
-        while ($row = $result_favoritos->fetch_assoc()) {
-            $favoriteIds[] = $row['id_producto'];
-        }
-        $stmt_favoritos->close();
+        // Ahora verificamos en la tabla lista_favoritos con el id_cliente
+        $sql = "SELECT id_favorito FROM lista_favoritos WHERE id_cliente = ? AND id_producto = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ii", $id_cliente, $id_producto);
+        $stmt->execute();
+        $stmt->store_result();
+        $num_rows = $stmt->num_rows;
+        $stmt->close();
+        return $num_rows > 0;
+    }
 
-        return $favoriteIds;
+    /**
+     * Añade o elimina un producto de los favoritos de un usuario.
+     */
+    public function toggle(int $id_usuario, int $id_producto): string {
+        if ($this->yaEsFavorito($id_usuario, $id_producto)) {
+            // Si ya es favorito, lo eliminamos
+            $sql = "DELETE FROM lista_favoritos WHERE id_cliente = (SELECT id_cliente FROM cliente WHERE id_usuario = ?) AND id_producto = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ii", $id_usuario, $id_producto);
+            $stmt->execute();
+            $stmt->close();
+            return 'removed';
+        } else {
+            // Si no es favorito, lo añadimos
+            $stmt_cliente = $this->conn->prepare("SELECT id_cliente FROM cliente WHERE id_usuario = ?");
+            $stmt_cliente->bind_param("i", $id_usuario);
+            $stmt_cliente->execute();
+            $id_cliente = $stmt_cliente->get_result()->fetch_assoc()['id_cliente'];
+            $stmt_cliente->close();
+
+            $sql = "INSERT INTO lista_favoritos (id_cliente, id_producto) VALUES (?, ?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ii", $id_cliente, $id_producto);
+            $stmt->execute();
+            $stmt->close();
+            return 'added';
+        }
     }
 }

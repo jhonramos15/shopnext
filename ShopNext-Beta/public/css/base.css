@@ -427,152 +427,136 @@ section {
 
 /* === ESTILOS PARA LA SECCIÓN DE PRODUCTOS === */
 
-/* Contenedor de la rejilla de productos */
 .product-grid {
     display: grid;
-    /* 4 columnas en pantallas grandes */
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px; /* Espacio entre productos */
+    /* Ajusta para que se vean 4 columnas en web y sea responsive */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px; /* Espacio entre tarjetas */
 }
 
-/* La tarjeta individual del producto */
 .product-card {
     background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: none; /* Quitamos bordes previos */
+    overflow: hidden; /* Clave para el efecto del botón */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    flex-direction: column;
+    display: flex;
+    flex-direction: column; /* Organiza el contenido en columna */
 }
 
 .product-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
 }
 
-/* === Contenedor de la Imagen (LA SOLUCIÓN AL TAMAÑO) === */
+/* --- Contenedor de la Imagen --- */
 .product-image-wrapper {
-    position: relative;
-    background-color: #f5f5f5;
-    width: 100%;
-    /* Forzamos a que sea siempre cuadrado */
-    aspect-ratio: 1 / 1;
-    padding: 30px;
+    background-color: #F5F5F5; /* Fondo gris claro */
+    position: relative; /* Necesario para posicionar los íconos y el botón */
+    border-radius: 4px;
+    overflow: hidden;
+    height: 250px; /* Altura fija para todas las imágenes */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .product-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    /* La imagen se ajusta sin deformarse dentro del cuadrado */
-    object-fit: contain;
+    width: auto;
+    max-height: 80%; /* La imagen ocupa el 80% del contenedor */
+    object-fit: contain; /* Asegura que la imagen se vea completa */
+    transition: transform 0.4s ease;
 }
 
-/* --- Iconos y Botones sobre la imagen --- */
+.product-card:hover .product-image-wrapper img {
+    transform: scale(1.1); /* Efecto de zoom suave a la imagen */
+}
 
-/* Contenedor para los iconos de la esquina */
-.product-card-icons {
+/* --- Botón "Añadir al Carrito" (que aparece al hacer hover) --- */
+.add-to-cart-btn {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 0;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    border-bottom-left-radius: 4px; /* Redondeo solo en las esquinas inferiores */
+    border-bottom-right-radius: 4px;
+    transform: translateY(100%); /* Lo esconde abajo */
+    transition: transform 0.3s ease-in-out;
+  z-index: 10;
+}
+
+.product-card:hover .add-to-cart-btn {
+    transform: translateY(0); /* Lo muestra al hacer hover en la tarjeta */
+}
+
+/* --- Íconos de Acción (Corazón y Ojo) --- */
+.product-actions {
     position: absolute;
     top: 12px;
     right: 12px;
     display: flex;
     flex-direction: column;
     gap: 8px;
+    z-index: 10;
 }
 
-.product-card-icons .icon-btn {
-    background-color: white;
-    border: none;
-    border-radius: 50%;
+.product-actions .action-btn {
+    background-color: #fefefe;
+    color: #121212;
+    border-radius: 50%; /* Círculo perfecto */
     width: 34px;
     height: 34px;
-    cursor: pointer;
-    color: #121212;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.product-card-icons .icon-btn:hover {
-    background-color: #8A2BE2; /* Morado */
-    color: white;
+.product-actions .action-btn:hover {
+    background-color: #7606a2;
+    color: #fff;
+    transform: scale(1.1);
 }
 
-/* Para los íconos de corazón y ojo */
-.icon-btn i {
-    font-size: 16px; /* Ajusta el tamaño del ícono si es necesario */
-    line-height: 1; /* Mejora la alineación vertical */
-}
-
-/* Para el ícono del carrito */
-.add-to-cart-btn i {
-    font-size: 16px;
-    margin-right: 8px; /* Espacio entre el ícono y el texto */
-}
-
-/* Botón "Añadir al Carrito" que aparece al hacer hover */
-.add-to-cart-btn {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: black;
-    color: white;
-    border: none;
-    padding: 12px 0;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* Oculto por defecto */
-    opacity: 0;
-    transform: translateY(100%);
-    transition: all 0.3s ease-in-out;
-}
-
-.product-card:hover .add-to-cart-btn {
-    /* Aparece al pasar el mouse sobre la tarjeta */
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* === Detalles del Producto (Nombre y Precio) === */
+/* --- Detalles del Producto (Nombre, Precio, Reseñas) --- */
 .product-details {
-    padding: 16px;
-    text-align: left;
+    padding: 16px 8px;
+    text-align: left; /* Alinea el texto a la izquierda */
 }
 
 .product-details h3 {
     font-size: 16px;
-    font-weight: 500;
-    color: #121212;
-    margin: 0 0 8px 0;
+    font-weight: 600; /* Un poco más de grosor */
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Evita que nombres largos rompan el diseño */
 }
 
-.product-details .product-price {
+.product-price {
+    color: #8E06C2; /* Color rojo para el precio */
     font-size: 16px;
-    font-weight: 600;
-    color: #8A2BE2; /* Morado */
+    font-weight: 500;
+    margin-top: 8px;
 }
 
-/* === Estilos Responsivos === */
-@media (max-width: 1024px) {
-    .product-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
+.product-reviews {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
-@media (max-width: 768px) {
-    .product-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-@media (max-width: 480px) {
-    .product-grid {
-        grid-template-columns: 1fr; /* Una sola columna */
-    }
+
+.product-reviews .review-count {
+    color: #808080; /* Color gris para el contador */
+    font-size: 14px;
 }
 
 /* Encabezado de la sección (ej. "Más Vendidos") */
@@ -585,7 +569,7 @@ section {
 }
 
 .badge2 {
-    color: #a44ae4; /* Morado */
+    color: #8E06C2; /* Morado */
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -596,7 +580,7 @@ section {
     content: '';
     width: 10px;
     height: 25px;
-    background-color: #a44ae4;
+    background-color: #8E06C2;
     border-radius: 4px;
     margin-right: 8px;
 }

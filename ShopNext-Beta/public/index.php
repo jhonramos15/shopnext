@@ -27,7 +27,11 @@ require_once __DIR__ . '/../src/core/init.php';
 use App\Controllers\Auth\LoginController;
 use App\Controllers\Auth\RegistroController;
 use App\Controllers\Shop\HomeController;
+use App\Controllers\User\FavoritesController;
+use App\Core\SessionManager;
+use App\Controllers\Shop\ProductController;
 
+SessionManager::start();
 
 // 3. Obtenemos la página solicitada de la URL
 $page = $_GET['action'] ?? 'home';
@@ -74,13 +78,40 @@ switch ($page) {
             exit;
         }
         break;
+
     case 'logout':
         $controller = new LoginController();
         $controller->logout();
         break;
 
-    // ... (otros casos para 'products', 'cart', etc.)
+    case 'contact':
+        // Carga directamente la vista de contacto
+        require_once __DIR__ . '/../views/pages/contact.html';
+        break;
 
+    case 'product-detail':
+        // 1. Obtenemos el ID del producto de la URL y lo sanitizamos
+        $productId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+        if ($productId > 0) {
+            // 2. Creamos el controlador y llamamos al método show
+            $controller = new ProductController();
+            $controller->show($productId);
+        } else {
+            // Si no hay un ID válido, es un error.
+            http_response_code(400); // Bad Request
+            require __DIR__ . '/../views/error/404.html';
+        }
+        break;
+
+    case 'guardar-resena':
+        // Nos aseguramos de que la petición sea de tipo POST por seguridad
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $controller = new App\Controllers\Shop\ResenaController();
+            $controller->guardar();
+        }
+        break;
+        
 default:
     // Establecemos el código de respuesta HTTP correcto para "No Encontrado"
     http_response_code(404);

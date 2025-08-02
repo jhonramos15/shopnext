@@ -1,154 +1,9 @@
-/* Fuente principal del sitio */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-
-/* Reseteo de márgenes y paddings, y se aplica la fuente */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
-
-/* División entre cada sección  */
-section {
-  border-top: 1px solid #eee;
-}
-
-/* Parte superior del header (alerta y selector de idioma) */
-.header-top {
-  background: #121212;
-  color: #fff;
-  padding: 10px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  position: relative;
-}
-
-/* Estilo para el selector de idioma */
-.header-top select {
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  background: #121212;
-  color: #fff;
-  border-radius: 6px;
-  padding: 4px;
-  border: none;
-}
-
-/* Tamaño del texto en el párrafo y título */
-.header-top p,
-.header-top h2 {
-  font-size: 14px;
-}
-
-/* Título con subrayado */
-.header-top h2 {
-  border-bottom: 1px solid #fff;
-  font-weight: 600;
-}
-
-/* Contenedor principal del header */
-.header-main {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 20px 30px;
-  background-color: #fff;
-  gap: 15px;
-}
-
-/* Agrupa el logo y el botón del menú */
-.header-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* Tamaño del logo */
-.logo img {
-  width: 160px;
-  display: block;
-}
-
-/* Botón del menú hamburguesa (móvil) */
-.hamburger {
-  display: none;
-  font-size: 24px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-/* Menú de navegación (horizontal en escritorio) */
-.nav-links {
-  display: flex;
-  gap: 25px;
-}
-
-/* Estilo para los enlaces del menú */
-.nav-links a {
-  text-decoration: none;
-  color: #8E06C2;
-  font-weight: 400;
-  position: relative;
-}
-
-/* Línea inferior animada al pasar el mouse */
-.nav-links a::after {
-  content: "";
-  position: absolute;
-  bottom: -3px;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background: #8E06C2;
-  transform: translateX(-50%);
-  transition: width 0.3s;
-}
-
-.nav-links a:hover::after {
-  width: 100%;
-}
-
 /* Contenedor de buscador, íconos y login */
 .icons {
   display: flex;
   align-items: center;
   gap: 12px;
 }
-
-/* Contenedor del buscador */
-.buscador {
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-}
-
-/* Input del buscador */
-.buscador input {
-  border: 1px solid #ccc;
-  padding: 6px 10px;
-  width: 100%;
-  background: #f5f5f5;
-  border-radius: 5px 0 0 5px;
-}
-
-/* Botón del buscador */
-.buscador button {
-  padding: 6px 10px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  background: #f5f5f5;
-  border-radius: 0 5px 5px 0;
-  position: relative;
-  right: 1px;
-}
-
 /* Íconos como favoritos y carrito */
 .icon-btn {
   background: none;
@@ -163,684 +18,368 @@ section {
   font-weight: 500;
   color: #121212;
 }
+/* Estilos para la página de detalles del producto */
+/* Inspirado en el diseño de la captura de pantalla */
 
-/* Estilos responsive para laptops */
-@media (max-width: 1024px) {
-  .header-main {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .hamburger {
-    display: block;
-  }
-
-  .nav-links {
-    display: none;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 15px;
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .nav-links.active {
+/* Contenedor principal de la página */
+.product-detail-container {
     display: flex;
-  }
-
-  .icons {
-    flex-wrap: nowrap;
-    overflow: auto;
-    justify-content: center;
-    width: 100%;
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  .buscador {
-    width: 100%;
-    max-width: 260px;
-    justify-content: center;
-  }
-
-  .logo-menu {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-  }
-}
-
-/* Estilos responsive para móviles */
-@media (max-width: 600px) {
-  .header-main {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .logo-menu {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-  }
-
-  .nav-links {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .nav-links.active {
-    display: flex;
-  }
-
-  .icons {
-    flex-direction: row;
     flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-  }
-
-  .buscador {
-    flex: 1 1 100px;
-    max-width: 160px;
-    justify-content: center;
-  }
-
-  .icon-btn,
-  .login-btn {
-    flex-shrink: 0;
-  }
-
-  .login-btn {
-    margin-top: 0;
-  }
+    gap: 40px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
 }
 
-/* --- Contenedor Principal --- */
-.product-view {
+/* Contenedor de las imágenes del producto */
+.product-images {
+    flex: 1;
+    min-width: 300px;
     display: flex;
-    gap: 50px;
-    max-width: 1200px;
-    margin: 0 auto;
+    gap: 15px;
+}
+
+.thumbnail-images {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.thumbnail-images img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+.thumbnail-images img:hover,
+.thumbnail-images img.active {
+    border-color: #DB4444;
+}
+
+.main-image {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #F5F5F5;
+    border-radius: 4px;
     padding: 20px;
 }
 
-/* --- Galería de Imágenes --- */
-.image-gallery { display: flex; gap: 20px; }
-.thumbnails { display: flex; flex-direction: column; gap: 10px; }
-.thumbnail-img {
-    width: 80px; height: 80px; object-fit: cover; cursor: pointer;
-    border: 2px solid #e0e0e0; border-radius: 4px; padding: 5px;
-}
-.thumbnail-img.active { border-color: #8E06C2; } /* Color rojo para el borde activo */
-.main-image-container {
-    background-color: #F5F5F5; border-radius: 4px;
-    padding: 20px; height: 500px; width: 500px; /* Tamaño fijo */
-    display: flex; align-items: center; justify-content: center;
-}
-.main-image { max-width: 100%; max-height: 100%; object-fit: contain; }
-
-/* --- Detalles del Producto (Columna Derecha) --- */
-.product-details { flex: 1; display: flex; flex-direction: column; }
-.product-details h1 { font-size: 24px; font-weight: 600; margin: 0; }
-
-.product-rating { display: flex; align-items: center; gap: 8px; margin: 16px 0; }
-
-/* === AJUSTE 1: ESTRELLAS DE CALIFICACIÓN === */
-.stars .fa-star {
-    color: #FFAD33; /* Color naranja/amarillo para las estrellas */
-}
-.product-rating span { color: #808080; font-size: 14px; }
-.stock-status { color: #00B517; font-size: 14px; font-weight: 500; }
-
-.product-price { font-size: 24px; margin: 8px 0 16px; color: #222; }
-.product-description { font-size: 14px; line-height: 1.6; border-bottom: 1px solid #ddd; padding-bottom: 20px; }
-
-/* Acciones de compra */
-.actions { display: flex; gap: 16px; margin-top: 24px; align-items: center; }
-.buy-btn {
-    flex-grow: 1; padding: 12px 24px; background-color: #8E06C2; /* Rojo */
-    color: white; border: none; border-radius: 4px; cursor: pointer;
-    font-size: 16px; text-decoration: none; text-align: center;
+.main-image img {
+    max-width: 100%;
+    max-height: 500px;
+    object-fit: contain;
 }
 
-/* === AJUSTE 2: BOTÓN DE FAVORITOS (CORAZÓN) === */
-.wishlist-btn {
-    padding: 10px; border: 1px solid #ccc; border-radius: 4px;
-    background-color: transparent; cursor: pointer; font-size: 18px;
-    display: flex; align-items: center; justify-content: center;
+/* Información del producto */
+.product-info {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
 }
-.wishlist-btn .fa-heart { color: #333; }
 
-
-/* === AJUSTE 3: RECUADROS DE ENVÍO === */
-.delivery-info {
-    margin-top: 40px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    overflow: hidden; /* Para que los bordes internos no se salgan */
+.product-info h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
 }
-.delivery-option {
+
+.reviews-summary {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 16px;
+    gap: 15px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #808080;
 }
-.delivery-option:first-child {
-    border-bottom: 1px solid #ccc;
+
+.stars .fa-star {
+    color: #E0E0E0;
 }
-.delivery-option i {
+
+.stars .fa-star.filled {
+    color: #8E06C2;
+}
+
+.price {
     font-size: 24px;
+    font-weight: 500;
     color: #333;
-    width: 30px; /* Ancho para alinear */
-    text-align: center;
+    margin-bottom: 15px;
 }
-.delivery-option div h4 {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 0 0 4px;
+
+.description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #121212;
+    margin-bottom: 20px;
 }
-.delivery-option div p {
-    font-size: 12px;
-    color: #555;
-    margin: 0;
-    text-decoration: underline;
-    cursor: pointer;
+
+.product-info hr {
+    border: none;
+    border-top: 1px solid #E0E0E0;
+    margin: 20px 0;
+}
+
+/* --- ESTILOS AÑADIDOS para Acciones de Compra --- */
+
+.purchase-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 25px;
 }
 
 .quantity-selector {
-    display: flex; /* Para alinear los elementos horizontalmente */
-    border: 1px solid #808080; /* Borde gris, como en la imagen */
+    display: flex;
+    border: 1px solid #808080;
     border-radius: 4px;
-    overflow: hidden; /* Importante para que los bordes se vean bien */
-    width: fit-content; /* El contenedor se ajusta al contenido */
+    overflow: hidden; /* Para que los bordes del input no se salgan */
 }
 
-.quantity-btn {
-    width: 40px;
-    height: 40px;
-    border: none;
-    background-color: transparent;
-    font-size: 20px;
-    font-weight: bold;
-    color: #333;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.quantity-btn:hover {
-    background-color: #f0f0f0; /* Un gris claro al pasar el mouse */
-}
-
-.quantity-input {
-    width: 80px; /* Ancho para el número */
-    height: 40px;
+.quantity-selector input {
+    width: 60px;
     text-align: center;
     border: none;
-    /* Líneas divisorias a los lados */
     border-left: 1px solid #808080;
     border-right: 1px solid #808080;
     font-size: 16px;
     font-weight: 500;
+    padding: 10px 0;
+    background: transparent;
+    color: #333;
 }
 
-/* Quitamos el contorno azul que aparece al hacer clic */
-.quantity-input:focus {
+.quantity-selector input:focus {
     outline: none;
 }
 
-/* Contenedor principal de los dos recuadros */
-.delivery-info {
-    margin-top: 40px; /* Espacio arriba para separarlo de los botones */
-    border: 1px solid #d1d1d1; /* Borde gris más sutil */
-    border-radius: 4px;
-    overflow: hidden; /* Importante para que los bordes se vean bien */
+.quantity-btn {
+    background-color: transparent;
+    border: none;
+    padding: 0 15px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #121212;
+    transition: background-color 0.2s;
 }
 
-/* Estilo para cada opción individual (Envío y Devolución) */
+.quantity-btn:hover {
+    background-color: #8E06C2;
+    color: #fefefe;
+}
+
+.buy-now-btn {
+    flex-grow: 1;
+    padding: 12px 20px;
+    background-color: #8E06C2;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.buy-now-btn:hover {
+    background-color: #690491;
+}
+
+.add-to-favorites-btn {
+    padding: 10px;
+    border: 1px solid #808080;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1; /* Alinea el corazón verticalmente */
+    transition: all 0.3s;
+}
+
+.add-to-favorites-btn:hover {
+    border-color: #121212;
+    color: #8E06C2;
+}
+
+/* Clase para cuando un producto ya es favorito */
+.add-to-favorites-btn.is-favorite {
+    border-color: #DB4444;
+    color: #DB4444;
+    background-color: #fdecec;
+}
+
+.add-to-favorites-btn .fa-solid { /* Para el corazón relleno */
+    color: #DB4444;
+}
+
+/* --- ESTILOS AÑADIDOS para Información de Envío --- */
+
+.delivery-info-container {
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    margin-top: 25px;
+    overflow: hidden; /* Para que el borde de en medio funcione bien */
+}
+
 .delivery-option {
     display: flex;
-    align-items: center; /* Centra verticalmente el ícono con el texto */
-    gap: 16px; /* Espacio entre el ícono y el bloque de texto */
-    padding: 16px;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
 }
 
-/* Línea divisoria entre las dos opciones */
+/* Añadir una línea divisoria entre las dos opciones */
 .delivery-option:first-child {
-    border-bottom: 1px solid #d1d1d1;
+    border-bottom: 1px solid #E0E0E0;
 }
 
-/* Estilo para los íconos (camión y flecha) */
-.delivery-option i {
+.delivery-icon {
     font-size: 24px;
-    color: #333;
-    width: 30px;
-    text-align: center;
+    color: #121212;
 }
 
-/* Estilos para el texto */
-.delivery-option div h4 {
+.delivery-text h4 {
+    font-weight: 600;
     font-size: 16px;
-    font-weight: 600;
-    margin: 0 0 4px; /* Espacio debajo del título */
+    margin: 0 0 5px 0;
 }
 
-.delivery-option div p {
-    font-size: 12px;
-    color: #555;
+.delivery-text p {
+    font-size: 13px;
+    color: #121212;
     margin: 0;
-    text-decoration: underline;
-    cursor: pointer;
+    line-height: 1.4;
 }
 
-.review-form-container {
-    background-color: #ffffff;
-    padding: 30px; /* Más espaciado interno */
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    margin-top: 40px; /* Más espacio para separarlo de la línea */
+/* --- Estilos para la sección de Reseñas --- */
+
+.reviews-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
 }
 
-.review-form-container h4 {
-    font-size: 1.2rem; /* Título un poco más grande */
+.reviews-container h2, .reviews-container h3 {
     font-weight: 600;
-    margin-top: 0;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #8E06C2;
+    padding-bottom: 10px;
+    display: inline-block;
 }
 
-#review-form .form-group {
+.review-form-section {
+    background-color: #F9F9F9;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 40px;
+}
+
+.review-form-section .form-group {
     margin-bottom: 20px;
 }
 
-#review-form label {
+.review-form-section label {
     display: block;
-    font-weight: 500;
-    font-size: 0.9rem;
     margin-bottom: 8px;
-    color: #333;
-}
-
-/* Estilos para las estrellas de valoración */
-.product-rating .stars .fa-star {
-    color: #680493; /* Color amarillo/naranja para las estrellas */
-}
-
-.wishlist-btn {
-    padding: 10px; border: 0px; border-radius: 4px;
-    background-color: transparent; cursor: pointer; font-size: 20px;
-}
-.wishlist-btn i { color: #333; }
-.wishlist-btn:hover, .wishlist-btn.active {
-    border-color: #121212;
-}
-.wishlist-btn.active i {
-    color: #680493; /* Corazón rojo cuando está activo */
-}
-
-.actions {
-    display: flex;
-    align-items: center;  /* Centra los botones verticalmente */
-    gap: 16px;          /* ¡ESTA ES LA LÍNEA CLAVE! Añade espacio entre los botones */
-    margin-top: 24px;
-}
-
-/* Hacemos que el botón "Comprar Ahora" ocupe el espacio restante */
-.buy-btn {
-    flex-grow: 1; 
-}
-
-/* El texto "En Stock" en verde */
-.product-rating .stock-status {
-    color: #00B517; 
-    font-size: 14px; 
     font-weight: 500;
 }
 
-/* Contenedor principal del aviso */
-.login-prompt {
-    border: 1px solid #e0e0e0;  /* Borde sutil */
-    border-radius: 8px;         /* Esquinas redondeadas */
-    padding: 25px 30px;         /* Espaciado interno amplio */
-    text-align: center;         /* Centra el texto y el botón */
-    background-color: #f8f9fa;  /* Un fondo gris muy claro */
-    margin-top: 20px;
-}
-
-/* Párrafo del mensaje */
-.login-prompt p {
-    margin: 0 0 15px 0;   /* Espacio solo debajo del texto */
-    font-size: 16px;
-    color: #333;          /* Color de texto oscuro para legibilidad */
-}
-
-/* Botón/Enlace para Iniciar Sesión */
-.login-link-btn {
-    display: inline-block;        /* Permite darle padding y forma */
-    padding: 12px 30px;           /* Tamaño del botón */
-    background-color: #8E06C2;    /* Tu color morado principal */
-    color: #ffffff;               /* Texto blanco */
-    text-decoration: none;        /* Quita el subrayado del enlace */
-    border-radius: 5px;           /* Esquinas redondeadas */
-    font-weight: 500;
-    transition: all 0.3s ease;  /* Transición suave para el hover */
-}
-
-/* Efecto al pasar el mouse sobre el botón */
-.login-link-btn:hover {
-    background-color: #680493;    /* Morado un poco más oscuro */
-    transform: translateY(-2px);  /* Efecto de "levantarse" */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-}
-#review-form input[type="text"],
-#review-form textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-#review-form input[type="text"]:focus,
-#review-form textarea:focus {
-    outline: none;
-    border-color: #8E06C2;
-    box-shadow: 0 0 0 3px rgba(142, 6, 194, 0.15); /* Sombra suave al enfocar */
-}
-
-#review-form textarea {
-    resize: vertical;
-    min-height: 100px;
-}
-
-#review-form .star-rating {
-    display: flex;
-    flex-direction: row-reverse; /* Importante para el efecto hover */
-    justify-content: flex-end;   /* Alinea las estrellas a la izquierda */
-    gap: 5px;                    /* Espacio entre estrellas */
-}
-
-.reviews-content-wrapper {
-    background-color: #ffffff;
-    padding: 30px;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    margin-top: 30px; /* Separa este bloque del resumen de arriba */
-}
-
-/* Ajustamos el contenedor del formulario para que no tenga estilos repetidos */
-.review-form-container {
-    background-color: transparent; /* Quitamos el fondo */
-    border: none;                  /* Quitamos el borde */
-    padding: 0;                    /* Quitamos el padding */
-    margin: 0;                     /* Quitamos el margen */
-}
-
-
-/* Oculta los botones de radio originales */
-#review-form .star-rating input[type="radio"] {
-    display: none;
-}
-
-/* Estilo de las estrellas (las etiquetas <label>) */
-#review-form .star-rating label {
-    font-size: 2.2rem;     /* Las hace más grandes */
-    color: #e0e0e0;        /* Color de estrella vacía (gris claro) */
-    cursor: pointer;
-    transition: color 0.2s ease-in-out;
-}
-
-/* La magia: cambia el color al pasar el mouse o al seleccionar */
-#review-form .star-rating label:hover,
-#review-form .star-rating label:hover ~ label,
-#review-form .star-rating input[type="radio"]:checked ~ label {
-    color: #8E06C2; /* Amarillo estándar para estrellas seleccionadas */
-}
-
-/* Estrellas interactivas para el formulario */
+/* Estilo para las estrellas del formulario */
 .star-rating {
     display: flex;
-    flex-direction: row-reverse; /* Esto es clave para el efecto hover */
-    justify-content: flex-end; /* Alinea las estrellas a la izquierda */
+    flex-direction: row-reverse;
+    justify-content: flex-end;
     gap: 5px;
 }
 
 .star-rating input[type="radio"] {
-    display: none; /* Oculta los círculos de los radio buttons */
+    display: none;
 }
 
 .star-rating label {
-    font-size: 2.2rem; /* Estrellas más grandes */
-    color: #e0e0e0; /* Color de estrella vacía */
+    font-size: 30px;
+    color: #ddd;
     cursor: pointer;
     transition: color 0.2s;
 }
 
-/* Efecto hover: al pasar sobre una estrella, esa y las anteriores se iluminan */
+.star-rating input[type="radio"]:checked ~ label,
 .star-rating label:hover,
-.star-rating label:hover ~ label,
-.star-rating input[type="radio"]:checked ~ label {
-    color: #ffc107; /* Amarillo para estrellas seleccionadas/hover */
+.star-rating label:hover ~ label {
+    color: #8E06C2;
 }
-/* Botón de envío */
-#review-form button[type="submit"] {
+
+.review-form-section textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.submit-review-btn {
     background-color: #8E06C2;
     color: white;
+    padding: 12px 30px;
     border: none;
-    border-radius: 6px;
-    padding: 12px 25px;
-    font-size: 0.9rem;
-    font-weight: 600;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.2s;
-    margin-top: 10px;
-}
-
-#review-form button[type="submit"]:hover {
-    background-color: #700B97; /* Un tono más oscuro para el hover */
-}
-
-#review-form button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-/* Mensaje de respuesta del formulario (éxito o error) */
-#review-form-message {
-    margin-top: 15px;
+    font-size: 16px;
     font-weight: 500;
+    transition: background-color 0.3s;
 }
 
-.reviews-section {
-    max-width: 900px;
-    margin: 40px auto;
-    font-family: 'Poppins', sans-serif;
-}
-
-.rating-summary {
-    display: flex;
-    gap: 40px;
-    align-items: center;
-    background-color: #f8f9fa;
-    padding: 25px;
-    border-radius: 12px;
-    margin-bottom: 30px;
-}
-
-/* Lado derecho: Puntuación promedio */
-.rating-average {
-    flex: 1;
-    text-align: center;
-    border-left: 1px solid #e0e0e0;
-    padding-left: 40px;
-}
-.average-score {
-    font-size: 4rem;
-    font-weight: 600;
-    color: #333;
-}
-.average-stars .fas {
-    font-size: 1.2rem;
-    color: #8E06C2;
-}
-.total-reviews {
-    font-size: 0.9rem;
-    color: #6c757d;
-    margin-top: 5px;
-}
-
-/* Lado izquierdo: Barras de progreso */
-.rating-bars {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-.rating-bar-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-}
-.rating-bar-item .fa-star {
-    color: #8E06C2;
-}
-.bar-container {
-    flex-grow: 1;
-    height: 8px;
-    background-color: #e9ecef;
-    border-radius: 4px;
-    overflow: hidden;
-}
-.bar {
-    height: 100%;
+.submit-review-btn:hover {
     background-color: #8E06C2;
-    border-radius: 4px;
-}
-.rating-bar-item .count {
-    min-width: 20px;
-    text-align: right;
-    color: #6c757d;
 }
 
-/* Estilos para los comentarios individuales */
-.review-item {
-    border-bottom: 1px solid #eee;
-    padding: 20px 0;
+/* Estilos para la lista de reseñas */
+.reviews-list {
+    margin-top: 30px;
 }
-.review-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+
+.review-card {
+    background-color: #fff;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.review-card .review-author {
+    font-weight: 600;
     margin-bottom: 5px;
 }
-.review-date {
-    font-size: 0.8em;
-    color: #888;
+
+.review-card .review-rating .fa-star {
+    color: #E0E0E0;
 }
-.review-stars .star {
-    font-size: 16px;
-    color: #ccc;
-}
-.review-stars .star.filled {
+
+.review-card .review-rating .fa-star.filled {
     color: #8E06C2;
 }
-.review-item p {
-    margin-top: 10px;
-    line-height: 1.6;
+
+.review-card .review-comment {
+    margin: 10px 0;
+    line-height: 1.5;
+    color: #121212;
 }
 
-/* footer*/
-
-footer,
-.footer-contact {
-  margin-top: 0;
-  padding: 40px 20px;
-  font-family: 'Poppins', sans-serif;
-  background-color: #121212;
-  color: white;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  gap: 20px;
-}
-
-.footer-section {
-  flex: 1 1 200px;
-  max-width: 250px;
-  padding: 20px;
-  background-color: #121212;
-}
-
-.footer-section h3 {
-  margin-bottom: 10px;
-}
-
-.footer-section ul {
-  list-style: none;
-  padding: 0;
-}
-
-.footer-section ul li {
-  margin-bottom: 10px;
-}
-
-.footer-section a {
-  text-decoration: none;
-  color: #f1f1f1;
-}
-
-.footer-section a:hover {
-  text-decoration: underline;
-}
-
-/* Logo */
-.footer-logo {
-  max-width: 150px;
-  height: auto;
-  display: block;
-  margin: 0 auto 10px auto;
-}
-
-/* Íconos sociales */
-.social-icons {
-  display: flex;
-  gap: 10px;
-}
-
-.social-icons li {
-  list-style: none;
-}
-
-.social-icons img {
-  width: 28px;
-  height: 28px;
-  background: white;
-  border-radius: 50%;
-  padding: 5px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .footer-contact {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .footer-section {
-    max-width: 100%;
-  }
-
-  .social-icons {
-    justify-content: center;
-  }
+.review-card .review-date {
+    font-size: 12px;
+    color: #808080;
+    text-align: right;
+    display: block;
 }

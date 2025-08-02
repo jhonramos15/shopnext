@@ -1,7 +1,9 @@
 <?php
+// En src/guard/AuthGuard.php
 
 namespace App\Guard;
 
+// ✅ 1. Definimos la clase que envuelve todo.
 class AuthGuard {
 
     /**
@@ -12,28 +14,37 @@ class AuthGuard {
             session_start();
         }
     }
-
-    /**
-     * Verifica si un usuario ya tiene una sesión activa y, de ser así,
-     * lo redirige a su dashboard correspondiente.
-     * * Esta función debe ser llamada al principio de las páginas
-     * a las que un usuario logueado no debería acceder (como login.php o signUp.html).
-     */
     public static function redirectIfAuthenticated() {
         self::startSecureSession();
 
         if (isset($_SESSION['id_usuario'])) {
-            $rol = $_SESSION['rol'] ?? 'cliente'; // Asumir 'cliente' si no está definido
+            $rol = $_SESSION['rol'] ?? 'cliente';
 
+            // Usamos las rutas del router, no las rutas de archivos directos
             $redirecciones = [
-                'admin'    => '../dashboard/adminView.php',
-                'vendedor' => '../dashboard/vendedorView.php',
-                'cliente'  => '../pages/home.php' // Redirigir a la home, no a una página de usuario específica
+                'admin'    => 'index.php?action=admin-dashboard',
+                'vendedor' => 'index.php?action=seller-dashboard',
+                'cliente'  => 'index.php?action=home' 
             ];
 
             $destino = $redirecciones[$rol] ?? $redirecciones['cliente'];
             
+            // Usamos BASE_URL para que las rutas sean siempre correctas
+            if (defined('BASE_URL')) {
+                $destino = BASE_URL . $destino;
+            }
+
             header("Location: " . $destino);
+            exit;
+        }
+    }
+
+    public static function redirectIfNotAuthenticated() {
+        self::startSecureSession();
+
+        // Si la sesión 'id_usuario' NO existe, lo mandamos al login.
+        if (!isset($_SESSION['id_usuario'])) {
+            header("Location: index.php?action=login"); // Redirige a la ruta de login
             exit;
         }
     }

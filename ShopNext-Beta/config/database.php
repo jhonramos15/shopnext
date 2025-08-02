@@ -1,42 +1,40 @@
 <?php
+// En src/config/Database.php
 
 namespace Config;
 
-// Importamos la clase mysqli del espacio global para que la encuentre
-use mysqli; 
-use Exception;
-/**
- * Clase Database: Gestiona la conexión a la base de datos.
- * Se encarga de establecer y proporcionar la conexión, manteniendo
- * las credenciales en un solo lugar.
- */
+use mysqli;
+use mysqli_sql_exception; // Importante para capturar errores de SQL
+
 class Database {
-    // Parámetros de conexión
     private $host = 'localhost';
-    private $db_name = 'shopnexs';
+    private $db_name = 'shopnexs'; // ¿Estás 100% seguro de que se llama así?
     private $username = 'root';
     private $password = '';
-    public $conn;
+    public $conn = null;
 
-    /**
-     * @return mysqli|null Objeto de conexión mysqli o null si falla.
-     */
     public function getConnection() {
-        $this->conn = null;
+        // Si ya tenemos una conexión, la reutilizamos
+        if ($this->conn) {
+            return $this->conn;
+        }
+
+        // ✅ ¡AQUÍ ESTÁ LA MAGIA!
+        // Le decimos a mysqli que sea "estricto" y que lance un error visible si algo falla.
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
         try {
             $this->conn = new mysqli($this->host, $this->username, $this->password, $this->db_name);
-            if ($this->conn->connect_error) {
-                throw new Exception("Error de conexión: " . $this->conn->connect_error);
-            }
-        } catch (Exception $e) {
-            // En un entorno de producción, nunca muestres errores detallados al usuario.
-            // Guárdalos en un log.
-            error_log($e->getMessage());
-            return null;
-        }
+            // Si el código llega aquí, la conexión fue exitosa.
+            return $this->conn;
 
-        return $this->conn;
+        } catch (mysqli_sql_exception $e) {
+            // Si la conexión falla, el catch lo atrapará y detendremos todo
+            // mostrando un mensaje de error claro y directo.
+            die("<h1>Error Crítico de Base de Datos</h1><p>No se pudo conectar a MySQL. Revisa los datos.</p><p><strong>Error exacto:</strong> " . $e->getMessage() . "</p>");
+        }
+        
+        return null; // Este return ya no debería alcanzarse
     }
 }
 ?>

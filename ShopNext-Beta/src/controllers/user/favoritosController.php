@@ -1,71 +1,45 @@
 <?php
-// controllers/user/favoritosController.php
+// En src/controllers/user/FavoritesController.php
 
-session_start();
-header('Content-Type: application/json');
+namespace App\Controllers\User;
 
-// 1. Verificar si el usuario está logueado
-if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'cliente') {
-    echo json_encode(['success' => false, 'error' => 'login_required']);
-    exit;
-}
+use App\Models\FavoritosModel;
+use App\Core\SessionManager; // Usamos nuestro manejador de sesión
 
-if (!isset($_POST['id_producto'])) {
-    echo json_encode(['success' => false, 'error' => 'Producto no especificado.']);
-    exit;
-}
+class FavoritesController {
 
-$id_producto = filter_var($_POST['id_producto'], FILTER_VALIDATE_INT);
-$id_usuario = $_SESSION['id_usuario'];
-$response = [];
+    public function toggleFavorite() {
+        header('Content-Type: application/json');
+        SessionManager::start();
 
-$conexion = new mysqli("localhost", "root", "", "shopnexs");
-if ($conexion->connect_error) {
-    echo json_encode(['success' => false, 'error' => 'Error de conexión.']);
-    exit;
-}
+        // 1. Verificamos si el usuario ha iniciado sesión
+        if (!SessionManager::isLoggedIn() || SessionManager::get('rol') !== 'cliente') {
+            echo json_encode(['success' => false, 'error' => 'login_required']);
+            exit;
+        }
 
-try {
-    // 2. Obtener el id_cliente a partir del id_usuario
-    $stmt_cliente = $conexion->prepare("SELECT id_cliente FROM cliente WHERE id_usuario = ?");
-    $stmt_cliente->bind_param("i", $id_usuario);
-    $stmt_cliente->execute();
-    $resultado_cliente = $stmt_cliente->get_result();
-    
-    if ($resultado_cliente->num_rows === 0) {
-        throw new Exception("Perfil de cliente no encontrado.");
+        // 2. Verificamos que nos hayan enviado un ID de producto válido
+        if (!isset($_POST['id_producto']) || !is_numeric($_POST['id_producto'])) {
+            echo json_encode(['success' => false, 'error' => 'ID de producto inválido.']);
+            exit;
+        }
+
+        try {
+            $id_usuario = SessionManager::get('id_usuario');
+            $id_producto = (int)$_POST['id_producto'];
+
+            // 3. Creamos el modelo y le pasamos la orden
+            $favoritesModel = new FavoritosModel();
+            $action = $favoritesModel->toggle($id_usuario, $id_producto);
+
+            // 4. Respondemos al JavaScript con la acción realizada
+            echo json_encode(['success' => true, 'action' => $action, 'message' => "Acción '$action' completada."]);
+
+        } catch (\Exception $e) {
+            // Si algo explota en el modelo, lo atrapamos aquí
+            http_response_code(500); // Error de servidor
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+        exit;
     }
-    $id_cliente = $resultado_cliente->fetch_assoc()['id_cliente'];
-    $stmt_cliente->close();
-
-    // 3. Revisar si el producto ya está en favoritos
-    $stmt_check = $conexion->prepare("SELECT id_favorito FROM lista_favoritos WHERE id_cliente = ? AND id_producto = ?");
-    $stmt_check->bind_param("ii", $id_cliente, $id_producto);
-    $stmt_check->execute();
-    $resultado_check = $stmt_check->get_result();
-    $existe = $resultado_check->fetch_assoc();
-    $stmt_check->close();
-
-    if ($existe) {
-        // Si ya existe, lo eliminamos
-        $stmt_delete = $conexion->prepare("DELETE FROM lista_favoritos WHERE id_favorito = ?");
-        $stmt_delete->bind_param("i", $existe['id_favorito']);
-        $stmt_delete->execute();
-        $stmt_delete->close();
-        $response = ['success' => true, 'action' => 'removed'];
-    } else {
-        // Si no existe, lo insertamos
-        $stmt_add = $conexion->prepare("INSERT INTO lista_favoritos (id_cliente, id_producto) VALUES (?, ?)");
-        $stmt_add->bind_param("ii", $id_cliente, $id_producto);
-        $stmt_add->execute();
-        $stmt_add->close();
-        $response = ['success' => true, 'action' => 'added'];
-    }
-
-} catch (Exception $e) {
-    $response = ['success' => false, 'error' => $e->getMessage()];
 }
-
-$conexion->close();
-echo json_encode($response);
-exit;

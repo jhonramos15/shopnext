@@ -26,12 +26,12 @@
     <nav class="nav-links">
         <a href="/shopnext/ShopNext-Beta/public/index.php">Inicio</a>
 
-        <?php if ($usuario_logueado): ?>
+        <?php if ($data['usuario_logueado']): ?>
             <a href="?action=products">Productos</a>
             <a href="?action=contact">Contacto</a>
         <?php else: ?>
             <a href="?action=signup">Regístrate</a>
-            <a href="?=contact">Contacto</a>
+            <a href="index.php?action=contact">Contacto</a>
             <a href="?action=about">Acerca de</a>
         <?php endif; ?>
     </nav>
@@ -43,7 +43,7 @@
       </form>
       <div id="search-results"></div>
       <!-- Favoritos y Carrito, logueados -->
-      <?php if ($usuario_logueado): ?>
+      <?php if ($data['usuario_logueado']): ?>
         <a href="/shopnext/ShopNext-Beta/views/user/pages/favoritos.php" title="Favoritos"><i class="fa-solid fa-heart"></i></a>
         <a href="/shopnext/ShopNext-Beta/views/user/cart/carrito.php" title="Carrito"><i class="fa-solid fa-cart-shopping"></i></a>
         <!-- Ícono de usuario, solo si está logueado -->
@@ -67,7 +67,7 @@
       <?php else: ?>
         <a href="/shopnext/ShopNext-Beta/views/auth/login.php" title="Favoritos"><i class="fa-solid fa-heart"></i></a>
         <a href="/shopnext/ShopNext-Beta/views/auth/login.php" title="Carrito"><i class="fa-solid fa-cart-shopping"></i></a>
-        <a href="/shopnext/ShopNext-Beta/views/auth/login.php" class="login-btn">Iniciar Sesión</a>
+        <a href="?action=login" class="login-btn">Iniciar Sesión</a>
       <?php endif; ?>
     </div>
   </div>
@@ -172,35 +172,55 @@
       </h2>
     </div>
   </div>  
-  <div class="our-products">
-    <h2>Nuestros Productos</h2>
+<div class="our-products">
     <div class="product-grid">
         <?php if (!empty($latestProducts)): ?>
             <?php foreach ($latestProducts as $product): ?>
-              <div class="product-card">
+                <div class="product-card">
                     <div class="product-image-wrapper">
-                        <?php
-                            $base_url = '/shopnext/ShopNext-Beta/';
-                            $image_path = $base_url . 'public/uploads/products/' . htmlspecialchars($product['ruta_imagen']);
-                        ?>
-                        <img src="<?php echo $image_path; ?>" alt="<?php echo htmlspecialchars($product['nombre_producto']); ?>">
+                        
+                        <div class="product-actions">
+                            <a href="#" class="action-btn add-to-favorites" data-product-id="<?php echo $product['id_producto']; ?>" title="Añadir a favoritos">
+                                <i class="fa-solid fa-heart"></i>
+                            </a>
+                            <a href="index.php?action=product-detail&id=<?php echo $product['id_producto']; ?>" class="action-btn view-product" title="Ver producto">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
                         </div>
+                        <button class="add-to-cart-btn">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            Añadir al Carrito
+                        </button>
+                        <img src="<?php echo BASE_URL . 'uploads/products/' . htmlspecialchars($product['ruta_imagen']); ?>" alt="<?php echo htmlspecialchars($product['nombre_producto']); ?>">
+                    </div>
+
                     <div class="product-details">
                         <h3><?php echo htmlspecialchars($product['nombre_producto']); ?></h3>
                         <div class="product-price">
                             $<?php echo htmlspecialchars(number_format($product['precio'])); ?>
                         </div>
-                    </div>
-                </div>
 
+                        <div class="product-reviews">
+                            <?php 
+                            // Asumimos que el controlador nos pasa estos datos
+                            $promedioRedondeado = round($product['resena_promedio'] ?? 0);
+                            $totalResenas = $product['resena_total'] ?? 0;
+                            
+                            for ($i = 1; $i <= 5; $i++): ?>
+                                <?php if ($i <= $promedioRedondeado): ?>
+                                    <i class="fa-solid fa-star" style="color: #8E06C2;"></i> <?php else: ?>
+                                    <i class="fa-regular fa-star" style="color: #8E06C2;"></i> <?php endif; ?>
+                            <?php endfor; ?>
+                            <span class="review-count">(<?php echo $totalResenas; ?>)</span>
+                        </div>
+                        </div>
+                </div>
             <?php endforeach; ?>
         <?php else: ?>
             <p>No hay productos para mostrar.</p>
         <?php endif; ?>
-
     </div>
 </div>
-  </div>
 </section>
 <section></section>
 <!-- Secciones Destacadas -->

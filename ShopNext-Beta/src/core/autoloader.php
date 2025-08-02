@@ -1,6 +1,5 @@
 <?php
 /**
- * Autoloader Inteligente v2
  * Este autoloader entiende que las carpetas pueden estar en minúsculas
  * pero los nombres de archivo de las clases están en PascalCase.
  */
