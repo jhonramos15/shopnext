@@ -4,6 +4,7 @@ namespace App\Controllers\Shop;
 // Importamos las herramientas que vamos a usar
 use App\Models\ProductsModel;
 use App\Core\SessionManager;
+use App\Models\Shop\ProductsModel as ProductDataModel;
 
 class HomeController {
 

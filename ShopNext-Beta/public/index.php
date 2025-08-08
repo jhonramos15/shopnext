@@ -24,12 +24,16 @@ require_once __DIR__ . '/../src/core/init.php';
 
 // Importamos TODOS los controladores que vamos a usar en este archivo.
 // Es como poner las herramientas sobre la mesa antes de trabajar.
-use App\Controllers\Auth\LoginController;
-use App\Controllers\Auth\RegistroController;
-use App\Controllers\Shop\HomeController;
-use App\Controllers\User\FavoritesController;
-use App\Core\SessionManager;
-use App\Controllers\Shop\ProductController;
+use App\Controllers\Auth\LoginController; // Controlador del login
+use App\Controllers\Auth\RegistroController; // Controlador del registro
+use App\Controllers\Shop\HomeController; // Controlador del homepage
+use App\Controllers\User\FavoritesController; // Controlador de Favoritos
+use App\Core\SessionManager; // Controlador que administra las sesiones
+use App\Controllers\Shop\ProductController; // Controlador de los productos
+use App\Controllers\Shop\PagesController; // Controlador de varias páginas como, contacto y acerca de
+use App\Controllers\User\AccountController; // Controlador de la cuenta del usuario
+use App\Controllers\Shop\SearchController;
+use App\Controllers\Shop\CartController;
 
 SessionManager::start();
 
@@ -55,7 +59,15 @@ switch ($page) {
         break;
 
     case 'signup':  // Muestra el formulario de registro
-        $filePath = __DIR__ . '/../views/auth/sign-up.html';
+        // ✅ CORRECCIÓN: Cargamos directamente la vista.
+        require_once __DIR__ . '/../views/auth/sign-up.html';
+        break;
+
+    case 'about':  // Muestra la página "Acerca de"
+        // ✅ LIMPIEZA: El controlador ya se encarga de cargar la vista, no necesitamos más.
+        $controller = new PagesController();
+        $controller->about();
+        break;
         
         if (file_exists($filePath)) {
             require_once $filePath;
@@ -111,6 +123,48 @@ switch ($page) {
             $controller->guardar();
         }
         break;
+
+    /* ========== RUTAS PARA LA CUENTA DEL USUARIO ========== */
+    case 'account':
+        $controller = new AccountController();
+        $controller->show();
+        break;
+
+    case 'update-profile':
+        $controller = new AccountController();
+        $controller->update();
+        break;
+
+    case 'search':
+        $controller = new SearchController();
+        $controller->handleSearch();
+        break;
+
+    /* ========== RUTAS PARA FAVORITOS ========== */
+    case 'favorites': // Para mostrar la página de favoritos
+        $controller = new App\Controllers\User\FavoritosController();
+        $controller->show();
+        break;
+
+    case 'toggle-favorite': // Para la acción AJAX de agregar/quitar
+        $controller = new App\Controllers\User\FavoritosController();
+        $controller->toggleFavorite();
+    break;
+
+    case 'cart':
+        $controller = new CartController();
+        $controller->show();
+        break;
+
+    case 'cart-api':
+        // Esta ruta manejará todas las acciones AJAX del carrito
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $controller = new CartController();
+            $controller->handleApiAction();
+        }
+        break;
+
+
         
 default:
     // Establecemos el código de respuesta HTTP correcto para "No Encontrado"

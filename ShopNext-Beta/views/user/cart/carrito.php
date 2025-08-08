@@ -1,55 +1,10 @@
-<?php
-// views/user/cart/carrito.php
-session_start();
-// Guardian de rutas
-require_once __DIR__ . '/../../../controllers/authGuardCliente.php'; 
-
-// Conexión a la BD
-$conexion = new mysqli("localhost", "root", "", "shopnexs");
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
-}
-
-// Obtenemos el id_cliente del usuario
-$id_usuario = $_SESSION['id_usuario'];
-$stmt_cliente = $conexion->prepare("SELECT id_cliente FROM cliente WHERE id_usuario = ?");
-$stmt_cliente->bind_param("i", $id_usuario);
-$stmt_cliente->execute();
-$cliente_res = $stmt_cliente->get_result();
-$id_cliente = ($cliente_res->num_rows > 0) ? $cliente_res->fetch_assoc()['id_cliente'] : 0;
-
-// Obtenemos el id_carrito de ese cliente
-$id_carrito = 0;
-if ($id_cliente > 0) {
-    $stmt_carrito = $conexion->prepare("SELECT id_carrito FROM carrito WHERE id_cliente = ?");
-    $stmt_carrito->bind_param("i", $id_cliente);
-    $stmt_carrito->execute();
-    $carrito_res = $stmt_carrito->get_result();
-    $id_carrito = ($carrito_res->num_rows > 0) ? $carrito_res->fetch_assoc()['id_carrito'] : 0;
-}
-
-// Obtenemos todos los productos de ESE carrito
-$items_del_carrito = [];
-if ($id_carrito > 0) {
-    $sql_items = "SELECT p.nombre_producto, p.precio, p.ruta_imagen, pc.cantidad, pc.id_producto_carrito, p.id_producto
-                  FROM producto_carrito pc
-                  JOIN producto p ON pc.id_producto = p.id_producto
-                  WHERE pc.id_carrito = ?";
-    $stmt_items = $conexion->prepare($sql_items);
-    $stmt_items->bind_param("i", $id_carrito);
-    $stmt_items->execute();
-    $resultado_items = $stmt_items->get_result();
-    $items_del_carrito = $resultado_items->fetch_all(MYSQLI_ASSOC);
-}
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tu Carrito de Compras | ShopNext</title>
-    <link rel="stylesheet" href="../../../public/css/cart/carrito.css"> 
+    <title>Carrito de Compras | ShopNext</title>
+    <link rel="stylesheet" href="css/shop/carrito.css"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
@@ -70,7 +25,7 @@ if ($id_carrito > 0) {
     <!-- Logo Principal -->
     <div class="logo-menu">
       <div class="logo">
-        <a href="../indexUser.php"><img src="../../../public/img/logo.svg" alt="ShopNext"></a>
+        <a href="../indexUser.php"><img src="img/logo.svg" alt="ShopNext"></a>
       </div>
       <!-- Menú Hamburguesa -->
       <button class="hamburger" onclick="toggleMenu()">
@@ -164,7 +119,7 @@ if ($id_carrito > 0) {
     <div class="cart-bottom">
     <div class="cart-actions">
         <a href="../../../public/index.php" class="btn btn-outline">Volver a la Tienda</a>
-        <button type="button" class="btn btn-danger" onclick="vaciarCarrito()">Vaciar Carrito</button>
+        <button type="button" class="btn btn-danger btn-vaciar-carrito">Vaciar Carrito</button>
     </div>
     
     <div class="summary-section">
@@ -180,7 +135,7 @@ if ($id_carrito > 0) {
 
 <footer class="footer-contact">
   <div class="footer-section">
-    <img src="../../../public/img/logo-positivo.png" alt="ShopNext Logo" class="footer-logo">
+    <img src="img/logo-positivo.png" alt="ShopNext Logo" class="footer-logo">
   </div>
   <div class="footer-section">
     <h3>Información</h3>
@@ -201,17 +156,22 @@ if ($id_carrito > 0) {
   <div class="footer-section">
     <h3>Contacto</h3>
     <ul class="social-icons">
-      <li><a href="#"><img src="../../../public/img/Icon-Twitter.png" alt="Twitter"></a></li>
-      <li><a href="#"><img src="../../../public/img/icon-instagram.png" alt="Instagram"></a></li>
-      <li><a href="#"><img src="../../../public/img/Icon-Linkedin.png" alt="LinkedIn"></a></li>
+      <li><a href="#"><img src="img/Icon-Twitter.png" alt="Twitter"></a></li>
+      <li><a href="#"><img src="img/icon-instagram.png" alt="Instagram"></a></li>
+      <li><a href="#"><img src="img/Icon-Linkedin.png" alt="LinkedIn"></a></li>
     </ul>
   </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="../../../public/js/alertas.js"></script>
-<script src="../../../public/js/cart/carrito.js"></script>
-<script src="../../../public/js/dropdown.js"></script>
+
+<script>
+    const CART_API_URL = '<?php echo BASE_URL; ?>index.php?action=cart-api';
+</script>
+
+<script src="<?php echo BASE_URL; ?>js/common/alertas.js"></script>
+<script src="<?php echo BASE_URL; ?>js/shop/carrito.js"></script>
+<script src="<?php echo BASE_URL; ?>js/user/dropdown.js"></script>
 
 </body>
 </html>

@@ -91,4 +91,27 @@ class SessionManager {
         self::set('last_activity', time());
         return false;
     }
+    /**
+     * Obtiene un mensaje "flash" de la sesión y lo elimina inmediatamente después.
+     * Útil para notificaciones que solo deben mostrarse una vez.
+     *
+     * @param string $key La clave del mensaje flash.
+     * @param mixed $default El valor a devolver si la clave no existe.
+     * @return mixed El valor del mensaje de la sesión o el valor por defecto.
+     */
+    public static function flash($key, $default = null) {
+        if (self::has($key)) {
+            // Guarda el valor de la sesión en una variable temporal
+            $value = self::get($key);
+            
+            // Elimina el valor de la sesión para que no vuelva a aparecer
+            self::remove($key);
+            
+            // Devuelve el valor que se recuperó
+            return $value;
+        }
+        
+        // Si no se encontró la clave, devuelve el valor por defecto
+        return $default;
+    }
 }

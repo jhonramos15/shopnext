@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="../../public/css/shop/aboutUS.css">
+    <link rel="stylesheet" href="css/shop/about-us.css">
+    <link rel="stylesheet" href="css/base.css">
 </head>
 <body>
 <header>
@@ -25,7 +26,7 @@
     <!-- Logo Principal -->
     <div class="logo-menu">
       <div class="logo">
-        <a href="../../public/index.php"><img src="../../public/img/logo.svg" alt="ShopNext"></a>
+        <a href="index.php"><img src="img/logo.svg" alt="ShopNext"></a>
       </div>
       <!-- Menú Hamburguesa -->
       <button class="hamburger" onclick="toggleMenu()">
@@ -33,28 +34,56 @@
       </button>
     </div>
 
-    <!-- Nav Menú -->
-    <nav class="nav-links" id="navMenu">
-      <a href="../../public/index.php">Inicio</a>
-      <a href="../auth/signUp.html">Regístrate</a>
-      <a href="contact.html">Contacto</a>
-      <a href="aboutUs.html">Acerca de</a>
+        <!-- Nav Menú -->
+    <nav class="nav-links">
+        <a href="/shopnext/ShopNext-Beta/public/index.php">Inicio</a>
+
+        <?php if ($data['usuario_logueado']): ?>
+            <a href="?action=products">Productos</a>
+            <a href="?action=contact">Contacto</a>
+        <?php else: ?>
+            <a href="?action=signup">Regístrate</a>
+            <a href="index.php?action=contact">Contacto</a>
+            <a href="?action=about">Acerca de</a>
+        <?php endif; ?>
     </nav>
 
-    <!-- Buscador -->
-    <div class="icons">
-      <div class="buscador">
-        <input type="text" placeholder="¿Qué estás buscando?">
-        <button><i class="fa-solid fa-magnifying-glass"></i></button>
-      </div>
-      <!-- Favoritos -->
-      <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
-      <!-- Carrito -->
-      <button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
-      <!-- Iniciar Sesión -->
-      <a href="../auth/login.php" class="login-btn">Iniciar Sesión</a>
+        <!-- Buscador -->
+        <div class="icons">
+            <div class="buscador">
+                <input type="text" placeholder="¿Qué estás buscando?">
+                <button><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+              <!-- Favoritos y Carrito, logueados -->
+      <?php if ($data['usuario_logueado']): ?>
+        <a href="/shopnext/ShopNext-Beta/views/user/pages/favoritos.php" title="Favoritos"><i class="fa-solid fa-heart"></i></a>
+        <a href="/shopnext/ShopNext-Beta/views/user/cart/carrito.php" title="Carrito"><i class="fa-solid fa-cart-shopping"></i></a>
+        <!-- Ícono de usuario, solo si está logueado -->
+        <div class="user-menu-container">
+            <i class="fas fa-user user-icon"></i>
+            
+            <div class="dropdown-content" id="dropdownMenu">
+              <a href="/shopnext/ShopNext-Beta/views/pages/account.php">
+                <i class="fas fa-user-circle"></i> <span>Mi Perfil</span>
+              </a>
+              <a href="/shopnext/ShopNext-Beta/views/user/pages/pedidos.php">
+                <i class="fas fa-box"></i> <span>Mis Pedidos</span>
+              </a>
+              <hr>
+              <a href="index.php?action=logout" class="logout-link">
+                <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
+              </a>
+            </div>
+        </div>
+        <!-- Favoritos y Carrito, no logueados -->
+      <?php else: ?>
+        <a href="/shopnext/ShopNext-Beta/views/auth/login.php" title="Favoritos"><i class="fa-solid fa-heart"></i></a>
+        <a href="/shopnext/ShopNext-Beta/views/auth/login.php" title="Carrito"><i class="fa-solid fa-cart-shopping"></i></a>
+        <a href="?action=login" class="login-btn">Iniciar Sesión</a>
+      <?php endif; ?>
+        </div>
+    
     </div>
-  </div>
 </header>
 <section class="main-section">
     <div id="history">
@@ -78,7 +107,7 @@
         </div>
         <!-- Contenedor de imagen -->
         <div id="img-history">
-            <img src="../../public/img/about-us im.png" alt="About Us">
+            <img src="img/about-us im.png" alt="About Us">
         </div>
     </div>
 </section>
@@ -109,33 +138,33 @@
 </section>
 <section class="team-section">
     <div class="team-member">
-        <img src="../../public/img/frame-1.jpg" alt="Perfil Jhon" class="profile-img">
+        <img src="img/frame-1.jpg" alt="Perfil Jhon" class="profile-img">
         <h2>Jhon Ramos</h2>
         <h3>Desarrollador Front-End</h3>
         <div class="social-icons">
-            <img src="../../public/img/Icon-Twitter.png" alt="Twitter">
-            <img src="../../public/img/icon-instagram.png" alt="Instagram">
-            <img src="../../public/img/Icon-Linkedin.png" alt="LinkedIn">
+            <img src="img/Icon-Twitter.png" alt="Twitter">
+            <img src="img/icon-instagram.png" alt="Instagram">
+            <img src="img/Icon-Linkedin.png" alt="LinkedIn">
         </div>
     </div>
     <div class="team-member">
-        <img src="../../public/img/frame-2.png" alt="Perfil Brayan" class="profile-img">
+        <img src="img/frame-2.png" alt="Perfil Brayan" class="profile-img">
         <h2>Brayan Ardila</h2>
         <h3>Desarrollador Full-Stack</h3>
         <div class="social-icons">
-            <img src="../../public/img/Icon-Twitter.png" alt="Twitter">
-            <img src="../../public/img/icon-instagram.png" alt="Instagram">
-            <img src="../../public/img/Icon-Linkedin.png" alt="LinkedIn">
+            <img src="img/Icon-Twitter.png" alt="Twitter">
+            <img src="img/icon-instagram.png" alt="Instagram">
+            <img src="img/Icon-Linkedin.png" alt="LinkedIn">
         </div>
     </div>
     <div class="team-member">
-        <img src="../../public/img/frame-3.jpg" alt="Perfil Brayan" class="profile-img">
+        <img src="img/frame-3.jpg" alt="Perfil Brayan" class="profile-img">
         <h2>Joseph Vidal</h2>
         <h3>Desarrollador Back-End</h3>
         <div class="social-icons">
-            <img src="../../public/img/Icon-Twitter.png" alt="Twitter">
-            <img src="../../public/img/icon-instagram.png" alt="Instagram">
-            <img src="../../public/img/Icon-Linkedin.png" alt="LinkedIn">
+            <img src="img/Icon-Twitter.png" alt="Twitter">
+            <img src="img/icon-instagram.png" alt="Instagram">
+            <img src="img/Icon-Linkedin.png" alt="LinkedIn">
         </div>
     </div>
 </section>
@@ -143,21 +172,21 @@
     <div class="benefits-container">
         <div class="benefit-box">
             <div class="benefit-icon">
-                <img src="../../public/img/security.png" alt="Security" />
+                <img src="img/security.png" alt="Security" />
             </div>
             <h3>ENVÍO RÁPIDO Y GRATUITO</h3>
             <p>Envíos con descuento desde los 140.000 COP</p>
         </div>
         <div class="benefit-box">
             <div class="benefit-icon">
-                <img src="../../public/img/services.png" alt="Customer Support" />
+                <img src="img/services.png" alt="Customer Support" />
             </div>
             <h3>ATENCIÓN AL CLIENTE 24/7</h3>
             <p>Soporte amigable 24/7</p>
         </div>
         <div class="benefit-box">
             <div class="benefit-icon">
-                <img src="../../public/img/support.png" alt="Guarantee" />
+                <img src="img/support.png" alt="Guarantee" />
             </div>
             <h3>GARANTÍA DE DEVOLUCIÓN</h3>
             <p>30 días para tu reembolso</p>
@@ -166,7 +195,7 @@
 </section>
 <footer class="footer-contact">
   <div class="footer-section">
-    <img src="../../public/img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
+    <img src="img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
   </div>
   <div class="footer-section">
     <h3>Información</h3>
@@ -187,12 +216,13 @@
   <div class="footer-section">
     <h3>Contacto</h3>
     <ul class="social-icons">
-      <li><a href="#"><img src="../../public/img/Icon-Twitter.png" alt="Twitter"></a></li>
-      <li><a href="#"><img src="../../public/img/icon-instagram.png" alt="Instagram"></a></li>
-      <li><a href="#"><img src="../../public/img/Icon-Linkedin.png" alt="LinkedIn"></a></li>
+      <li><a href="#"><img src="img/Icon-Twitter.png" alt="Twitter"></a></li>
+      <li><a href="#"><img src="img/icon-instagram.png" alt="Instagram"></a></li>
+      <li><a href="#"><img src="img/Icon-Linkedin.png" alt="LinkedIn"></a></li>
     </ul>
   </div>
 </footer>
-<script src="../../public/js/aboutUs.js"></script>
+<script src="js/common/about-us.js"></script>
+<script src="js/shop/index.js"></script>
 </body>
 </html>

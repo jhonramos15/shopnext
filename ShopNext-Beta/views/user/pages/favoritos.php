@@ -1,48 +1,15 @@
-<?php
-session_start();
-// Guardián para asegurar que el usuario sea un cliente logueado
-require_once __DIR__ . '/../../../controllers/authGuardCliente.php';
-
-// Conexión a la base de datos
-$conexion = new mysqli("localhost", "root", "", "shopnexs");
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
-}
-
-// Obtención del id_cliente a partir del id_usuario de la sesión
-$id_cliente = null;
-if (isset($_SESSION['id_usuario'])) {
-    $id_usuario_session = $_SESSION['id_usuario'];
-    $stmt_cliente = $conexion->prepare("SELECT id_cliente FROM cliente WHERE id_usuario = ?");
-    $stmt_cliente->bind_param("i", $id_usuario_session);
-    $stmt_cliente->execute();
-    $resultado_cliente = $stmt_cliente->get_result();
-    if ($resultado_cliente->num_rows > 0) {
-        $id_cliente = $resultado_cliente->fetch_assoc()['id_cliente'];
-    }
-    $stmt_cliente->close();
-}
-
-// Obtener los productos favoritos de ese cliente
-$productos_favoritos = [];
-if ($id_cliente !== null) {
-    $sql = "SELECT p.id_producto, p.nombre_producto, p.precio, p.ruta_imagen
-            FROM producto p
-            JOIN lista_favoritos lf ON p.id_producto = lf.id_producto
-            WHERE lf.id_cliente = ?";
-    $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("i", $id_cliente);
-    $stmt->execute();
-    $resultado_favoritos = $stmt->get_result();
-    $productos_favoritos = $resultado_favoritos->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-}
-$conexion->close();
-?>
-
-<link rel="stylesheet" href="/shopnext/ShopNext-Beta/public/css/favoritos.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/base.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/user/favoritos.css">
+    <link rel="icon" href="<?php echo BASE_URL; ?>img/icon_principal.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
 <header>
   <!-- Header Negro -->
   <div class="header-top">
@@ -69,9 +36,9 @@ $conexion->close();
 
     <!-- Nav Menú -->
     <nav class="nav-links" id="navMenu">
-      <a href="../../../public/index.php">Inicio</a>
-      <a href="pedidos.php">Pedidos</a>
-      <a href="contact.php">Contacto</a>
+      <a href="?action=home">Inicio</a>
+      <a href="?action=products">Productos</a>
+      <a href="?action=contact">Contacto</a>
     </nav>
 
     <!-- Buscador -->
@@ -84,68 +51,71 @@ $conexion->close();
         <i class="fa-solid fa-cart-shopping" style="color: #121212;"></i>
       </a>
       <!-- Ícono de usuario -->
-        <div class="user-menu-container">
-          <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
-          <div class="dropdown-content" id="dropdownMenu">
-            <a href="../pages/account.php">Perfil</a>
-            <a href="pedidos.php">Pedidos</a>
-            <a href="../../../controllers/logout.php">Cerrar sesión</a>
-          </div>
-        </div>   
+      <div class="user-menu-container">
+            <i class="fas fa-user user-icon"></i>
+            
+            <div class="dropdown-content" id="dropdownMenu">
+              <a href="?action=account">
+                <i class="fas fa-user-circle"></i> <span>Mi Perfil</span>
+              </a>
+              <a href="/shopnext/ShopNext-Beta/views/user/pages/pedidos.php">
+                <i class="fas fa-box"></i> <span>Mis Pedidos</span>
+              </a>
+              <hr>
+              <a href="index.php?action=logout" class="logout-link">
+                <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
+              </a>
+            </div>
+        </div>
     </div>
   </div>
 </header>
-
 <main class="wishlist-container">
-    <div class="wishlist-header">
-        <h1>Mi Lista de Deseos (<?php echo count($productos_favoritos); ?>)</h1>
-        <button class="move-all-btn">Mover todo al Carrito</button>
-    </div>
+    <h1>Mi Lista de Deseos</h1>
 
-    <?php if (count($productos_favoritos) > 0): ?>
-        <div class="wishlist-grid">
-            <?php foreach ($productos_favoritos as $producto): ?>
-                <div class="product-card" data-product-id="<?php echo $producto['id_producto']; ?>">
-                    <div class="product-image-wrapper">
-                        <button class="delete-btn" title="Eliminar de favoritos">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
+    <?php if (empty($data['favoritos'])): ?>
+        <p class="empty-wishlist">Tu lista de deseos está vacía.</p>
+    <?php else: ?>
+        <div class="product-grid">
+            
+            <?php foreach ($data['favoritos'] as $producto): ?>
+                <div class="product-card" id="product-<?php echo $producto['id_producto']; ?>">
+                    <div class="product-image-container">
+                        <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($producto['ruta_imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre_producto']); ?>" class="product-img">
                         
-                        <a href="../../pages/productoDetalle.php?id=<?php echo $producto['id_producto']; ?>">
-                            <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($producto['ruta_imagen'] ?: 'default.png'); ?>" alt="<?php echo htmlspecialchars($producto['nombre_producto']); ?>">
-                        </a>
-
-                        <button class="add-to-cart-btn">
-                            <i class="fas fa-shopping-cart"></i> Añadir al Carrito
-                        </button>
+                        <div class="product-overlay">
+                            <button class="add-to-cart-btn" data-id="<?php echo $producto['id_producto']; ?>">Añadir al carrito</button>
+                            
+                            <div class="product-actions">
+                                <button class="remove-from-wishlist" data-id="<?php echo $producto['id_producto']; ?>">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="product-details">
-                        <h3><?php echo htmlspecialchars($producto['nombre_producto']); ?></h3>
-                        <p class="product-price">$<?php echo number_format($producto['precio'], 0, ',', '.'); ?></p>
+                    
+                    <div class="product-info">
+                        <h4><?php echo htmlspecialchars($producto['nombre_producto']); ?></h4>
+                        <p class="price">$<?php echo number_format($producto['precio'], 2); ?></p>
                         <div class="product-rating">
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="far fa-star"></i>
-                            <span class="review-count">(65)</span>
+                            <span>(88)</span>
                         </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
-        </div>
-    <?php else: ?>
-        <div class="empty-wishlist">
-            <p>Tu lista de deseos está vacía. ¡Explora nuestros productos y añade tus favoritos!</p>
+                <?php endforeach; ?>
+
         </div>
     <?php endif; ?>
-
 </main>
-
 <!-- Footer -->
      <footer class="footer-contact">
       <div class="footer-section">
-          <img src="../../../public/img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
+          <img src="img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
       </div>
 
       <div class="footer-section">
@@ -170,15 +140,16 @@ $conexion->close();
           <h3>Contacto</h3>
           <ul>
               <li><a>Redes Sociales</a></li>
-              <img src="../../../public/img/Icon-Twitter.png" alt="Icon Twitter">
-              <img src="../../../public/img/icon-instagram.png" alt="Icon Instagram">
-              <img src="../../../public/img/Icon-Linkedin.png" alt="Icon LinkedIn">
+              <img src="img/Icon-Twitter.png" alt="Icon Twitter">
+              <img src="img/icon-instagram.png" alt="Icon Instagram">
+              <img src="img/Icon-Linkedin.png" alt="Icon LinkedIn">
             </ul>
           </div>
     </footer>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
-<script src="/shopnext/ShopNext-Beta/public/js/user/deleteFavorito.js"></script>
+<script src="/shopnext/ShopNext-Beta/public/js/user/favorite-actions.js"></script>
 <script src="/shopnext/ShopNext-Beta/public/js/cart/carrito.js"></script>
 <script src="/shopnext/ShopNext-Beta/public/js/user/wishlistActions.js"></script>
+<script src="/shopnext/ShopNext-Beta/public/js/user/dropdown.js"></script>
 </body>
 </html>

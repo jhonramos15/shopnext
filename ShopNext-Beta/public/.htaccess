@@ -1,17 +1,16 @@
-ErrorDocument 404 /shopnext/ShopNext-Beta/views/error/404.html
-ErrorDocument 403 /shopnext/ShopNext-Beta/views/error/403.html
-ErrorDocument 500 /shopnext/ShopNext-Beta/views/error/500.html
-ErrorDocument 401 /shopnext/ShopNext-Beta/views/error/401.html
+<IfModule mod_rewrite.c>
+    # Activa el motor de reescritura
+    RewriteEngine On
 
-Options -MultiViews
-RewriteEngine On
+    # Establece la carpeta base del proyecto para que las rutas funcionen bien
+    RewriteBase /shopnext/ShopNext-Beta/
 
-# Si la petición NO es para un archivo existente
-RewriteCond %{REQUEST_FILENAME} !-f
-# Si la petición NO es para un directorio existente
-RewriteCond %{REQUEST_FILENAME} !-d
+    # --- La Condición Clave ---
+    # Si la URL que pide el navegador NO es un archivo que ya existe...
+    RewriteCond %{REQUEST_FILENAME} !-f
+    # Y si la URL que pide el navegador NO es una carpeta que ya existe...
+    RewriteCond %{REQUEST_FILENAME} !-d
 
-# CORRECCIÓN: Redirige todas las peticiones a index.php usando ?action=
-# Ahora tu .htaccess y tu index.php hablarán el mismo "idioma".
-RewriteRule ^(.*)$ index.php?action=$1 [L,QSA]
-
+    # ...ENTONCES, y solo entonces, redirige la petición a tu controlador frontal
+    RewriteRule ^(.*)$ public/index.php?/$1 [L,QSA]
+</IfModule>

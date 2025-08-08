@@ -1,56 +1,11 @@
-<?php
-// Inicia o reanuda la sesión actual.
-session_start();
-
-// 1. INCLUIMOS LOS ARCHIVOS IMPORTANTES
-require_once '../../config/conexion.php';
-require_once '../../controllers/authGuardCliente.php';
-
-// 2. VERIFICAMOS LA SESIÓN DEL USUARIO
-if (!isset($_SESSION['id_usuario'])) {
-    header("Location: login.php");
-    exit;
-}
-
-// 3. OBTENEMOS EL ID Y BUSCAMOS TODOS LOS DATOS DEL USUARIO
-$id_usuario = $_SESSION['id_usuario'];
-
-$db = new Conexion();
-$conexion = $db->conectar();
-
-// ¡ESTA ES LA CONSULTA CORRECTA! Une las tablas para obtener todos los datos.
-$stmt = $conexion->prepare(
-    "SELECT 
-        u.correo_usuario,
-        c.nombre,
-        c.telefono,
-        c.genero,
-        c.fecha_nacimiento,
-        c.foto_perfil
-    FROM usuario u
-    LEFT JOIN cliente c ON u.id_usuario = c.id_usuario
-    WHERE u.id_usuario = ?"
-);
-
-$stmt->bind_param("i", $id_usuario);
-$stmt->execute();
-$resultado = $stmt->get_result();
-$usuario = $resultado->fetch_assoc();
-
-// 4. SI EL USUARIO NO EXISTE EN LA BD, LO REDIRIGIMOS
-if (!$usuario) {
-    header("Location: ../../controllers/logout.php");
-    exit;
-}
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="../../public/css/account.css">
+    <link rel="stylesheet" href="css/user/account.css">
+    <link rel="stylesheet" href="css/base.css">
     <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>ShopNext | Mi Cuenta</title>
@@ -73,7 +28,7 @@ if (!$usuario) {
     <!-- Logo Principal -->
     <div class="logo-menu">
       <div class="logo">
-        <a href="indexUser.php"><img src="../../public/img/logo.svg" alt="ShopNext"></a>
+        <a href="indexUser.php"><img src="img/logo.svg" alt="ShopNext"></a>
       </div>
       <!-- Menú Hamburguesa -->
       <button class="hamburger" onclick="toggleMenu()">
@@ -83,8 +38,9 @@ if (!$usuario) {
 
     <!-- Nav Menú -->
     <nav class="nav-links" id="navMenu">
-      <a href="../user/indexUser.php">Inicio</a>
-      <a href="../user/pages/contact.php">Contacto</a>
+        <a href="/shopnext/ShopNext-Beta/public/index.php">Inicio</a>
+        <a href="?action=products">Productos</a>
+        <a href="?action=contact">Contacto</a>
     </nav>
 
     <!-- Buscador -->
@@ -95,14 +51,22 @@ if (!$usuario) {
       </div>
       <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
       <a href="../user/cart/carrito.php"><button class="icon-btn"><i class="fa-solid fa-cart-shopping"></i></button></a>
-      <!-- Ícono de usuario -->
+        <!-- Ícono de usuario, solo si está logueado -->
         <div class="user-menu-container">
-          <i class="fas fa-user user-icon" style="color: #121212;" onclick="toggleDropdown()"></i>
-          <div class="dropdown-content" id="dropdownMenu">
-            <a href="account.php">Perfil</a>
-            <a href="../user/pages/pedidos.php">Pedidos</a>
-            <a href="../../controllers/logout.php">Cerrar sesión</a>
-          </div>
+            <i class="fas fa-user user-icon"></i>
+            
+            <div class="dropdown-content" id="dropdownMenu">
+              <a href="?action=account">
+                <i class="fas fa-user-circle"></i> <span>Mi Perfil</span>
+              </a>
+              <a href="/shopnext/ShopNext-Beta/views/user/pages/pedidos.php">
+                <i class="fas fa-box"></i> <span>Mis Pedidos</span>
+              </a>
+              <hr>
+              <a href="index.php?action=logout" class="logout-link">
+                <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
+              </a>
+            </div>
         </div>      
     </div>
   </div>
@@ -111,7 +75,7 @@ if (!$usuario) {
     <main class="account-container">
         <aside class="account-sidebar">
             <div class="profile-picture-container">
-                <img src="/shopnext/ShopNext-Beta/public/uploads/avatars/<?php echo htmlspecialchars($usuario['foto_perfil'] ?? 'default_avatar.png'); ?>" alt="Foto de Perfil" id="profile-pic">
+                <img src="<?php echo BASE_URL; ?>uploads/avatars/<?php echo htmlspecialchars($usuario['foto_perfil'] ?? 'default_avatar.png'); ?>" alt="Foto de Perfil" id="profile-pic">
             </div>
             <ul>
                 <li class="active"><a href="#">Mi Cuenta</a></li>
@@ -122,7 +86,7 @@ if (!$usuario) {
         </aside>
 
         <section class="account-content">
-            <form id="profile-form" action="/shopnext/ShopNext-Beta/controllers/updatePerfil.php" method="POST" enctype="multipart/form-data">
+            <form id="profile-form" action="index.php?action=update-profile" method="POST" enctype="multipart/form-data">
                 <h2>Editar Perfil</h2>
                 
                 <div class="form-row">
@@ -186,14 +150,40 @@ if (!$usuario) {
             </form>
         </section>
     </main>
+<footer class="footer-contact">
+  <div class="footer-section">
+    <img src="img/logo-positivo.png" alt="ShopNexs Logo" class="footer-logo">
+  </div>
+  <div class="footer-section">
+    <h3>Información</h3>
+    <ul>
+      <li><a href="aboutUs.html">Acerca de</a></li>
+      <li><a href="contact.html">Contacto</a></li>
+      <li><a href="../auth/signUp.html">Regístrate</a></li>
+    </ul>
+  </div>
+  <div class="footer-section">
+    <h3>Soporte</h3>
+    <ul>
+      <li><a>soporteshopnexts@gmail.com</a></li>
+      <li><a>Calle 133 # 123 - 34 Piso 12</a></li>
+      <li><a>+57 343 948 9283</a></li>
+    </ul>
+  </div>
+  <div class="footer-section">
+    <h3>Contacto</h3>
+    <ul class="social-icons">
+      <li><a href="#"><img src="img/Icon-Twitter.png" alt="Twitter"></a></li>
+      <li><a href="#"><img src="img/icon-instagram.png" alt="Instagram"></a></li>
+      <li><a href="#"><img src="img/Icon-Linkedin.png" alt="LinkedIn"></a></li>
+    </ul>
+  </div>
+</footer>
 
-    <footer>
-        </footer>
-
-    <script src="../../public/js/alertas.js"></script>
-    <script src="../../public/js/account.js"></script>
-    <script src="../../public/js/menuHamburguer.js"></script>
-    <script src="../../public/js/dropdown.js"></script>
+    <script src="js/common/alertas.js"></script>
+    <script src="js/user/account.js"></script>
+    <script src="js/common/menu-hamburguer.js"></script>
+    <script src="js/user/dropdown.js"></script>
 
 </body>
 </html>

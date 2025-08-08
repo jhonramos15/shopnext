@@ -53,16 +53,16 @@
                 <input type="text" placeholder="¿Qué estás buscando?">
                 <button><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
-              <!-- Favoritos y Carrito, logueados -->
+      <!-- Favoritos y Carrito, logueados -->
       <?php if ($data['usuario_logueado']): ?>
-        <a href="/shopnext/ShopNext-Beta/views/user/pages/favoritos.php" title="Favoritos"><i class="fa-solid fa-heart"></i></a>
+        <a href="?action=favorites" title="Favoritos"><i class="fa-solid fa-heart"></i></a>
         <a href="/shopnext/ShopNext-Beta/views/user/cart/carrito.php" title="Carrito"><i class="fa-solid fa-cart-shopping"></i></a>
         <!-- Ícono de usuario, solo si está logueado -->
         <div class="user-menu-container">
             <i class="fas fa-user user-icon"></i>
             
             <div class="dropdown-content" id="dropdownMenu">
-              <a href="/shopnext/ShopNext-Beta/views/pages/account.php">
+              <a href="?action=account">
                 <i class="fas fa-user-circle"></i> <span>Mi Perfil</span>
               </a>
               <a href="/shopnext/ShopNext-Beta/views/user/pages/pedidos.php">
@@ -73,7 +73,7 @@
                 <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
               </a>
             </div>
-        </div>
+        </div>      
         <!-- Favoritos y Carrito, no logueados -->
       <?php else: ?>
         <a href="/shopnext/ShopNext-Beta/views/auth/login.php" title="Favoritos"><i class="fa-solid fa-heart"></i></a>
@@ -277,6 +277,7 @@
 </script>
 
 <script src="<?php echo BASE_URL; ?>js/shop/product-details.js"></script>
+<script src="<?php echo BASE_URL; ?>js/user/dropdown.js"></script>
 
 </body>
 </html>

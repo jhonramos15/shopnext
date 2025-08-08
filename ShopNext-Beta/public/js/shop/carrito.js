@@ -1,133 +1,85 @@
 /**
  * ======================================================================
- * FUNCIÓN GLOBAL PARA AÑADIR AL CARRITO
- * Se define en el ámbito global para que sea accesible desde cualquier
- * 'onclick' en tu HTML.
+ * ARCHIVO: carrito.js (Versión Final y Refactorizada)
  * ======================================================================
  */
-function agregarAlCarrito(productoId) {
-    const cantidadInput = document.getElementById('quantity');
-    const cantidad = cantidadInput ? cantidadInput.value : 1;
 
+// NOTA: Esta variable la define la vista PHP (carrito.php)
+// const CART_API_URL = 'index.php?action=cart-api';
+
+/**
+ * Función central para todas las interacciones con la API del carrito.
+ */
+function callCartApi(action, data = {}) {
     const formData = new FormData();
-    formData.append('id_producto', productoId);
-    formData.append('cantidad', cantidad);
+    formData.append('action', action);
 
-    fetch("/shopnext/ShopNext-Beta/controllers/cart/carritoController.php", {
+    for (const key in data) {
+        formData.append(key, data[key]);
+    }
+
+    return fetch(CART_API_URL, {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire('¡Añadido!', 'El producto se ha añadido a tu carrito.', 'success');
-        } else if (data.error && data.error === 'login_required') {
-            Swal.fire('Inicia Sesión', 'Necesitas iniciar sesión para poder comprar.', 'info');
-        } else {
-            Swal.fire('Error', data.error || 'No se pudo añadir el producto.', 'error');
-        }
+    .then(response => {
+        if (!response.ok) throw new Error('Error en la respuesta del servidor');
+        return response.json();
     })
     .catch(error => {
-        console.error('Error en fetch:', error);
+        console.error('Error en la API del carrito:', error);
         Swal.fire('Error de Conexión', 'No se pudo comunicar con el servidor.', 'error');
     });
 }
 
 /**
- * ======================================================================
- * LÓGICA QUE SE EJECUTA CUANDO EL DOM ESTÁ LISTO
- * ======================================================================
+ * Función global para añadir un producto al carrito.
+ */
+function agregarAlCarrito(productoId) {
+    const cantidadInput = document.getElementById('quantity-input');
+    const cantidad = cantidadInput ? cantidadInput.value : 1;
+
+    callCartApi('add', { id_producto: productoId, cantidad: cantidad })
+        .then(response => {
+            if (response && response.success) {
+                Swal.fire('¡Añadido!', 'El producto se ha añadido a tu carrito.', 'success');
+            } else {
+                const message = response ? response.message : 'No se pudo añadir el producto.';
+                Swal.fire('Error', message, 'error');
+            }
+        });
+}
+
+/**
+ * Lógica específica para la página del carrito.
  */
 document.addEventListener('DOMContentLoaded', function () {
+    const cartContainer = document.querySelector('.cart-container');
+    if (!cartContainer) return; // Si no es la página del carrito, no seguir.
 
-    // Listener para los formularios de "Añadir al carrito" (como en el index).
-    document.addEventListener('submit', function(event) {
-        if (event.target.matches('.add-to-cart-form')) {
-            event.preventDefault();
-            const form = event.target;
-            const productoIdInput = form.querySelector('input[name="id_producto"]');
-            if (productoIdInput) {
-                agregarAlCarrito(productoIdInput.value);
-            }
-        }
-    });
-
-    // --- LÓGICA PARA LA VISTA DEL CARRITO (carrito.php) ---
-    const cartItemsContainer = document.getElementById('cart-items');
-    if (!cartItemsContainer) return;
-
-    const updateCartTotal = () => {
-        let total = 0;
-        document.querySelectorAll('.cart-item').forEach(item => {
-            const price = parseFloat(item.querySelector('.product-price').dataset.price);
-            const quantity = parseInt(item.querySelector('.quantity-input').value);
-            total += price * quantity;
-        });
-        const totalElement = document.getElementById('cart-total');
-        if (totalElement) {
-            totalElement.textContent = `$${total.toLocaleString('es-CO')}`;
-        }
-    };
-
-    const callApi = (action, id, quantity = null) => {
-        const formData = new FormData();
-        formData.append('action', action);
-        formData.append('id_producto_carrito', id);
-        if (quantity !== null) {
-            formData.append('cantidad', quantity);
-        }
-
-        return fetch('/shopnext/ShopNext-Beta/controllers/cart/carritoAPI.php', {
-            method: 'POST',
-            body: formData
-        }).then(response => response.json())
-          .catch(error => Swal.fire('Error', 'Hubo un problema de conexión.', 'error'));
-    };
-
-    cartItemsContainer.addEventListener('click', function (event) {
+    // Event listener para los botones de eliminar y vaciar.
+    cartContainer.addEventListener('click', (event) => {
         const target = event.target;
         const cartItem = target.closest('.cart-item');
-        if (!cartItem) return;
 
-        const id = cartItem.dataset.id;
-        const quantityInput = cartItem.querySelector('.quantity-input');
-        const price = parseFloat(cartItem.querySelector('.product-price').dataset.price);
-        const subtotalElement = cartItem.querySelector('.product-subtotal');
-        let quantity = parseInt(quantityInput.value);
+        // Botón para eliminar un solo producto.
+        if (target.closest('.remove-item-btn')) {
+            event.preventDefault();
+            const idProducto = target.closest('.remove-item-btn').dataset.idProducto;
 
-        if (target.matches('.increase-qty')) {
-            quantity++;
-            quantityInput.value = quantity;
-            subtotalElement.textContent = `$${(price * quantity).toLocaleString('es-CO')}`;
-            callApi('update', id, quantity).then(() => updateCartTotal());
-        }
-
-        if (target.matches('.decrease-qty')) {
-            if (quantity > 1) {
-                quantity--;
-                quantityInput.value = quantity;
-                subtotalElement.textContent = `$${(price * quantity).toLocaleString('es-CO')}`;
-                callApi('update', id, quantity).then(() => updateCartTotal());
-            }
-        }
-
-        if (target.closest('.delete-product')) {
             Swal.fire({
                 title: '¿Quitar producto?',
-                text: "El producto será eliminado de tu carrito.",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Sí, quitar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    callApi('delete', id).then(response => {
+                    callCartApi('remove', { id_producto: idProducto }).then(response => {
                         if (response && response.success) {
-                            cartItem.remove();
-                            updateCartTotal();
-                            Swal.fire('Eliminado', 'El producto ha sido quitado del carrito.', 'success');
+                            cartItem.remove(); // Elimina el elemento del DOM
+                            // Aquí puedes añadir una función para recalcular el total
+                            Swal.fire('Eliminado', 'El producto ha sido quitado.', 'success');
                         } else {
                             Swal.fire('Error', 'No se pudo quitar el producto.', 'error');
                         }
@@ -135,72 +87,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         }
+
+        // Botón para vaciar todo el carrito.
+        if (target.closest('.btn-vaciar-carrito')) {
+            Swal.fire({
+                title: '¿Vaciar todo el carrito?',
+                text: "Esta acción eliminará todos los productos.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, ¡vaciarlo!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Llama a la API con la acción 'clear'
+                    callCartApi('clear').then(response => {
+                        if (response && response.success) {
+                            // Recarga la página para mostrar el carrito vacío.
+                            window.location.reload();
+                        } else {
+                            Swal.fire('Error', 'No se pudo vaciar el carrito.', 'error');
+                        }
+                    });
+                }
+            });
+        }
     });
 });
-
-/**
- * Función para eliminar un producto específico del carrito.
- * @param {number} idProducto - El ID del producto a eliminar.
- */
-function eliminarDelCarrito(idProducto) {
-    Swal.fire({
-        title: '¿Estás seguro?',
-        text: "Este producto se eliminará de tu carrito.",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#8E06C2',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, ¡eliminar!',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // ===== RUTA CORREGIDA AQUÍ =====
-            fetch('/shopnext/ShopNext-Beta/controllers/cart/carritoController.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `action=eliminar&id_producto=${idProducto}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.reload();
-                } else {
-                    Swal.fire('Error', data.message, 'error');
-                }
-            });
-        }
-    });
-}
-
-/**
- * Función para vaciar completamente el carrito de compras.
- */
-function vaciarCarrito() {
-    Swal.fire({
-        title: '¿Vaciar todo el carrito?',
-        text: "Esta acción eliminará todos los productos y no se puede deshacer.",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#8E06C2',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, ¡vaciarlo!',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // ===== Y RUTA CORREGIDA AQUÍ =====
-            fetch('/shopnext/ShopNext-Beta/controllers/cart/carritoController.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: 'action=vaciar'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.reload();
-                } else {
-                    Swal.fire('Error', data.message, 'error');
-                }
-            });
-        }
-    });
-}

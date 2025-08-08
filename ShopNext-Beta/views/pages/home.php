@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/shop/home.css">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/base.css">
+    <link rel="stylesheet" href="/shopnext/ShopNext-Beta/public/css/base.css">
+    <link rel="stylesheet" href="/shopnext/ShopNext-Beta/public/css/shop/home.css">
     <link rel="icon" href="<?php echo BASE_URL; ?>img/icon_principal.ico">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <title>ShopNext | Inicio</title>
@@ -31,7 +31,7 @@
             <a href="?action=contact">Contacto</a>
         <?php else: ?>
             <a href="?action=signup">Regístrate</a>
-            <a href="index.php?action=contact">Contacto</a>
+            <a href="?action=contact">Contacto</a>
             <a href="?action=about">Acerca de</a>
         <?php endif; ?>
     </nav>
@@ -44,14 +44,14 @@
       <div id="search-results"></div>
       <!-- Favoritos y Carrito, logueados -->
       <?php if ($data['usuario_logueado']): ?>
-        <a href="/shopnext/ShopNext-Beta/views/user/pages/favoritos.php" title="Favoritos"><i class="fa-solid fa-heart"></i></a>
-        <a href="/shopnext/ShopNext-Beta/views/user/cart/carrito.php" title="Carrito"><i class="fa-solid fa-cart-shopping"></i></a>
+        <a href="?action=favorites" title="Favoritos"><i class="fa-solid fa-heart"></i></a>
+        <a href="?action=cart" title="Carrito"><i class="fa-solid fa-cart-shopping"></i></a>
         <!-- Ícono de usuario, solo si está logueado -->
         <div class="user-menu-container">
             <i class="fas fa-user user-icon"></i>
             
             <div class="dropdown-content" id="dropdownMenu">
-              <a href="/shopnext/ShopNext-Beta/views/pages/account.php">
+              <a href="?action=account">
                 <i class="fas fa-user-circle"></i> <span>Mi Perfil</span>
               </a>
               <a href="/shopnext/ShopNext-Beta/views/user/pages/pedidos.php">
@@ -399,7 +399,7 @@
   <div class="footer-section">
     <h3>Información</h3>
     <ul>
-      <li><a href="../views/pages/aboutUs.html">Acerca de</a></li>
+      <li><a href="?action=about">Acerca de</a></li>
       <li><a href="../views/pages/contact.html">Contacto</a></li>
       <li><a href="../views/auth/signUp.html">Regístrate</a></li>
     </ul>

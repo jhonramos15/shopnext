@@ -129,5 +129,21 @@ class ProductsModel {
         
         return $producto;
     }
+
+    public function searchByName($searchTerm) {
+        $sql = "SELECT id_producto, nombre_producto, precio, ruta_imagen 
+                FROM producto 
+                WHERE nombre_producto LIKE ?";
+        
+        $stmt = $this->conn->prepare($sql);
+        
+        $likeTerm = '%' . $searchTerm . '%';
+        $stmt->bind_param("s", $likeTerm);
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
 }
 ?>
