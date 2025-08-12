@@ -26,7 +26,6 @@ class LoginController {
      * Esta función es llamada por el router cuando la petición es POST.
      */
 public function handleLogin() {
-    // Renombramos tu método 'procesar' a 'handleLogin' para más claridad
     $this->iniciarSesionSegura();
 
     $correo = $_POST['correo'] ?? '';
@@ -36,20 +35,24 @@ public function handleLogin() {
         $this->redirigirConError('vacio');
     }
 
-    // Llamamos al modelo para que intente autenticar
+    // Llamamos al modelo que AHORA SÍ funciona correctamente.
     $usuario = $this->usuarioModel->autenticarUsuario($correo, $clave);
 
-    // El resto del código no se ejecutará por ahora, lo cual es correcto para depurar.
-    if (!$usuario) {
-        $this->redirigirConError('credenciales');
+    if (is_array($usuario) && isset($usuario['verificado']) && $usuario['verificado'] == 1) {
+        // ÉXITO: El usuario es válido y está verificado.
+        $this->establecerSesion($usuario);
+        $this->redirigirPorRol($usuario['rol']);
+    } else {
+        // FALLO: Cualquier otro caso se considera un fallo.
+        // Ahora determinamos la razón del fallo.
+        if (is_array($usuario) && isset($usuario['verificado']) && $usuario['verificado'] == 0) {
+            // El usuario existe pero no ha verificado su cuenta.
+            $this->redirigirConError('no_verificado');
+        } else {
+            // La contraseña/correo son incorrectos o el usuario no existe.
+            $this->redirigirConError('credenciales');
+        }
     }
-
-    if ($usuario['verificado'] == 0) {
-        $this->redirigirConError('no_verificado');
-    }
-
-    $this->establecerSesion($usuario);
-    $this->redirigirPorRol($usuario['rol']);
 }
 
     /**
@@ -108,10 +111,10 @@ private function redirigirPorRol(string $rol) {
 
     if ($rol === 'admin') {
         // Un admin va a su dashboard.
-        $destino = 'index.php?action=admin-dashboard'; 
+        $destino = 'index.php?action=admin&page=dashboard';
     } elseif ($rol === 'vendedor') {
         // Un vendedor va a su dashboard.
-        $destino = 'index.php?action=seller-dashboard';
+        $destino = 'index.php?action=seller';
     }
     // Para cualquier otro rol (como 'cliente'), no hacemos nada
     // y se usará el destino por defecto: 'index.php?action=home'.

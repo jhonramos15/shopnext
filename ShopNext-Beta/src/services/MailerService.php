@@ -2,13 +2,12 @@
 
 namespace App\Services;
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-// Asegúrate de que las rutas a PHPMailer sean correctas desde este archivo.
 require_once __DIR__ . '/../core/PHPMailer/src/Exception.php';
 require_once __DIR__ . '/../core/PHPMailer/src/PHPMailer.php';
 require_once __DIR__ . '/../core/PHPMailer/src/SMTP.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class MailerService {
     private $mailer;
@@ -21,17 +20,17 @@ class MailerService {
     private function configure() {
         // Configuración del servidor SMTP
         $this->mailer->isSMTP();
-        $this->mailer->SMTPDebug = 2;
-        $this->mailer->Host       = 'smtp.example.com'; // EJ: smtp.gmail.com
+        $this->mailer->SMTPDebug = 0;
+        $this->mailer->Host = 'smtp.gmail.com';
         $this->mailer->SMTPAuth   = true;
-        $mail->Username   = 'shopnextsoporte@gmail.com'; // Tu correo
-        $mail->Password   = 'kmce npby tdkr sacz';     // Tu contraseña de aplicación SIN ESPACIOS
+        $this->mailer->Username   = 'shopnextsoporte@gmail.com';
+        $this->mailer->Password   = 'otggvxfhagmgffkv';
         $this->mailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $this->mailer->Port       = 465;
         $this->mailer->CharSet    = 'UTF-8';
 
         // Emisor del correo
-        $mail->setFrom('shopnextsoporte@gmail.com', 'ShopNext Test');
+        $this->mailer->setFrom('shopnextsoporte@gmail.com', 'ShopNext Test');
     }
 
     /**
@@ -49,7 +48,7 @@ class MailerService {
             $this->mailer->Subject = 'Verifica tu cuenta en ShopNext';
             
             // Asegúrate de que este enlace apunte a tu script de verificación
-            $verificationLink = "http://localhost/shopnext/ShopNext-Beta/public/index.php?page=verificar&token=" . $token;
+            $verificationLink = "http://localhost/shopnext/public/index.php?action=verify&token=" . $token;
 
             $this->mailer->Body = $this->getHtmlTemplate($recipientName, $verificationLink);
             $this->mailer->AltBody = "Para verificar tu cuenta, copia y pega este enlace en tu navegador: " . $verificationLink;

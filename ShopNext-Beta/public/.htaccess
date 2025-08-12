@@ -1,16 +1,13 @@
 <IfModule mod_rewrite.c>
-    # Activa el motor de reescritura
     RewriteEngine On
 
-    # Establece la carpeta base del proyecto para que las rutas funcionen bien
+    # La base de tu proyecto es correcta
     RewriteBase /shopnext/ShopNext-Beta/
 
-    # --- La Condición Clave ---
-    # Si la URL que pide el navegador NO es un archivo que ya existe...
+    # Si la petición NO es para un archivo o directorio existente...
     RewriteCond %{REQUEST_FILENAME} !-f
-    # Y si la URL que pide el navegador NO es una carpeta que ya existe...
     RewriteCond %{REQUEST_FILENAME} !-d
 
-    # ...ENTONCES, y solo entonces, redirige la petición a tu controlador frontal
-    RewriteRule ^(.*)$ public/index.php?/$1 [L,QSA]
+    # ...redirige TODO a tu controlador frontal en la carpeta public.
+    RewriteRule . public/index.php [L]
 </IfModule>

@@ -97,7 +97,7 @@ class Usuario {
     try {
         // --- Insertar en la tabla 'usuario' ---
         $stmt_usuario = $this->conn->prepare(
-            "INSERT INTO usuario (correo_usuario, contraseña, token, rol) VALUES (?, ?, ?, 'cliente')"
+            "INSERT INTO usuario (correo_usuario, contrasena, token, rol) VALUES (?, ?, ?, 'cliente')"
         );
         // Si la preparación falla, la consulta está mal escrita
         if ($stmt_usuario === false) {
@@ -169,7 +169,7 @@ public function crearVendedor(array $datos): bool
         // ✅ PASO 2: AÑADIMOS EL TOKEN A LA CONSULTA DEL USUARIO
         // La consulta ahora incluye las 4 columnas obligatorias: correo, contraseña, token y rol.
         $stmt_usuario = $this->conn->prepare(
-            "INSERT INTO usuario (correo_usuario, contraseña, token, rol) VALUES (?, ?, ?, 'vendedor')"
+            "INSERT INTO usuario (correo_usuario, contrasena, token, rol) VALUES (?, ?, ?, 'vendedor')"
         );
         if ($stmt_usuario === false) {
             throw new Exception("Error al preparar la consulta de usuario: " . $this->conn->error);
@@ -214,32 +214,69 @@ public function crearVendedor(array $datos): bool
 }
     }
 
-/**
- * Autentica a un usuario verificando su correo y contraseña.
- *
- * @param string $correo El correo del usuario.
- * @param string $clave La contraseña en texto plano.
- * @return array|false Los datos del usuario si la autenticación es exitosa, o false si falla.
+    /**
+     * Autentica a un usuario y determina su rol.
+     * Esta es la función completamente reparada.
+     *
+     * @param string $correo El correo del usuario.
+     * @param string $clave La contraseña en texto plano.
+     * @return array|false Los datos del usuario (incluyendo el rol) o false si falla.
+     */
+    /**
+ * VERSIÓN DE DEPURACIÓN FINAL
+ * Esta función nos dirá exactamente dónde está el error.
  */
 public function autenticarUsuario(string $correo, string $clave)
 {
-    // Preparamos la consulta para evitar inyección SQL
-    $stmt = $this->conn->prepare("SELECT id_usuario, contraseña, rol, verificado FROM usuario WHERE correo_usuario = ?");
+    // Preparamos UNA consulta que trae TODO: id, hash, estado y el ROL.
+    $stmt = $this->conn->prepare(
+        "SELECT id_usuario, contrasena, verificado, rol FROM usuario WHERE correo_usuario = ?"
+    );
+    
+    if ($stmt === false) {
+        // En un entorno real, aquí registrarías el error en un log.
+        // error_log('Error al preparar la consulta: ' . $this->conn->error);
+        return false;
+    }
+
     $stmt->bind_param("s", $correo);
     $stmt->execute();
     $resultado = $stmt->get_result();
+    $stmt->close();
 
     if ($resultado->num_rows === 1) {
         $usuario = $resultado->fetch_assoc();
         
-        // Verificamos que la contraseña que nos dan coincida con la guardada en la BD
-        if (password_verify($clave, $usuario['contraseña'])) {
-            // ¡Éxito! Devolvemos todos los datos del usuario
+        if (password_verify($clave, $usuario['contrasena'])) {
+            // Éxito. Devolvemos el array del usuario.
+            unset($usuario['contrasena']); // Quitamos el hash por seguridad.
             return $usuario;
         }
     }
 
-    // Si el usuario no existe o la contraseña es incorrecta, devolvemos false
-    return false;
+    // Falla si no encuentra usuario o la clave es incorrecta.
+    return false; 
 }
+    private function obtenerRol(int $id_usuario): ?string
+    {
+        $stmt_cliente = $this->conn->prepare("SELECT id_cliente FROM cliente WHERE id_usuario = ?");
+        $stmt_cliente->bind_param("i", $id_usuario);
+        $stmt_cliente->execute();
+        if ($stmt_cliente->get_result()->num_rows > 0) {
+            $stmt_cliente->close();
+            return 'cliente';
+        }
+        $stmt_cliente->close();
+
+        $stmt_vendedor = $this->conn->prepare("SELECT id_vendedor FROM vendedor WHERE id_usuario = ?");
+        $stmt_vendedor->bind_param("i", $id_usuario);
+        $stmt_vendedor->execute();
+        if ($stmt_vendedor->get_result()->num_rows > 0) {
+            $stmt_vendedor->close();
+            return 'vendedor';
+        }
+        $stmt_vendedor->close();
+        return null;
+    }
+
 }

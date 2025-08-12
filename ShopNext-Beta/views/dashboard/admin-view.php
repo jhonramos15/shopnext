@@ -1,110 +1,27 @@
-<?php
-session_start();
-
-// Verificar si el usuario está logueado y tiene el rol correcto (admin)
-if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'admin') {
-    header("Location: ../auth/login.php?status=sesion_expirada"); // Redirigir si no es admin
-    exit;
-}
-
-// Tiempo máximo de inactividad en segundos (ej. 5 minutos)
-$inactividad = 300;
-
-if (isset($_SESSION['last_activity'])) {
-    $tiempo_inactivo = time() - $_SESSION['last_activity'];
-
-    if ($tiempo_inactivo > $inactividad) {
-        // Cerrar sesión por inactividad
-        session_unset();
-        session_destroy();
-        header("Location: ../auth/login.php?status=sesion_expirada");
-        exit;
-    } else {
-        // Actualizar el tiempo de actividad
-        $_SESSION['last_activity'] = time();
-    }
-} else {
-    // Inicializar el tiempo de actividad
-    $_SESSION['last_activity'] = time();
-}
-
-// 1. Conexión a la base de datos
-$conexion = new mysqli("localhost", "root", "", "shopnexs"); // Ajusta tus credenciales si es necesario
-if ($conexion->connect_error) {
-    die("Falló la conexión: " . $conexion->connect_error);
-}
-
-// 2. Consulta para obtener el total de usuarios
-$total_users_query = "SELECT COUNT(*) as total FROM usuario";
-$total_users_result = $conexion->query($total_users_query);
-$total_usuarios = $total_users_result->fetch_assoc()['total'];
-
-// 3. Consulta para obtener los usuarios registrados en los últimos 7 días
-$new_users_query = "SELECT COUNT(*) as nuevos_usuarios FROM usuario WHERE fecha_registro >= CURDATE() - INTERVAL 7 DAY";
-$new_users_result = $conexion->query($new_users_query);
-$nuevos_usuarios = $new_users_result->fetch_assoc()['nuevos_usuarios'];
-
-// 4. Consulta para las ventas totales
-$ventas_query = "SELECT SUM(cantidad * precio_unitario) as total_ventas FROM detalle_pedido";
-$ventas_result = $conexion->query($ventas_query);
-$total_ventas = $ventas_result->fetch_assoc()['total_ventas'] ?? 0;
-
-// 4. Calcular el cambio porcentual
-$usuarios_anteriores = $total_usuarios - $nuevos_usuarios;
-$cambio_porcentual = 0; // Inicializar en 0
-
-// Evitar división por cero si no hay usuarios anteriores
-if ($usuarios_anteriores > 0) {
-    $cambio_porcentual = ($nuevos_usuarios / $usuarios_anteriores) * 100;
-} elseif ($nuevos_usuarios > 0) {
-    $cambio_porcentual = 100; // Si no había usuarios y ahora sí, es un 100% de aumento
-}
-
-// 5. CONSULTA PARA EL TOTAL DE PEDIDOS
-$total_pedidos_query = "SELECT COUNT(*) as total_pedidos FROM pedido";
-$total_pedidos_result = $conexion->query($total_pedidos_query);
-$total_pedidos = $total_pedidos_result->fetch_assoc()['total_pedidos'];
-
-// PEDIDOS RECIENTES
-$pedidos_recientes_query = "SELECT 
-                                p.fecha,
-                                prod.nombre_producto,
-                                p.estado,
-                                (dp.cantidad * dp.precio_unitario) AS importe
-                            FROM pedido p
-                            JOIN detalle_pedido dp ON p.id_pedido = dp.id_pedido
-                            JOIN producto prod ON dp.id_producto = prod.id_producto
-                            ORDER BY p.fecha DESC, p.id_pedido DESC
-                            LIMIT 5";
-$resultado_pedidos_recientes = $conexion->query($pedidos_recientes_query);
-
-$conexion->close(); // Cerrar la conexión
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Inicio</title>
-    <link rel="stylesheet" href="../../public/css/admin/dashboardAdmin.css">
-    <link rel="icon" href="../../public/img/icon_principal.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/admin/dashboard-admin.css">
+    <link rel="icon" href="img/icon_principal.ico" type="image/x-icon">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
     <aside class="sidebar">
         <div class="logo-container">
-            <img src="../../public/img/logo.svg" alt="Logo" class="logo-img">
+            <img src="img/logo.svg" alt="Logo" class="logo-img">
         </div>
         <ul class="menu">
-            <li><a href="adminView.php"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
-            <li><a href="admin/productos.php"><i data-lucide="box"></i><span>Productos</span></a></li>
-            <li><a href="admin/clientes.php"><i data-lucide="users"></i><span>Clientes</span></a></li>
-            <li><a href="admin/ingresos.php"><i data-lucide="bar-chart-2"></i><span>Ingresos</span></a></li>
-            <li><a href="admin/ayuda.php"><i data-lucide="help-circle"></i><span>Ayuda</span></a></li>
-            <li><a href="admin/vendedores.php"><i data-lucide="user-check"></i><span>Vendedores</span></a></li>
-            <li><a href="admin/resenas.php"><i data-lucide="star"></i><span>Reseñas</span></a></li>
+            <li class="active"><a href="index.php?action=admin&page=dashboard"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
+            <li><a href="index.php?action=admin&page=products"><i data-lucide="box"></i><span>Productos</span></a></li>
+            <li><a href="index.php?action=admin&page=clients"><i data-lucide="users"></i><span>Clientes</span></a></li>
+            <li><a href="index.php?action=admin&page=income"><i data-lucide="bar-chart-2"></i><span>Ingresos</span></a></li>
+            <li><a href="index.php?action=admin&page=help"><i data-lucide="help-circle"></i><span>Ayuda</span></a></li>
+            <li><a href="index.php?action=admin&page=sellers"><i data-lucide="user-check"></i><span>Vendedores</span></a></li>
+            <li><a href="index.php?action=admin&page=reviews"><i data-lucide="star"></i><span>Reseñas</span></a></li>
         </ul>
         <div class="user-profile-container">
             <div class="user" id="userProfileBtn">
@@ -123,7 +40,7 @@ $conexion->close(); // Cerrar la conexión
 
     <main class="main">
         <header class="header">
-            <h1>Hola, Brayan 👋</h1>
+            <h1>Hola, <?php echo htmlspecialchars($data['admin_nombre']); ?> 👋</h1>
         </header>
 
         <div class="dashboard-content">
@@ -140,9 +57,9 @@ $conexion->close(); // Cerrar la conexión
                     <div>
                         <h3>Total de usuarios</h3>
                         <p>
-                            <?php echo number_format($total_usuarios); ?>
-                            <span class="percentage <?php echo ($cambio_porcentual >= 0) ? 'positive' : 'neutral'; ?>">
-                                <?php echo ($cambio_porcentual >= 0 ? '+' : '') . number_format($cambio_porcentual, 1); ?>%
+                            <?php echo number_format($data['stats']['total_usuarios']); ?>
+                            <span class="percentage <?php echo ($data['stats']['cambio_porcentual_usuarios'] >= 0) ? 'positive' : 'neutral'; ?>">
+                                <?php echo ($data['stats']['cambio_porcentual_usuarios'] >= 0 ? '+' : '') . number_format($data['stats']['cambio_porcentual_usuarios'], 1); ?>%
                             </span>
                         </p>
                     </div>
@@ -151,14 +68,14 @@ $conexion->close(); // Cerrar la conexión
                     <i data-lucide="shopping-cart"></i>
                     <div>
                         <h3>Pedido total</h3>
-                        <p><?php echo number_format($total_pedidos); ?></p>
-                        </div>
+                        <p><?php echo number_format($data['stats']['total_pedidos']); ?></p>
+                    </div>
                 </div>
                 <div class="card">
                     <i data-lucide="dollar-sign"></i>
                     <div>
                         <h3>Ventas totales</h3>
-                        <p>$<?php echo number_format($total_ventas, 2); ?></p>
+                        <p>$<?php echo number_format($data['stats']['total_ventas']);?></p>
                     </div>
                 </div>
             </section>
@@ -188,62 +105,30 @@ $conexion->close(); // Cerrar la conexión
                 </div>
             </section>
 
-            <section class="grid-row middle-row">
+                        <section class="grid-row middle-row">
                 <div class="card recent-orders-card">
                     <h3>Pedidos recientes</h3>
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>FECHA</th>
-                                    <th>PRODUCTO</th>
-                                    <th>ESTADO</th>
-                                    <th>IMPORTE</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if ($resultado_pedidos_recientes && $resultado_pedidos_recientes->num_rows > 0): ?>
-                                    <?php while ($pedido = $resultado_pedidos_recientes->fetch_assoc()): ?>
-                                        <tr>
-                                            <td><?php echo date("d/m/Y", strtotime($pedido['fecha'])); ?></td>
-                                            <td><?php echo htmlspecialchars($pedido['nombre_producto']); ?></td>
-                                            <td>
-                                                <span class="status <?php echo strtolower(htmlspecialchars($pedido['estado'])); ?>">
-                                                    <?php echo ucfirst(htmlspecialchars($pedido['estado'])); ?>
-                                                </span>
-                                            </td>
-                                            <td>$<?php echo number_format($pedido['importe'], 2); ?></td>
-                                        </tr>
-                                    <?php endwhile; ?>
-                                <?php else: ?>
+                    <table>
+                        <thead><tr><th>FECHA</th><th>PRODUCTO</th><th>ESTADO</th><th>IMPORTE</th></tr></thead>
+                        <tbody>
+                            <?php if (!empty($data['recent_orders'])): ?>
+                                <?php foreach ($data['recent_orders'] as $pedido): ?>
                                     <tr>
-                                        <td colspan="4" style="text-align: center;">No hay pedidos recientes.</td>
+                                        <td><?php echo date("d/m/Y", strtotime($pedido['fecha'])); ?></td>
+                                        <td><?php echo htmlspecialchars($pedido['nombre_producto']); ?></td>
+                                        <td><span class="status <?php echo strtolower(htmlspecialchars($pedido['estado'])); ?>"><?php echo ucfirst(htmlspecialchars($pedido['estado'])); ?></span></td>
+                                        <td>$<?php echo number_format($pedido['importe'], 2); ?></td>
                                     </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr><td colspan="4">No hay pedidos recientes.</td></tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
-
-                <div class="card analysis-report-card">
-                     <h3>Informe de análisis</h3>
-                    <div class="analysis-content">
-                        <div class="analysis-item">
-                            <p>Crecimiento de finanzas</p>
-                            <span class="value positive">+45.14%</span>
-                        </div>
-                        <div class="analysis-item">
-                            <p>Ratio de gastos</p>
-                            <span class="value">0.58%</span>
-                        </div>
-                        <div class="analysis-item">
-                            <p>Riesgo empresarial</p>
-                            <span class="value status-low">Bajo</span>
-                        </div>
-                    </div>
-                    <div class="chart-canvas-container analysis-chart-container">
-                        <canvas id="companyFinanceChart"></canvas>
-                    </div>
+                                 <div class="card analysis-report-card">
+                    <h3>Informe de análisis</h3>
+                    <div class="chart-canvas-container analysis-chart-container"><canvas id="companyFinanceChart"></canvas></div>
                     <button class="descargar-reporte" onclick="descargarReporte('companyFinanceChart')">Descargar PDF</button>
                 </div>
             </section>
@@ -322,6 +207,6 @@ $conexion->close(); // Cerrar la conexión
     <script>
         lucide.createIcons();
     </script>
-    <script src="../../public/js/admin/script-admin.js"></script>
+    <script src="js/admin/script-admin.js"></script>
 </body>
 </html>

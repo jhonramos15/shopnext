@@ -1,4 +1,9 @@
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 /**
  * ShopNext - Punto de Entrada Único (Router Principal)
  */
@@ -34,6 +39,19 @@ use App\Controllers\Shop\PagesController; // Controlador de varias páginas como
 use App\Controllers\User\AccountController; // Controlador de la cuenta del usuario
 use App\Controllers\Shop\SearchController;
 use App\Controllers\Shop\CartController;
+use App\Controllers\Auth\VerificarTokenController; 
+use App\Guard\AuthGuard;  
+use App\Controllers\Vendedor\DashboardController as VendedorDashboard;
+use App\Controllers\Vendedor\ProductController as VendedorProduct;
+use App\Controllers\Vendedor\OrderController as VendedorOrder;
+use App\Controllers\Vendedor\IncomeController as VendedorIncome;
+use App\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Controllers\Admin\AdminProductController as AdminProduct;
+use App\Controllers\Admin\AdminClientController as AdminClient;
+use App\Controllers\Admin\AdminHelpController as AdminHelp;
+use App\Controllers\Admin\AdminSellerController as AdminSeller;
+use App\Controllers\Admin\AdminIncomeController as AdminIncome;
+use App\Controllers\Admin\AdminReviewsController as AdminReviews;
 
 SessionManager::start();
 
@@ -56,6 +74,11 @@ switch ($page) {
         } else {
             $controller->showLoginForm();
         }
+        break;
+
+    case 'verify':
+        $controller = new VerificarTokenController();
+        $controller->handleVerification();
         break;
 
     case 'signup':  // Muestra el formulario de registro
@@ -164,7 +187,107 @@ switch ($page) {
         }
         break;
 
+    /* ========== RUTAS PARA DASHBOARDS (NUEVO) ========== */
 
+    case 'seller':
+        // 1. Proteger TODA la sección de una vez.
+        AuthGuard::redirectIfNotAuthenticated();
+        // Aquí también podrías verificar que el rol sea 'vendedor'.
+
+        // 2. Obtener la página específica que se solicita dentro de la sección.
+        // Si no se especifica, por defecto será el dashboard.
+        $page = $_GET['page'] ?? 'dashboard';
+
+        // 3. Un mini-router solo para la sección del vendedor.
+        switch ($page) {
+            case 'dashboard':
+                $controller = new VendedorDashboard();
+                $controller->showDashboard();
+                break;
+            
+            case 'productos':
+                $controller = new VendedorProduct();
+                $controller->showProductsPage();
+                break;
+            
+            case 'income': // ✅ ¡NUEVA RUTA!
+                $controller = new VendedorIncome();
+                $controller->showIncomePage();
+                break;
+            
+            case 'upload-product': // ✅ RUTA PARA MOSTRAR EL FORMULARIO
+                $controller = new VendedorProduct();
+                $controller->showUploadForm();
+                break;
+
+            case 'upload-action': // ✅ RUTA PARA PROCESAR EL FORMULARIO
+                $controller = new VendedorProduct();
+                $controller->handleUpload();
+                break;
+            case 'orders':
+                $controller = new VendedorOrder();
+                $controller->showOrdersPage();
+                break;
+            
+            default:
+                // Si la página no existe dentro de la sección de vendedor
+                http_response_code(404);
+                require __DIR__ . '/../views/error/404.html';
+                break;
+        }
+        break; 
+
+    // --- SECCIÓN COMPLETA DEL ADMIN ---
+    case 'admin':
+        AuthGuard::redirectIfNotAuthenticated(); // Protege toda la sección
+        // Aquí podrías añadir una verificación extra para que el rol sea 'admin'
+
+        $page = $_GET['page'] ?? 'dashboard'; // Página por defecto
+
+        // Mini-router para la sección de admin
+        switch ($page) {
+            case 'dashboard':
+                $controller = new AdminDashboard();
+                $controller->showDashboardPage();
+                break;
+
+            case 'products': // ✅ ¡NUEVA RUTA!
+                $controller = new AdminProduct();
+                $controller->showProductsPage();
+                break;
+
+            case 'clients': // ✅ ¡NUEVA RUTA!
+                $controller = new AdminClient();
+                $controller->showClientsPage();
+                break;
+
+            case 'help': // ✅ ¡NUEVA RUTA!
+                $controller = new AdminHelp();
+                $controller->showHelpPage();
+                break;
+
+            case 'sellers': // ✅ ¡NUEVA RUTA!
+                $controller = new AdminSeller();
+                $controller->showSellersPage();
+                break;
+
+            case 'income': // ✅ ¡NUEVA RUTA!
+                $controller = new AdminIncome();
+                $controller->showIncomePage();
+                break;
+
+            case 'reviews': // ✅ ¡NUEVA RUTA!
+                $controller = new AdminReviews();
+                $controller->showReviewsPage();
+                break;
+
+
+            default:
+                http_response_code(404);
+                require __DIR__ . '/../views/error/404.html';
+                break;
+        }
+        break; // ¡Importante! Cierra el 'case: admin'
         
 default:
     // Establecemos el código de respuesta HTTP correcto para "No Encontrado"

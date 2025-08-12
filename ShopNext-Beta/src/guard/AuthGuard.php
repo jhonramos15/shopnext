@@ -20,13 +20,11 @@ class AuthGuard {
         if (isset($_SESSION['id_usuario'])) {
             $rol = $_SESSION['rol'] ?? 'cliente';
 
-            // Usamos las rutas del router, no las rutas de archivos directos
             $redirecciones = [
-                'admin'    => 'index.php?action=admin-dashboard',
-                'vendedor' => 'index.php?action=seller-dashboard',
+                'admin'    => 'index.php?action=admin&page=dashboard', 
+                'vendedor' => 'index.php?action=seller&page=dashboard',
                 'cliente'  => 'index.php?action=home' 
             ];
-
             $destino = $redirecciones[$rol] ?? $redirecciones['cliente'];
             
             // Usamos BASE_URL para que las rutas sean siempre correctas

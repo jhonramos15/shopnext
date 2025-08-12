@@ -80,7 +80,6 @@ class ClienteModel {
             }
 
             // --- 2. Actualización de la tabla 'usuarios' ---
-            // ¡AHORA INCLUYE LA CONTRASEÑA!
             $fieldsUsuario = ['correo' => 's'];
             if (isset($data['password'])) {
                 $fieldsUsuario['password'] = 's';

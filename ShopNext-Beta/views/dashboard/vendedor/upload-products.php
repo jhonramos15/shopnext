@@ -1,50 +1,42 @@
-<?php
-session_start();
-
-// Guardián de seguridad
-if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'vendedor') {
-    header("Location: ../../auth/login.php");
-    exit;
-}
-$_SESSION['last_activity'] = time();
-
-$nombre_vendedor = $_SESSION['nombre_vendedor'] ?? 'Vendedor';
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Subir Producto</title>
-    <link rel="stylesheet" href="../../../public/css/vendedor/subirProductos.css">
-    <link rel="icon" href="../../../public/img/icon_principal.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/vendedor/subir-productos.css">
+    <link rel="icon" href="img/icon_principal.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
     <div class="dashboard">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="logo-container">
-                <img src="../../../public/img/logo.svg" alt="Logo" class="logo-img"/>
+                <img src="<?php echo BASE_URL; ?>img/logo.svg" alt="Logo" class="logo-img"/>
             </div>
             <ul class="menu">
-               <li><a href="../vendedorView.php"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
-               <li><a href="productos.php"><i data-lucide="package"></i><span>Productos</span></a></li>
-               <li><a href="pedidos.php"><i data-lucide="shopping-cart"></i><span>Pedidos</span></a></li>
-               <li class="active"><a href="subirProductos.php"><i data-lucide="upload-cloud"></i><span>Subir Producto</span></a></li>
-               <li><a href="ingresos.php"><i data-lucide="dollar-sign"></i><span>Ingresos</span></a></li>
+                <li><a href="<?php echo BASE_URL; ?>index.php?action=seller&page=dashboard"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
+                <li><a href="<?php echo BASE_URL; ?>index.php?action=seller&page=products"><i data-lucide="package"></i><span>Productos</span></a></li>
+                <li><a href="<?php echo BASE_URL; ?>index.php?action=seller&page=orders"><i data-lucide="shopping-cart"></i><span>Pedidos</span></a></li>
+                <li class="active"><a href="<?php echo BASE_URL; ?>index.php?action=seller&page=upload-product"><i data-lucide="upload-cloud"></i><span>Subir Producto</span></a></li>
+                <li><a href="<?php echo BASE_URL; ?>index.php?action=seller&page=income"><i data-lucide="dollar-sign"></i><span>Ingresos</span></a></li>
             </ul>
             <div class="user-profile-container">
+                
                 <div class="user" id="userProfileBtn">
                     <img src="https://i.pravatar.cc/40" alt="user" />
                     <div class="user-info">
-                        <p><?php echo htmlspecialchars($nombre_vendedor); ?></p>
+                        <p><?php echo htmlspecialchars($data['nombre_vendedor']); ?></p>
                         <small>Vendedor</small>
                     </div>
                     <i data-lucide="chevron-down" class="profile-arrow"></i>
                 </div>
-                    <a href="../../../controllers/logout.php"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
+                
+                <div class="profile-dropdown" id="profileDropdownMenu">
+                    <a href="<?php echo BASE_URL; ?>index.php?action=logout"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
                 </div>
+            
             </div>
         </aside>
 
@@ -54,7 +46,7 @@ $nombre_vendedor = $_SESSION['nombre_vendedor'] ?? 'Vendedor';
             </header>
 
             <div class="form-container">
-                <form action="../../../controllers/uploads/uploadProduct.php" method="POST" enctype="multipart/form-data">
+                <form action="<?php echo BASE_URL; ?>index.php?action=seller&page=upload-action" method="POST" enctype="multipart/form-data">
                     <div class="new-product-section">
                         <div class="details-column">
                             <div class="form-group">
@@ -126,6 +118,7 @@ $nombre_vendedor = $_SESSION['nombre_vendedor'] ?? 'Vendedor';
     </div>
 
     <script>lucide.createIcons();</script>
-    <script src="../../../public/js/vendedor/subirProductos.js"></script>
+    <script src="js/vendedor/subir-productos.js"></script>
+    <script src="js/vendedor/dashboard-vendedor.js"></script>
 </body>
 </html>

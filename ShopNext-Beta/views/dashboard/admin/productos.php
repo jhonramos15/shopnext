@@ -1,52 +1,23 @@
-<?php
-session_start();
-
-// Guardián para la sección de Administrador
-if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'admin') {
-    header("Location: ../../auth/login.php");
-    exit;
-}
-$_SESSION['last_activity'] = time();
-
-// --- CONEXIÓN Y CONSULTAS ---
-$conexion = new mysqli("localhost", "root", "", "shopnexs");
-if ($conexion->connect_error) { die("Conexión fallida: " . $conexion->connect_error); }
-
-// Consultas para las tarjetas de resumen
-$total_productos = $conexion->query("SELECT COUNT(*) as total FROM producto")->fetch_assoc()['total'];
-$valor_inventario_result = $conexion->query("SELECT SUM(precio * stock) as valor_total FROM producto")->fetch_assoc();
-$valor_inventario = $valor_inventario_result['valor_total'] ?? 0; // Prevenir error si no hay productos
-$productos_agotados = $conexion->query("SELECT COUNT(*) as agotados FROM producto WHERE stock = 0")->fetch_assoc()['agotados'];
-
-// Consulta para la tabla de productos
-$sql_productos = "SELECT
-                    p.id_producto, p.nombre_producto, p.precio, p.categoria, p.stock,
-                    v.nombre AS nombre_vendedor
-                  FROM producto p
-                  JOIN vendedor v ON p.id_vendedor = v.id_vendedor
-                  ORDER BY p.id_producto DESC";
-$resultado_productos = $conexion->query($sql_productos);
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Productos</title>
-    <link rel="stylesheet" href="../../../public/css/admin/productos.css">
+    <link rel="stylesheet" href="css/admin/productos.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="icon" href="../../../public/img/icon_principal.ico" type="image/x-icon">
+    <link rel="icon" href="img/icon_principal.ico" type="image/x-icon">
 </head>
 <body>
     <div class="dashboard">
         <aside class="sidebar">
             <div class="logo-container">
-                <img src="../../../public/img/logo.svg" alt="Logo" class="logo-img">
+                <img src="img/logo.svg" alt="Logo" class="logo-img">
             </div>
             <ul class="menu">
                 <li><a href="../adminView.php"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
-                <li class="active"><a href="productos.php"><i data-lucide="box"></i><span>Productos</span></a></li>
+                <li class="active"><a href="index.php?action=admin&page=productos"><i data-lucide="box"></i><span>Productos</span></a></li>
                 <li><a href="clientes.php"><i data-lucide="users"></i><span>Clientes</span></a></li>
                 <li><a href="ingresos.php"><i data-lucide="bar-chart-2"></i><span>Ingresos</span></a></li>
                 <li><a href="ayuda.php"><i data-lucide="help-circle"></i><span>Ayuda</span></a></li>
@@ -77,21 +48,21 @@ $resultado_productos = $conexion->query($sql_productos);
                     <i data-lucide="package"></i>
                     <div>
                         <h3>Todos los Productos</h3>
-                        <p><?php echo number_format($total_productos); ?></p>
+                        <p><?php echo number_format($data['stats']['total_productos']); ?></p>
                     </div>
                 </div>
                 <div class="card">
                     <i data-lucide="dollar-sign"></i>
                     <div>
                         <h3>Valor del Inventario</h3>
-                        <p>$<?php echo number_format($valor_inventario, 2); ?></p>
+                        <p>$<?php echo number_format($data['stats']['valor_inventario'] ?? 0, 2); ?></p>
                     </div>
                 </div>
                 <div class="card">
                     <i data-lucide="package-x"></i>
                     <div>
                         <h3>Agotados</h3>
-                        <p><?php echo number_format($productos_agotados); ?></p>
+                        <p><?php echo number_format($data['stats']['productos_agotados']); ?></p>
                     </div>
                 </div>
             </section>
@@ -113,35 +84,29 @@ $resultado_productos = $conexion->query($sql_productos);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        if ($resultado_productos && $resultado_productos->num_rows > 0) {
-                            while ($fila = $resultado_productos->fetch_assoc()) {
-                                $estado_texto = ($fila['stock'] > 0) ? 'Publicado' : 'Agotado';
-                                $estado_clase = ($fila['stock'] > 0) ? 'active' : 'inactive';
-                        ?>
-                                <tr data-id="<?php echo htmlspecialchars($fila['id_producto']); ?>">
-                                    <td><?php echo htmlspecialchars($fila['nombre_producto']); ?></td>
-                                    <td><?php echo htmlspecialchars($fila['nombre_vendedor']); ?></td>
-                                    <td><?php echo htmlspecialchars($fila['categoria']); ?></td>
-                                    <td><?php echo htmlspecialchars($fila['stock']); ?></td>
-                                    <td>$<?php echo number_format($fila['precio'], 2); ?></td>
-                                    <td><span class="status <?php echo $estado_clase; ?>"><?php echo $estado_texto; ?></span></td>
+                        <?php if (!empty($data['products'])): ?>
+                            <?php foreach ($data['products'] as $product): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($product['nombre_producto']); ?></td>
+                                    <td><?php echo htmlspecialchars($product['nombre_vendedor']); ?></td>
+                                    <td><?php echo htmlspecialchars($product['categoria']); ?></td>
+                                    <td><?php echo htmlspecialchars($product['stock']); ?></td>
+                                    <td>$<?php echo number_format($product['precio'], 2); ?></td>
+                                    <td>
+                                        <span class="status <?php echo ($product['stock'] > 0) ? 'active' : 'inactive'; ?>">
+                                            <?php echo ($product['stock'] > 0) ? 'Publicado' : 'Agotado'; ?>
+                                        </span>
+                                    </td>
                                     <td class="table-actions">
-                                        <a href="#" class="action-icon" title="Ver (pendiente)"><i data-lucide="eye"></i></a>
-                                                                
-                                        <a href="#" class="action-icon edit-btn" title="Editar"><i data-lucide="edit-2"></i></a>
-                                                                
-                                        <a href="#" class="action-icon delete-btn" title="Eliminar"><i data-lucide="trash-2"></i></a>
+                                        <a href="#" class="action-icon edit-btn"><i data-lucide="edit-2"></i></a>
+                                        <a href="#" class="action-icon delete-btn"><i data-lucide="trash-2"></i></a>
                                     </td>
                                 </tr>
-                        <?php
-                            }
-                        } else {
-                            echo "<tr><td colspan='7' class='text-center'>No hay productos registrados.</td></tr>";
-                        }
-                        $conexion->close();
-                        ?>
-                    </tbody>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr><td colspan="7">No hay productos registrados en la tienda.</td></tr>
+                        <?php endif; ?>
+                        </tbody>
                 </table>
             </section>
         </main>
@@ -149,7 +114,7 @@ $resultado_productos = $conexion->query($sql_productos);
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>lucide.createIcons();</script>
-    <script src="../../../public/js/main.js"></script>
-    <script src="../../../public/js/admin/productos.js"></script>
+    <script src="js/common/main.js"></script>
+    <script src="js/admin/productos.js"></script>
 </body>
 </html>

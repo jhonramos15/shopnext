@@ -1,49 +1,42 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const passwordInput = document.getElementById('password');
-  const togglePasswordButton = document.getElementById('togglePassword');
-  
-  if (passwordInput && togglePasswordButton) {
-    
-    // --- NUEVO: Ocultar el botón por defecto ---
-    togglePasswordButton.classList.add('hidden');
+    const urlParams = new URLSearchParams(window.location.search);
 
-    // --- NUEVO: Evento para escuchar mientras escribes ---
-    passwordInput.addEventListener('input', () => {
-      // Si el campo de contraseña tiene texto...
-      if (passwordInput.value.length > 0) {
-        togglePasswordButton.classList.remove('hidden'); // Muestra el botón
-      } else {
-        togglePasswordButton.classList.add('hidden'); // Oculta el botón
-      }
-    });
+    // ✅ Muestra la alerta de éxito si la URL es "?status=verificado_ok"
+    if (urlParams.get('status') === 'verificado_ok') {
+        Swal.fire({
+            icon: 'success',
+            title: '¡Cuenta Verificada!',
+            text: 'Tu cuenta ha sido verificada exitosamente. Ahora puedes iniciar sesión.',
+            confirmButtonText: '¡Genial!'
+        });
+    }
 
-    // --- Se mantiene igual: Funcionalidad de click para mostrar/ocultar ---
-    togglePasswordButton.addEventListener('click', function () {
-      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-      passwordInput.setAttribute('type', type);
-      this.classList.toggle('fa-eye');
-      this.classList.toggle('fa-eye-slash');
-    });
-  }
+    // Muestra las alertas de error
+    const error = urlParams.get('error');
+    if (error) {
+        let message = 'Tus credenciales son incorrectas. Por favor, inténtalo de nuevo.';
+        if (error === 'no_verificado') {
+            message = 'Tu cuenta aún no ha sido verificada. Por favor, revisa tu correo electrónico.';
+        } else if (error === 'token_invalido') {
+            message = 'El enlace de verificación no es válido o ya ha expirado.';
+        }
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al Iniciar Sesión',
+            text: message
+        });
+    }
 
-  // --- Se mantiene igual: Funcionalidad para VALIDAR el formulario de login ---
-  const loginForm = document.getElementById("formLogin");
-  if (loginForm) {
-    loginForm.addEventListener("submit", function (event) {
-      const correo = document.getElementById("correo").value.trim();
-      const clave = document.getElementById("password").value.trim();
-      
-      if (correo === "" || clave === "") {
-        event.preventDefault();
-        alert("Por favor completa todos los campos.");
-        return;
-      }
-
-      if (!correo.includes("@") || !correo.includes(".")) {
-        event.preventDefault();
-        alert("Por favor ingresa un correo válido.");
-        return;
-      }
-    });
-  }
+    // --- Lógica para el botón de mostrar/ocultar contraseña ---
+    const passwordInput = document.getElementById('password');
+    const togglePasswordButton = document.getElementById('togglePassword');
+    if (passwordInput && togglePasswordButton) {
+        // Tu código existente para el ojo de la contraseña va aquí y funcionará igual.
+        togglePasswordButton.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    }
 });

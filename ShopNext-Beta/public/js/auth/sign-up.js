@@ -104,14 +104,12 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
 }   
 
-const actionUrl = 'index.php?action=register';
-
 // Convertimos los datos del formulario a un objeto para enviarlo como JSON
         // 2. Usamos FormData, que es más simple y efectivo para formularios
         const formData = new FormData(this);
         
         // 3. Hacemos la petición fetch
-        fetch(actionUrl, {
+        fetch('/shopnext/ShopNext-Beta/public/index.php?action=register', {
             method: 'POST',
             body: formData // No necesitas JSON.stringify, FormData se encarga de todo.
         })
@@ -188,7 +186,7 @@ if (vendedorForm) {
 
         // --- PASO 2: ENVÍO DE DATOS (FETCH) ---
         // Esta parte se queda como la teníamos, solo se ejecuta si todas las validaciones pasan
-        fetch('index.php?action=register', {
+        fetch('/shopnext/ShopNext-Beta/public/index.php?action=register', {
             method: 'POST',
             body: new FormData(this)
         })
