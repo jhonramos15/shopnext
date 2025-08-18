@@ -16,12 +16,13 @@
         <img src="img/logo.svg" alt="Logo" class="logo-img">
       </div>
       <ul class="menu">
-        <li><a href="../adminView.php"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
-        <li><a href="productos.php"><i data-lucide="box"></i><span>Productos</span></a></li>
-        <li><a href="clientes.php"><i data-lucide="users"></i><span>Clientes</span></a></li>
-        <li><a href="ingresos.php"><i data-lucide="bar-chart-2"></i><span>Ingresos</span></a></li>
-        <li><a href="ayuda.php"><i data-lucide="help-circle"></i><span>Ayuda</span></a></li>
-        <li><a href="vendedores.php"><i data-lucide="user-check"></i><span>Vendedores</span></a></li>
+            <li><a href="index.php?action=admin&page=dashboard"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
+            <li><a href="index.php?action=admin&page=products"><i data-lucide="box"></i><span>Productos</span></a></li>
+            <li><a href="index.php?action=admin&page=clients"><i data-lucide="users"></i><span>Clientes</span></a></li>
+            <li class="active"><a href="index.php?action=admin&page=income"><i data-lucide="bar-chart-2"></i><span>Ingresos</span></a></li>
+            <li><a href="index.php?action=admin&page=help"><i data-lucide="help-circle"></i><span>Ayuda</span></a></li>
+            <li><a href="index.php?action=admin&page=sellers"><i data-lucide="user-check"></i><span>Vendedores</span></a></li>
+            <li><a href="index.php?action=admin&page=reviews"><i data-lucide="star"></i><span>Reseñas</span></a></li>
       </ul>
       
       <div class="profile-area">
@@ -34,7 +35,7 @@
           <i data-lucide="chevron-down" class="profile-arrow"></i>
         </div>
         <div id="profileDropdownMenu" class="profile-dropdown">
-          <a href="../../../controllers/logout.php"><i data-lucide="log-out"></i>Cerrar Sesión</a>
+          <a href="?action=logout"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
         </div>
       </div>
       </aside>

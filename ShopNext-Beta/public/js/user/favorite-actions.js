@@ -1,106 +1,103 @@
-/**
- * favoriteActions.js
- * * Gestiona todas las interacciones del usuario con la lista de favoritos,
- * incluyendo agregar, eliminar y actualizar la interfaz.
- * Utiliza delegación de eventos para optimizar el rendimiento.
- */
+// En: public/js/user/favorite-actions.js
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Usamos un solo 'oyente' en el cuerpo del documento para manejar todos los clics.
+    // --- LÓGICA PARA AÑADIR/QUITAR UN SOLO FAVORITO ---
     document.body.addEventListener('click', function(event) {
-
-        // Identificamos si el clic fue en un botón para agregar/quitar de favoritos.
-        const favoriteButton = event.target.closest('.favorite-btn');
+        const favoriteButton = event.target.closest('.favorite-btn, .remove-from-wishlist');
         if (favoriteButton) {
             handleToggleFavorite(favoriteButton);
-            return; // Detenemos la ejecución para no hacer más comprobaciones.
-        }
-
-        // Identificamos si el clic fue en un botón para eliminar desde la lista de deseos.
-        const removeButton = event.target.closest('.remove-from-wishlist');
-        if (removeButton) {
-            handleToggleFavorite(removeButton); // Reutilizamos la misma función.
         }
     });
 
+    // --- LÓGICA PARA MOVER TODO AL CARRITO ---
+    const moveAllButton = document.querySelector('.move-all-btn');
+    if (moveAllButton) {
+        moveAllButton.addEventListener('click', function () {
+            Swal.fire({
+                title: '¿Mover todo al carrito?',
+                text: "Todos los productos de tu lista se añadirán al carrito.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, mover todo',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    moveAllToCart();
+                }
+            });
+        });
+    }
 });
 
 /**
- * Función central que maneja la lógica de agregar/quitar un producto de favoritos.
- * @param {HTMLElement} button - El botón que fue presionado.
+ * Maneja la lógica de agregar/quitar un producto de favoritos via AJAX.
  */
 function handleToggleFavorite(button) {
     const idProducto = button.dataset.id;
-    if (!idProducto) return; // Salir si el botón no tiene un ID de producto.
+    if (!idProducto) return;
 
-    // Preparamos los datos para enviar al servidor.
     const formData = new FormData();
     formData.append('id_producto', idProducto);
 
-    // Llamamos al controlador de PHP usando fetch (AJAX).
-    fetch('index.php?action=toggle-favorite', {
+    fetch(`${App.baseUrl}index.php?action=toggle-favorite`, {
         method: 'POST',
         body: formData
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Hubo un problema con la respuesta del servidor.');
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // El servidor procesó la petición correctamente.
             updateFavoriteUI(button, data.action, idProducto);
         } else {
-            // El servidor devolvió un error (ej. el usuario no está logueado).
-            Swal.fire('Error', data.error || 'No se pudo procesar la solicitud.', 'error');
+            Swal.fire('Error', data.message || 'No se pudo procesar la solicitud.', 'error');
         }
     })
-    .catch(error => {
-        console.error('Error en la petición fetch:', error);
-        Swal.fire('Error de Conexión', 'No se pudo comunicar con el servidor.', 'error');
-    });
+    .catch(error => console.error('Error en fetch:', error));
 }
 
 /**
+ * Maneja la lógica para mover todos los favoritos al carrito.
+ */
+function moveAllToCart() {
+    fetch(`${App.baseUrl}index.php?action=move-favorites-to-cart`, {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire('¡Éxito!', data.message, 'success').then(() => {
+                // Redirige al carrito para ver los productos añadidos
+                window.location.href = `${App.baseUrl}index.php?action=cart`;
+            });
+        } else {
+            Swal.fire('Error', data.message, 'error');
+        }
+    })
+    .catch(error => console.error('Error en fetch:', error));
+}
+
+
+/**
  * Actualiza la interfaz de usuario después de una acción de favorito.
- * @param {HTMLElement} button - El botón que originó la acción.
- * @param {string} action - La acción realizada ('added' o 'removed').
- * @param {string} idProducto - El ID del producto afectado.
  */
 function updateFavoriteUI(button, action, idProducto) {
-    const heartIcon = button.querySelector('i'); // Buscamos el ícono del corazón.
+    const heartIcon = button.querySelector('i.fa-heart');
 
     if (action === 'added') {
-        // Mostramos la alerta de éxito.
-        Swal.fire({
-            title: '¡Añadido!',
-            text: 'El producto se agregó a tu lista de deseos.',
-            icon: 'success',
-            timer: 1500,
-            showConfirmButton: false,
-            width: '300px'
-        });
-
-        // Cambiamos el ícono a un corazón relleno.
         if (heartIcon) {
-            heartIcon.classList.remove('far'); // Quita el corazón vacío.
-            heartIcon.classList.add('fas');   // Pone el corazón lleno.
+            heartIcon.classList.remove('fa-regular');
+            heartIcon.classList.add('fa-solid'); // Corazón lleno
         }
-
+        Swal.fire({ title: '¡Añadido!', text: 'El producto se agregó a tus favoritos.', icon: 'success', timer: 1500 });
     } else { // 'removed'
-        // Cambiamos el ícono a un corazón vacío.
         if (heartIcon) {
-            heartIcon.classList.remove('fas');
-            heartIcon.classList.add('far');
+            heartIcon.classList.remove('fa-solid');
+            heartIcon.classList.add('fa-regular'); // Corazón vacío
         }
-
-        // Si estamos en la página de favoritos, la tarjeta del producto se elimina.
-        // El botón `.remove-from-wishlist` no tiene ícono, pero su acción es 'removed'.
+        
+        // Si estamos en la página de favoritos, la tarjeta del producto se elimina visualmente.
         const productCardOnWishlist = document.getElementById(`product-${idProducto}`);
         if (productCardOnWishlist) {
-            // Animación de salida suave.
             productCardOnWishlist.style.transition = 'opacity 0.5s';
             productCardOnWishlist.style.opacity = '0';
             setTimeout(() => productCardOnWishlist.remove(), 500);

@@ -256,28 +256,16 @@
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
-    const App = {
-        baseUrl: '<?php echo BASE_URL; ?>'
-    };
-
-    // Tu script para la galería de imágenes también puede ir aquí.
-    document.addEventListener('DOMContentLoaded', () => {
-        const mainImage = document.getElementById('mainProductImage');
-        const thumbnails = document.querySelectorAll('.thumbnail');
-
-        thumbnails.forEach(thumb => {
-            thumb.addEventListener('click', function() {
-                mainImage.src = this.src;
-                thumbnails.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-    });
-</script>
+    <script>
+        // Este objeto global pasa variables de PHP a tus scripts externos.
+        const App = {
+            baseUrl: '<?php echo BASE_URL; ?>'
+        };
+    </script>
 
 <script src="<?php echo BASE_URL; ?>js/shop/product-details.js"></script>
 <script src="<?php echo BASE_URL; ?>js/user/dropdown.js"></script>
+<script src="<?php echo BASE_URL; ?>js/shop/review-form.js"></script>
 
 </body>
 </html>

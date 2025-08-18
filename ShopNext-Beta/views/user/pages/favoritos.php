@@ -26,7 +26,7 @@
     <!-- Logo Principal -->
     <div class="logo-menu">
       <div class="logo">
-        <a href="../indexUser.php"><img src="../../../public/img/logo.svg" alt="ShopNext"></a>
+        <a href="../indexUser.php"><img src="img/logo.svg" alt="ShopNext"></a>
       </div>
       <!-- Menú Hamburguesa -->
       <button class="hamburger" onclick="toggleMenu()">
@@ -70,48 +70,38 @@
     </div>
   </div>
 </header>
-<main class="wishlist-container">
-    <h1>Mi Lista de Deseos</h1>
+    <main class="wishlist-container">
+        <div class="wishlist-header">
+            <h1>Mi Lista de Deseos</h1>
+            <button class="move-all-btn">Mover todo al Carrito</button>
+        </div>
 
-    <?php if (empty($data['favoritos'])): ?>
-        <p class="empty-wishlist">Tu lista de deseos está vacía.</p>
-    <?php else: ?>
-        <div class="product-grid">
-            
-            <?php foreach ($data['favoritos'] as $producto): ?>
-                <div class="product-card" id="product-<?php echo $producto['id_producto']; ?>">
-                    <div class="product-image-container">
-                        <img src="/shopnext/ShopNext-Beta/public/uploads/products/<?php echo htmlspecialchars($producto['ruta_imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre_producto']); ?>" class="product-img">
-                        
-                        <div class="product-overlay">
-                            <button class="add-to-cart-btn" data-id="<?php echo $producto['id_producto']; ?>">Añadir al carrito</button>
-                            
-                            <div class="product-actions">
-                                <button class="remove-from-wishlist" data-id="<?php echo $producto['id_producto']; ?>">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+        <?php if (empty($data['favoritos'])): ?>
+            <p class="empty-wishlist">Tu lista de deseos está vacía.</p>
+        <?php else: ?>
+            <div class="product-grid">
+                <?php foreach ($data['favoritos'] as $producto): ?>
+                    <div class="product-card" id="product-<?php echo $producto['id_producto']; ?>">
+                        <div class="product-image-container">
+                            <img src="<?php echo BASE_URL; ?>uploads/products/<?php echo htmlspecialchars($producto['ruta_imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre_producto']); ?>" class="product-img">
+                            <div class="product-overlay">
+                                <button class="add-to-cart-btn" data-id="<?php echo $producto['id_producto']; ?>">Añadir al carrito</button>
+                                <div class="product-actions">
+                                    <button class="remove-from-wishlist" data-id="<?php echo $producto['id_producto']; ?>">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="product-info">
-                        <h4><?php echo htmlspecialchars($producto['nombre_producto']); ?></h4>
-                        <p class="price">$<?php echo number_format($producto['precio'], 2); ?></p>
-                        <div class="product-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                            <span>(88)</span>
+                        <div class="product-info">
+                            <h4><?php echo htmlspecialchars($producto['nombre_producto']); ?></h4>
+                            <p class="price">$<?php echo number_format($producto['precio'], 2); ?></p>
                         </div>
                     </div>
-                </div>
                 <?php endforeach; ?>
-
-        </div>
-    <?php endif; ?>
-</main>
+            </div>
+        <?php endif; ?>
+    </main>
 <!-- Footer -->
      <footer class="footer-contact">
       <div class="footer-section">
@@ -148,8 +138,8 @@
     </footer>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
 <script src="/shopnext/ShopNext-Beta/public/js/user/favorite-actions.js"></script>
-<script src="/shopnext/ShopNext-Beta/public/js/cart/carrito.js"></script>
-<script src="/shopnext/ShopNext-Beta/public/js/user/wishlistActions.js"></script>
+<script src="/shopnext/ShopNext-Beta/public/js/shop/carrito.js"></script>
+<script src="/shopnext/ShopNext-Beta/public/js/user/wishlist-actions.js"></script>
 <script src="/shopnext/ShopNext-Beta/public/js/user/dropdown.js"></script>
 </body>
 </html>

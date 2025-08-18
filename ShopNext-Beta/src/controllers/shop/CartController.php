@@ -15,11 +15,8 @@ class CartController
     {
         $database = new Database();
         $db_connection = $database->getConnection();
-        $this->cartModel = new CartModel($db_connection);
-        
-        // CORRECCIÓN: Tu ClienteModel original no aceptaba la conexión en el constructor.
-        // Asegúrate de que el ClienteModel que estás usando ahora sí lo haga.
-        $this->clienteModel = new ClienteModel($db_connection); 
+        $this->cartModel = new CartModel();
+        $this->clienteModel = new ClienteModel(); 
     }
 
     /**
@@ -50,20 +47,23 @@ class CartController
     /**
      * Maneja las acciones de la API (añadir, eliminar, vaciar).
      */
+    /**
+     * Maneja las acciones de la API (añadir, eliminar, etc.).
+     */
     public function handleApiAction()
     {
         SessionManager::start();
         header('Content-Type: application/json');
 
         if (!SessionManager::isLoggedIn()) {
-            echo json_encode(['success' => false, 'message' => 'Debes iniciar sesión.']);
+            echo json_encode(['success' => false, 'message' => 'Debes iniciar sesión para añadir productos al carrito.']);
             exit;
         }
 
         $id_usuario = SessionManager::get('id_usuario');
         $cliente = $this->clienteModel->findByUsuarioId($id_usuario);
         if (!$cliente) {
-            echo json_encode(['success' => false, 'message' => 'Cliente no válido.']);
+            echo json_encode(['success' => false, 'message' => 'Perfil de cliente no válido.']);
             exit;
         }
         
@@ -72,6 +72,22 @@ class CartController
         $id_producto = isset($_POST['id_producto']) ? (int)$_POST['id_producto'] : 0;
         $cantidad = isset($_POST['cantidad']) ? (int)$_POST['cantidad'] : 1;
 
+        $success = false;
+        $message = 'Acción no reconocida.';
+
+        switch ($action) {
+            case 'add':
+                if ($id_producto > 0) {
+                    $success = $this->cartModel->addItem($id_carrito, $id_producto, $cantidad);
+                    $message = $success ? 'Producto añadido al carrito.' : 'No se pudo añadir el producto.';
+                } else {
+                    $message = 'ID de producto no válido.';
+                }
+                break;
+            // ... (tus otros casos: 'remove', 'clear', etc.)
+        }
+        
+        echo json_encode(['success' => $success, 'message' => $message]);
         $success = false;
         switch ($action) {
             case 'add':
@@ -90,5 +106,6 @@ class CartController
         }
         
         echo json_encode(['success' => $success]);
+        exit;
     }
 }

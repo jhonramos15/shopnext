@@ -187,9 +187,8 @@
                                 <i class="fa-solid fa-eye"></i>
                             </a>
                         </div>
-                        <button class="add-to-cart-btn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                            Añadir al Carrito
+                        <button class="add-to-cart-btn" data-product-id="<?php echo $product['id_producto']; ?>">
+                            <i class="fa-solid fa-cart-shopping"></i> Añadir al Carrito
                         </button>
                         <img src="<?php echo BASE_URL . 'uploads/products/' . htmlspecialchars($product['ruta_imagen']); ?>" alt="<?php echo htmlspecialchars($product['nombre_producto']); ?>">
                     </div>
@@ -421,12 +420,18 @@
     </ul>
   </div>
 </footer>
+
+<script>
+    const App = {
+        baseUrl: '<?php echo BASE_URL; ?>'
+    };
+</script>
 <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="js/common/alertas.js"></script> 
 <script src="js/shop/carrito.js"></script>
-<script src="js/user/favoritos.js"></script>   
+<script src="js/user/favorite-actions.js"></script>   
 <script src="js/common/menu-hamburguer.js"></script>
 <script src="js/shop/search.js"></script> 
 <script src="js/shop/index.js"></script> 

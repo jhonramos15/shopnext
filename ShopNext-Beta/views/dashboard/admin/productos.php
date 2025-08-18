@@ -16,12 +16,13 @@
                 <img src="img/logo.svg" alt="Logo" class="logo-img">
             </div>
             <ul class="menu">
-                <li><a href="../adminView.php"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
-                <li class="active"><a href="index.php?action=admin&page=productos"><i data-lucide="box"></i><span>Productos</span></a></li>
-                <li><a href="clientes.php"><i data-lucide="users"></i><span>Clientes</span></a></li>
-                <li><a href="ingresos.php"><i data-lucide="bar-chart-2"></i><span>Ingresos</span></a></li>
-                <li><a href="ayuda.php"><i data-lucide="help-circle"></i><span>Ayuda</span></a></li>
-                <li><a href="vendedores.php"><i data-lucide="user-check"></i><span>Vendedores</span></a></li>
+            <li><a href="index.php?action=admin&page=dashboard"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
+            <li class="active"><a href="index.php?action=admin&page=products"><i data-lucide="box"></i><span>Productos</span></a></li>
+            <li><a href="index.php?action=admin&page=clients"><i data-lucide="users"></i><span>Clientes</span></a></li>
+            <li><a href="index.php?action=admin&page=income"><i data-lucide="bar-chart-2"></i><span>Ingresos</span></a></li>
+            <li><a href="index.php?action=admin&page=help"><i data-lucide="help-circle"></i><span>Ayuda</span></a></li>
+            <li><a href="index.php?action=admin&page=sellers"><i data-lucide="user-check"></i><span>Vendedores</span></a></li>
+            <li><a href="index.php?action=admin&page=reviews"><i data-lucide="star"></i><span>Reseñas</span></a></li>
             </ul>
             <div class="user-profile-container">
                 <div class="user" id="userProfileBtn">
@@ -33,7 +34,7 @@
                     <i data-lucide="chevron-down" class="profile-arrow"></i>
                 </div>
                 <div class="profile-dropdown" id="profileDropdownMenu">
-                    <a href="../../../controllers/logout.php"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
+                    <a href="?action=logout"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
                 </div>
             </div>
         </aside>
@@ -67,54 +68,71 @@
                 </div>
             </section>
 
-            <section class="table-section" id="productos-table">
-                <div class="table-header">
-                    <h2>Productos en la Tienda</h2>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nombre Producto</th>
-                            <th>Vendedor</th>
-                            <th>Categoría</th>
-                            <th>Stock</th>
-                            <th>Precio</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+<section class="table-section" id="productos-table">
+    <div class="table-header"><h2>Productos en la Tienda</h2></div>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre Producto</th>
+                <th>Vendedor</th>
+                <th>Categoría</th>
+                <th>Stock</th>
+                <th>Precio</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
                         <?php if (!empty($data['products'])): ?>
                             <?php foreach ($data['products'] as $product): ?>
-                                <tr>
+                                <tr data-id="<?php echo htmlspecialchars($product['id_producto']); ?>">
                                     <td><?php echo htmlspecialchars($product['nombre_producto']); ?></td>
                                     <td><?php echo htmlspecialchars($product['nombre_vendedor']); ?></td>
                                     <td><?php echo htmlspecialchars($product['categoria']); ?></td>
                                     <td><?php echo htmlspecialchars($product['stock']); ?></td>
                                     <td>$<?php echo number_format($product['precio'], 2); ?></td>
-                                    <td>
-                                        <span class="status <?php echo ($product['stock'] > 0) ? 'active' : 'inactive'; ?>">
-                                            <?php echo ($product['stock'] > 0) ? 'Publicado' : 'Agotado'; ?>
-                                        </span>
-                                    </td>
+                                    <td><span class="status <?php echo ($product['stock'] > 0) ? 'active' : 'inactive'; ?>"><?php echo ($product['stock'] > 0) ? 'Publicado' : 'Agotado'; ?></span></td>
                                     <td class="table-actions">
-                                        <a href="#" class="action-icon edit-btn"><i data-lucide="edit-2"></i></a>
-                                        <a href="#" class="action-icon delete-btn"><i data-lucide="trash-2"></i></a>
+                                        <a href="#" class="action-icon edit-btn" title="Editar"><i data-lucide="edit-2"></i></a>
+                                        <a href="#" class="action-icon delete-btn" title="Eliminar"><i data-lucide="trash-2"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr><td colspan="7">No hay productos registrados en la tienda.</td></tr>
                         <?php endif; ?>
-                        </tbody>
+                    </tbody>
                 </table>
             </section>
+            <div id="edit-modal-overlay" class="modal-overlay" style="display:none;">
+                <div class="modal-content">
+                    <h2>Editar Producto</h2>
+                    <form id="edit-product-form">
+                        <input type="hidden" id="edit-product-id" name="id_producto">
+                        <div class="form-group"><label for="edit-nombre">Nombre</label><input type="text" id="edit-nombre" name="nombre_producto" required></div>
+                        <div class="form-group"><label for="edit-categoria">Categoría</label><input type="text" id="edit-categoria" name="categoria" required></div>
+                        <div class="form-group"><label for="edit-precio">Precio</label><input type="number" id="edit-precio" name="precio" step="0.01" required></div>
+                        <div class="form-group"><label for="edit-stock">Stock</label><input type="number" id="edit-stock" name="stock" required></div>
+                        <div class="modal-actions">
+                            <button type="button" class="btn-cancel" id="cancel-edit-btn">Cancelar</button>
+                            <button type="submit" class="btn-save">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>lucide.createIcons();</script>
-    <script src="js/common/main.js"></script>
-    <script src="js/admin/productos.js"></script>
+
+    <script>
+        const App = {
+            baseUrl: '<?php echo BASE_URL; ?>'
+        };
+        lucide.createIcons();
+    </script>
+
+    <script src="<?php echo BASE_URL; ?>js/admin/productos.js"></script>
+    <script src="<?php echo BASE_URL; ?>js/common/main.js"></script>
+    </body>
 </body>
 </html>

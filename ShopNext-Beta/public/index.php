@@ -39,6 +39,7 @@ use App\Controllers\Shop\PagesController; // Controlador de varias páginas como
 use App\Controllers\User\AccountController; // Controlador de la cuenta del usuario
 use App\Controllers\Shop\SearchController;
 use App\Controllers\Shop\CartController;
+use App\Controllers\Shop\ResenaController;
 use App\Controllers\Auth\VerificarTokenController; 
 use App\Guard\AuthGuard;  
 use App\Controllers\Vendedor\DashboardController as VendedorDashboard;
@@ -239,22 +240,40 @@ switch ($page) {
 
     // --- SECCIÓN COMPLETA DEL ADMIN ---
     case 'admin':
-        AuthGuard::redirectIfNotAuthenticated(); // Protege toda la sección
-        // Aquí podrías añadir una verificación extra para que el rol sea 'admin'
+        AuthGuard::redirectIfNotAuthenticated();
+        $page = $_GET['page'] ?? 'dashboard';
+        
+        // ✅ **LA CORRECCIÓN ESTÁ AQUÍ**
+        // Leemos el parámetro 'crud' para las acciones AJAX.
+        $crudAction = $_GET['crud'] ?? null;
 
-        $page = $_GET['page'] ?? 'dashboard'; // Página por defecto
-
-        // Mini-router para la sección de admin
         switch ($page) {
             case 'dashboard':
                 $controller = new AdminDashboard();
                 $controller->showDashboardPage();
                 break;
 
-            case 'products': // ✅ ¡NUEVA RUTA!
+            case 'products': // Agrupamos toda la lógica de productos aquí
                 $controller = new AdminProduct();
-                $controller->showProductsPage();
-                break;
+                
+                // Un segundo switch para manejar las acciones CRUD de productos
+                switch ($crudAction) {
+                    case 'get_data':
+                        $controller->getProductData();
+                        break;
+                    case 'update':
+                        $controller->handleUpdate();
+                        break;
+                    case 'delete':
+                        $controller->handleDelete();
+                        break;
+                    default:
+                        // Si no hay acción CRUD, mostramos la página normal
+                        $controller->showProductsPage();
+                        break;
+                }
+                break; // Fin del case 'products'
+
 
             case 'clients': // ✅ ¡NUEVA RUTA!
                 $controller = new AdminClient();

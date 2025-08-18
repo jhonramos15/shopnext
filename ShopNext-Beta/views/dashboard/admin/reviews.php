@@ -7,17 +7,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Reseñas</title>
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/admin/vendedores.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/admin/reviews.css">
     <link rel="icon" href="<?php echo BASE_URL; ?>img/icon_principal.ico" type="image/x-icon">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
     <div class="dashboard">
         <aside class="sidebar">
+        <div class="logo-container">
+            <img src="img/logo.svg" alt="Logo" class="logo-img">
+        </div>
             <ul class="menu">
-                <li><a href="<?php echo BASE_URL; ?>index.php?action=admin&page=dashboard"><span>Dashboard</span></a></li>
-                <li class="active"><a href="<?php echo BASE_URL; ?>index.php?action=admin&page=reviews"><span>Reseñas</span></a></li>
-                </ul>
+            <li><a href="index.php?action=admin&page=dashboard"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a></li>
+            <li><a href="index.php?action=admin&page=products"><i data-lucide="box"></i><span>Productos</span></a></li>
+            <li><a href="index.php?action=admin&page=clients"><i data-lucide="users"></i><span>Clientes</span></a></li>
+            <li><a href="index.php?action=admin&page=income"><i data-lucide="bar-chart-2"></i><span>Ingresos</span></a></li>
+            <li><a href="index.php?action=admin&page=help"><i data-lucide="help-circle"></i><span>Ayuda</span></a></li>
+            <li><a href="index.php?action=admin&page=sellers"><i data-lucide="user-check"></i><span>Vendedores</span></a></li>
+            <li class="active"><a href="index.php?action=admin&page=reviews"><i data-lucide="star"></i><span>Reseñas</span></a></li>
+            </ul>
+            <div class="user-profile-container">
+                <div class="user" id="userProfileBtn">
+                    <img src="https://i.pravatar.cc/40" alt="user" />
+                    <div class="user-info">
+                        <p>Brayan</p>
+                        <small>Administrador</small>
+                    </div>
+                    <i data-lucide="chevron-down" class="profile-arrow"></i>
+                </div>
+                <div class="profile-dropdown" id="profileDropdownMenu">
+                    <a href="?action=logout"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
+                </div>
+            </div>
         </aside>
 
         <main class="main">
@@ -54,25 +75,27 @@
                     </thead>
 <tbody>
     <?php if (!empty($data['reviews'])): ?>
-        <?php foreach ($data['reviews'] as $review): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($review['nombre_producto']); ?></td>
-                <td><?php echo htmlspecialchars($review['nombre_cliente']); ?></td>
-                
-                <td><?php echo str_repeat('★', $review['puntuacion']) . str_repeat('☆', 5 - $review['puntuacion']); ?></td>
-                
-                <td class="comment"><?php echo htmlspecialchars($review['comentario']); ?></td>
-                
-                <td><?php echo date("d/m/Y", strtotime($review['fecha_creacion'])); ?></td>
-                
-                <td><span class="status <?php echo strtolower(htmlspecialchars($review['estado'])); ?>"><?php echo ucfirst(htmlspecialchars($review['estado'])); ?></span></td>
-                <td class="table-actions">
-                    <a href="#" class="action-icon approve-btn"><i data-lucide="check-circle"></i></a>
-                    <a href="#" class="action-icon reject-btn"><i data-lucide="x-circle"></i></a>
-                    <a href="#" class="action-icon delete-btn"><i data-lucide="trash-2"></i></a>
-                </td>
-            </tr>
-        <?php endforeach; ?>
+                            <?php foreach ($data['reviews'] as $review): ?>
+                                <tr data-id="<?php echo $review['id_resena']; ?>">
+                                    <td><?php echo htmlspecialchars($review['nombre_producto']); ?></td>
+                                    <td><?php echo htmlspecialchars($review['nombre_cliente']); ?></td>
+                                    <td>
+                                        <div class="review-rating">
+                                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                <i class="fa-solid fa-star <?php echo ($i <= $review['puntuacion']) ? 'filled' : ''; ?>"></i>
+                                            <?php endfor; ?>
+                                        </div>
+                                    </td>
+                                    <td class="comment"><?php echo htmlspecialchars($review['comentario']); ?></td>
+                                    <td><?php echo date("d/m/Y", strtotime($review['fecha_creacion'])); ?></td>
+                                    <td><span class="status <?php echo strtolower(htmlspecialchars($review['estado'])); ?>"><?php echo ucfirst(htmlspecialchars($review['estado'])); ?></span></td>
+                                    <td class="table-actions">
+                                        <a href="#" class="action-icon approve-btn" title="Aprobar"><i data-lucide="check-circle"></i></a>
+                                        <a href="#" class="action-icon reject-btn" title="Rechazar"><i data-lucide="x-circle"></i></a>
+                                        <a href="#" class="action-icon delete-btn" title="Eliminar"><i data-lucide="trash-2"></i></a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
     <?php else: ?>
         <tr><td colspan="7">No hay reseñas para mostrar.</td></tr>
     <?php endif; ?>

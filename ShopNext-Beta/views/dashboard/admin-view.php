@@ -33,7 +33,7 @@
                 <i data-lucide="chevron-down" class="profile-arrow"></i>
             </div>
             <div class="profile-dropdown" id="profileDropdownMenu">
-                <a href="../../controllers/logout.php"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
+                <a href="?action=logout"><i data-lucide="log-out"></i><span>Cerrar Sesión</span></a>
             </div>
         </div>
     </aside>

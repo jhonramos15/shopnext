@@ -7,10 +7,11 @@ class CartModel
 {
     private $conn;
 
-    // Usamos la inyección de dependencias para recibir la conexión
-    public function __construct($db_connection)
+    public function __construct()
     {
-        $this->conn = $db_connection;
+        // ✅ Ahora el modelo crea su propia conexión, como los demás.
+        $database = new \Config\Database();
+        $this->conn = $database->getConnection();
     }
 
     /**

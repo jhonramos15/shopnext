@@ -1,136 +1,119 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const tableBody = document.querySelector('.table-section tbody');
-    if (!tableBody) return;
+document.addEventListener('DOMContentLoaded', function () {
+    const productosTableBody = document.querySelector('#productos-table tbody');
+    if (!productosTableBody) return;
 
-    // --- MANEJADOR DE CLICS PARA TODA LA TABLA ---
-    tableBody.addEventListener('click', (event) => {
-        const targetButton = event.target.closest('a.action-icon');
-        if (!targetButton) return;
+    const editModalOverlay = document.getElementById('edit-modal-overlay');
+    const editForm = document.getElementById('edit-product-form');
+    const cancelEditBtn = document.getElementById('cancel-edit-btn');
 
-        event.preventDefault();
-        const productRow = targetButton.closest('tr');
-        const productId = productRow.dataset.id;
+    const openEditModal = (productData) => {
+        document.getElementById('edit-product-id').value = productData.id_producto;
+        document.getElementById('edit-nombre').value = productData.nombre_producto;
+        document.getElementById('edit-categoria').value = productData.categoria;
+        document.getElementById('edit-stock').value = productData.stock;
+        document.getElementById('edit-precio').value = parseFloat(productData.precio).toFixed(2);
+        editModalOverlay.style.display = 'flex';
+    };
 
-        // Si es el botón de eliminar
-        if (targetButton.classList.contains('delete-btn')) {
-            confirmarEliminacion(productId, productRow);
+    productosTableBody.addEventListener('click', function (e) {
+        const button = e.target.closest('.action-icon');
+        if (!button) return;
+
+        const row = button.closest('tr');
+        const productId = row.dataset.id;
+
+        if (button.classList.contains('edit-btn')) {
+            e.preventDefault();
+            fetch(`${App.baseUrl}?action=admin&page=products&crud=get_data&id=${productId}`)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success && result.data) {
+                        openEditModal(result.data);
+                    } else {
+                        Swal.fire('Error', result.message || 'No se pudieron obtener los datos.', 'error');
+                    }
+                })
+                .catch(() => Swal.fire('Error de Red', 'No se pudo conectar con el servidor.', 'error'));
         }
 
-        // Si es el botón de editar
-        if (targetButton.classList.contains('edit-btn')) {
-            abrirModalEdicion(productId, productRow);
+        if (button.classList.contains('delete-btn')) {
+            e.preventDefault();
+            Swal.fire({
+                title: '¿Archivar producto?',
+                text: "El producto se ocultará de la tienda pero no se eliminará permanentemente.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, ¡archivar!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`${App.baseUrl}?action=admin&page=products&crud=delete`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id_producto: productId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire('¡Archivado!', 'El producto ha sido archivado.', 'success');
+                            
+                            // ✅ MEJORA: En lugar de borrar la fila, la "desvanecemos" y la eliminamos.
+                            row.style.transition = 'opacity 0.5s ease';
+                            row.style.opacity = '0';
+                            setTimeout(() => {
+                                row.remove();
+                            }, 500); // Espera a que termine la animación
+
+                        } else {
+                            Swal.fire('Error', data.message || 'No se pudo archivar el producto.', 'error');
+                        }
+                    })
+                    .catch(() => Swal.fire('Error de Red', 'No se pudo conectar con el servidor.', 'error'));
+                }
+            });
         }
     });
 
-    // --- FUNCIÓN PARA ELIMINAR (ya la tenías) ---
-    function confirmarEliminacion(id, rowElement) {
-        const productName = rowElement.cells[0].textContent;
-        Swal.fire({
-            title: '¿Estás seguro?',
-            html: `Vas a eliminar el producto: <br><b>${productName}</b>`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Sí, ¡eliminar!',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch('../../../controllers/admin/accionesProducto.php', {
-                    method: 'POST',
-                    credentials: 'same-origin',
-                    body: new URLSearchParams({ 'id_producto': id })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire('¡Eliminado!', data.message, 'success');
-                        rowElement.remove();
-                    } else {
-                        Swal.fire('Error', data.error, 'error');
-                    }
-                });
-            }
+    if(editForm) {
+        editForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(editForm);
+            const data = Object.fromEntries(formData.entries());
+
+            fetch(`${App.baseUrl}?action=admin&page=products&crud=update`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    Swal.fire({ title: '¡Actualizado!', icon: 'success', timer: 1500, showConfirmButton: false });
+                    
+                    const row = document.querySelector(`tr[data-id='${data.id_producto}']`);
+                    row.cells[0].textContent = data.nombre_producto;
+                    row.cells[2].textContent = data.categoria;
+                    row.cells[3].textContent = data.stock;
+                    row.cells[4].textContent = '$' + parseFloat(data.precio).toLocaleString('es-CO', { minimumFractionDigits: 2 });
+                    const statusSpan = row.cells[5].querySelector('span');
+                    statusSpan.textContent = data.stock > 0 ? 'Publicado' : 'Agotado';
+                    statusSpan.className = `status ${data.stock > 0 ? 'active' : 'inactive'}`;
+                    
+                    editModalOverlay.style.display = 'none';
+                } else {
+                    Swal.fire('Error', result.message || 'No se pudo actualizar el producto.', 'error');
+                }
+            })
+            .catch(() => Swal.fire('Error de Red', 'No se pudo conectar con el servidor.', 'error'));
         });
     }
-
-    // --- NUEVA FUNCIÓN PARA EDITAR ---
-    function abrirModalEdicion(id, rowElement) {
-        // 1. Primero, obtenemos los datos actuales del producto
-        fetch(`../../../controllers/admin/obtenerProducto.php?id=${id}`)
-            .then(res => res.json())
-            .then(data => {
-                if (!data.success) {
-                    Swal.fire('Error', data.error, 'error');
-                    return;
-                }
-                const producto = data.producto;
-
-                // 2. Mostramos el formulario emergente con SweetAlert2
-                Swal.fire({
-                    title: 'Editar Producto',
-                    html: `
-                        <form id="edit-form" class="swal2-form">
-                            <label>Nombre</label>
-                            <input id="swal-nombre" class="swal2-input" value="${producto.nombre_producto}">
-                            <label>Descripción</label>
-                            <textarea id="swal-descripcion" class="swal2-textarea">${producto.descripcion}</textarea>
-                            <label>Precio</label>
-                            <input id="swal-precio" class="swal2-input" type="number" step="0.01" value="${producto.precio}">
-                            <label>Stock</label>
-                            <input id="swal-stock" class="swal2-input" type="number" value="${producto.stock}">
-                        </form>
-                    `,
-                    confirmButtonText: 'Guardar Cambios',
-                    focusConfirm: false,
-                    didOpen: () => {
-                        // Código para cuando se abre la alerta
-                    },
-                    preConfirm: () => {
-                        // 3. Cuando se hace clic en "Guardar", recolectamos los datos y los enviamos
-                        const formData = new URLSearchParams();
-                        formData.append('id_producto', id);
-                        formData.append('nombre_producto', document.getElementById('swal-nombre').value);
-                        formData.append('descripcion', document.getElementById('swal-descripcion').value);
-                        formData.append('precio', document.getElementById('swal-precio').value);
-                        formData.append('stock', document.getElementById('swal-stock').value);
-
-                        return fetch('../../../controllers/admin/actualizarProducto.php', {
-                            method: 'POST',
-                            credentials: 'same-origin',
-                            body: formData
-                        })
-                        .then(res => res.json())
-                        .then(updateData => {
-                            if (!updateData.success) {
-                                throw new Error(updateData.error);
-                            }
-                            return updateData;
-                        })
-                        .catch(error => {
-                            Swal.showValidationMessage(`Error: ${error}`);
-                        });
-                    }
-                }).then((result) => {
-                    // 4. Si todo salió bien, actualizamos la tabla en vivo
-                    if (result.isConfirmed) {
-                        const updatedProduct = result.value.producto;
-                        rowElement.cells[0].textContent = updatedProduct.nombre_producto;
-                        rowElement.cells[3].textContent = updatedProduct.stock;
-                        rowElement.cells[4].textContent = `$${parseFloat(updatedProduct.precio).toFixed(2)}`;
-                        
-                        const estadoCell = rowElement.cells[5].querySelector('span');
-                        if(updatedProduct.stock > 0) {
-                            estadoCell.textContent = 'Publicado';
-                            estadoCell.className = 'status active';
-                        } else {
-                            estadoCell.textContent = 'Agotado';
-                            estadoCell.className = 'status inactive';
-                        }
-
-                        Swal.fire('¡Actualizado!', 'El producto ha sido modificado.', 'success');
-                    }
-                });
-            });
-    }
+    
+    if(cancelEditBtn) cancelEditBtn.addEventListener('click', () => editModalOverlay.style.display = 'none');
+    if(editModalOverlay) editModalOverlay.addEventListener('click', (e) => {
+        if (e.target === editModalOverlay) {
+            editModalOverlay.style.display = 'none';
+        }
+    });
 });

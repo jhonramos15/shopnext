@@ -592,3 +592,127 @@ td .status-actions-container {
 .pagination-button span:first-child + i {
     margin-left: 4px;
 }
+
+/* ============================================= */
+/* == ESTILOS PARA EL MODAL DE EDICIÓN (NUEVO) == */
+/* ============================================= */
+
+/* El fondo oscuro que cubre toda la pantalla */
+.modal-overlay {
+  /* Posicionamiento */
+  position: fixed; /* CLAVE: Lo saca del flujo normal y lo posiciona sobre todo */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Ocupa el 100% del ancho de la ventana */
+  height: 100vh; /* Ocupa el 100% del alto de la ventana */
+  z-index: 1000; /* CLAVE: Se asegura de que esté por encima de todo lo demás */
+
+  /* Centrado del contenido */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* Estilo y transición */
+  background-color: rgba(17, 24, 39, 0.6); /* Fondo negro semitransparente */
+  backdrop-filter: blur(4px); /* Efecto de desenfoque del fondo */
+  opacity: 0; /* Empieza invisible para la transición */
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Cuando el JS le quita el 'display: none', hacemos que se muestre */
+.modal-overlay:not([style*="display: none"]) {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* El contenedor blanco del formulario */
+.modal-content {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 500px; /* Ancho máximo para el modal */
+  transform: scale(0.95); /* Empieza un poco más pequeño para la animación */
+  transition: transform 0.3s ease;
+}
+
+.modal-overlay:not([style*="display: none"]) .modal-content {
+    transform: scale(1); /* Vuelve a su tamaño normal al mostrarse */
+}
+
+.modal-content h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #111827;
+}
+
+/* Estilos para el formulario dentro del modal */
+#edit-product-form .form-group {
+  margin-bottom: 20px;
+}
+
+#edit-product-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.9em;
+}
+
+#edit-product-form input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1em;
+  color: #111827;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#edit-product-form input:focus {
+  outline: none;
+  border-color: #7f56d9;
+  box-shadow: 0 0 0 3px rgba(127, 86, 217, 0.2);
+}
+
+/* Contenedor de los botones del modal */
+.modal-actions {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end; /* Alinea los botones a la derecha */
+  gap: 12px;
+}
+
+.modal-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.modal-actions button:active {
+    transform: scale(0.98); /* Efecto de clic */
+}
+
+.btn-cancel {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+.btn-cancel:hover {
+  background-color: #e5e7eb;
+}
+
+.btn-save {
+  background-color: #7f56d9;
+  color: #ffffff;
+}
+.btn-save:hover {
+  background-color: #6d28d9;
+}

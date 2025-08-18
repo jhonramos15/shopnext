@@ -130,18 +130,22 @@ class ProductsModel {
         return $producto;
     }
 
-    public function searchByName($searchTerm) {
+    public function searchByName(string $searchTerm): array {
+        // La consulta busca en el nombre Y en la descripción para mejores resultados
         $sql = "SELECT id_producto, nombre_producto, precio, ruta_imagen 
                 FROM producto 
-                WHERE nombre_producto LIKE ?";
+                WHERE nombre_producto LIKE ? OR descripcion LIKE ?";
         
         $stmt = $this->conn->prepare($sql);
         
+        // Añadimos los comodines '%' para que la búsqueda sea flexible
         $likeTerm = '%' . $searchTerm . '%';
-        $stmt->bind_param("s", $likeTerm);
+        // Usamos el mismo término para ambos parámetros
+        $stmt->bind_param("ss", $likeTerm, $likeTerm);
         
         $stmt->execute();
         $result = $stmt->get_result();
+        $stmt->close();
         
         return $result->fetch_all(MYSQLI_ASSOC);
     }

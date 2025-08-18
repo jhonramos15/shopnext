@@ -1,35 +1,36 @@
 <?php
+// En: src/controllers/shop/SearchController.php
+
 namespace App\Controllers\Shop;
 
-use App\Models\Shop\ProductsModel;
+use App\Models\ProductsModel;
 
 class SearchController {
-    private $productsModel;
+    private $productModel;
 
     public function __construct() {
-        $this->productsModel = new ProductsModel();
+        $this->productModel = new ProductsModel();
     }
 
-    /**
-     * Maneja la petición de búsqueda y devuelve los resultados en JSON.
-     */
     public function handleSearch() {
-        // Obtenemos el término de búsqueda de la URL (?term=...).
+        header('Content-Type: application/json');
+        
+        // Obtenemos el término de búsqueda de la URL
         $searchTerm = $_GET['term'] ?? '';
 
-        // Nos aseguramos de que haya algo que buscar.
+        // --- PUNTO DE DEPURACIÓN ---
+        // Descomenta la siguiente línea para ver qué está recibiendo el backend.
+        // die(json_encode(['termino_recibido' => $searchTerm]));
+
         if (empty($searchTerm)) {
-            echo json_encode([]); // Devolvemos un arreglo vacío si no hay término.
-            return;
+            echo json_encode([]);
+            exit;
         }
 
-        // Usamos el modelo para obtener los productos.
-        $results = $this->productsModel->searchByName($searchTerm);
-
-        // Configuramos la cabecera para indicar que la respuesta es JSON.
-        header('Content-Type: application/json');
-
-        // Convertimos el arreglo de resultados a formato JSON y lo imprimimos.
+        // Le pedimos al modelo que busque los productos
+        $results = $this->productModel->searchByName($searchTerm);
+        
+        // Devolvemos los resultados
         echo json_encode($results);
     }
 }
