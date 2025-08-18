@@ -17,6 +17,12 @@ class AdminProductModel {
         }
     }
 
+    public function getAllCategories(): array {
+        $sql = "SELECT id_categoria, nombre FROM categorias ORDER BY nombre ASC";
+        $resultado = $this->conn->query($sql);
+        return $resultado->fetch_all(MYSQLI_ASSOC);
+    }
+
     /**
      * Obtiene las estadísticas de productos para las tarjetas.
      */

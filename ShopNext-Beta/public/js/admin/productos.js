@@ -9,12 +9,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const openEditModal = (productData) => {
         document.getElementById('edit-product-id').value = productData.id_producto;
         document.getElementById('edit-nombre').value = productData.nombre_producto;
-        document.getElementById('edit-categoria').value = productData.categoria;
+        
+        // ✅ MODIFICADO: Seleccionamos el valor en el <select> usando el id_categoria
+        document.getElementById('edit-categoria').value = productData.id_categoria;
+
         document.getElementById('edit-stock').value = productData.stock;
         document.getElementById('edit-precio').value = parseFloat(productData.precio).toFixed(2);
         editModalOverlay.style.display = 'flex';
     };
 
+    // El resto del código no necesita cambios
     productosTableBody.addEventListener('click', function (e) {
         const button = e.target.closest('.action-icon');
         if (!button) return;
@@ -58,14 +62,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     .then(data => {
                         if (data.success) {
                             Swal.fire('¡Archivado!', 'El producto ha sido archivado.', 'success');
-                            
-                            // ✅ MEJORA: En lugar de borrar la fila, la "desvanecemos" y la eliminamos.
                             row.style.transition = 'opacity 0.5s ease';
                             row.style.opacity = '0';
                             setTimeout(() => {
                                 row.remove();
-                            }, 500); // Espera a que termine la animación
-
+                            }, 500);
                         } else {
                             Swal.fire('Error', data.message || 'No se pudo archivar el producto.', 'error');
                         }
@@ -90,18 +91,10 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(result => {
                 if (result.success) {
-                    Swal.fire({ title: '¡Actualizado!', icon: 'success', timer: 1500, showConfirmButton: false });
-                    
-                    const row = document.querySelector(`tr[data-id='${data.id_producto}']`);
-                    row.cells[0].textContent = data.nombre_producto;
-                    row.cells[2].textContent = data.categoria;
-                    row.cells[3].textContent = data.stock;
-                    row.cells[4].textContent = '$' + parseFloat(data.precio).toLocaleString('es-CO', { minimumFractionDigits: 2 });
-                    const statusSpan = row.cells[5].querySelector('span');
-                    statusSpan.textContent = data.stock > 0 ? 'Publicado' : 'Agotado';
-                    statusSpan.className = `status ${data.stock > 0 ? 'active' : 'inactive'}`;
-                    
-                    editModalOverlay.style.display = 'none';
+                    Swal.fire({ title: '¡Actualizado!', icon: 'success', timer: 1500, showConfirmButton: false })
+                    .then(() => {
+                        location.reload(); 
+                    });
                 } else {
                     Swal.fire('Error', result.message || 'No se pudo actualizar el producto.', 'error');
                 }

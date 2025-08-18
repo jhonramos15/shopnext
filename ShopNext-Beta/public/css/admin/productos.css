@@ -716,3 +716,39 @@ td .status-actions-container {
 .btn-save:hover {
   background-color: #6d28d9;
 }
+
+#edit-product-form select {
+  /* Apariencia y Reseteo */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: #ffffff; /* Fondo blanco para que no sea transparente */
+
+  /* Estilos visuales (igual que los inputs) */
+  width: 100%;
+  padding: 12px 40px 12px 15px; /* Padding derecho extra para la flecha */
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1em;
+  color: #111827;
+  cursor: pointer; /* Cambia el cursor para indicar que es seleccionable */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  /* Flecha personalizada */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+}
+
+/* Estado de foco (igual que los inputs) */
+#edit-product-form select:focus {
+  outline: none;
+  border-color: #7f56d9;
+  box-shadow: 0 0 0 3px rgba(127, 86, 217, 0.2);
+}
+
+/* Estilo para la primera opción deshabilitada */
+#edit-product-form select:invalid {
+  color: #6b7280;
+}

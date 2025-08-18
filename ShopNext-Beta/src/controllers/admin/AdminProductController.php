@@ -15,12 +15,14 @@ class AdminProductController {
             // Pedimos todos los datos que la vista necesita
             $stats = $productModel->getProductStats();
             $products = $productModel->getAllProducts();
+            $categories = $productModel->getAllCategories();
 
             // Empaquetamos todo en el array $data
             $data = [
                 'admin_nombre' => 'Brayan', // Temporalmente estático
                 'stats'        => $stats,
-                'products'     => $products
+                'products'     => $products,
+                'categories'   => $categories
             ];
             
             // Le pasamos los datos a la vista
