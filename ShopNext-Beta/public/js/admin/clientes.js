@@ -1,121 +1,134 @@
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('✅ JS Final v3 cargado. Este es el bueno.');
+    const tableBody = document.querySelector('#clientes-table tbody');
+    if (!tableBody) return;
 
-    // --- RENDERIZAR ÍCONOS PRIMERO ---
-    // Se asegura de que el HTML esté en su estado final antes de hacer nada más.
-    lucide.createIcons();
+    const modalOverlay = document.getElementById('edit-modal-overlay');
+    const editForm = document.getElementById('edit-client-form');
+    const cancelBtn = document.getElementById('cancel-edit-btn');
 
-    // --- LÓGICA GENERAL DE LA PÁGINA (MENÚ, PERFIL) ---
-    // Marcar el enlace activo en el menú
-    const currentPage = window.location.pathname.split('/').pop();
-    const menuLinks = document.querySelectorAll('.menu li a');
-    menuLinks.forEach(link => {
-        const linkPage = link.getAttribute('href').split('/').pop();
-        if (linkPage === currentPage) {
-            link.parentElement.classList.add('active');
-        }
-    });
+    const openEditModal = (clientData) => {
+        document.getElementById('edit-client-id').value = clientData.id_usuario;
+        document.getElementById('edit-nombre').value = clientData.nombre;
+        document.getElementById('edit-email').value = clientData.correo_usuario;
+        document.getElementById('edit-estado').value = clientData.estado;
+        modalOverlay.style.display = 'flex';
+    };
 
-    // Dropdown de perfil
-    const userProfileBtn = document.querySelector('.user');
-    const profileDropdownMenu = document.getElementById('profileDropdownMenu');
-    if (userProfileBtn) {
-        userProfileBtn.addEventListener('click', (e) => {
-            // Detenemos la propagación para que el clic no cierre el menú inmediatamente
-            e.stopPropagation(); 
-            profileDropdownMenu?.classList.toggle('show');
-        });
-    }
-    // Cierra el menú si se hace clic en cualquier otro lugar
-    window.addEventListener('click', () => {
-        profileDropdownMenu?.classList.remove('show');
-    });
+    tableBody.addEventListener('click', function (e) {
+        const button = e.target.closest('.action-icon');
+        if (!button) return;
 
-    // --- ESCUCHADOR DE CLICS GLOBAL PARA LAS ACCIONES DE LA TABLA ---
-    document.addEventListener('click', function (event) {
-        const editButton = event.target.closest('.edit-btn');
-        const deleteButton = event.target.closest('.delete-btn');
-
-        if (editButton) {
-            event.preventDefault(); // Detiene el '#'
-            handleEdit(editButton);
-        }
-
-        if (deleteButton) {
-            event.preventDefault(); // Detiene el '#'
-            handleDelete(deleteButton);
-        }
-    });
-
-    // --- FUNCIONES PARA MANEJAR LAS ACCIONES ---
-    function handleEdit(button) {
         const row = button.closest('tr');
-        if (!row) return;
+        const clientId = row.dataset.id;
 
-        const cells = row.cells;
-        document.getElementById('edit-id').value = cells[1].textContent;
-        document.getElementById('edit-nombre').value = cells[2].textContent;
-        document.getElementById('edit-email').value = cells[3].textContent;
-        
-        document.getElementById('edit-modal-overlay').style.display = 'flex';
-    }
-
-    function handleDelete(button) {
-        const row = button.closest('tr');
-        if (!row || !confirm('¿Estás seguro de que quieres eliminar a este cliente?')) {
-            return;
-        }
-        
-        const idCliente = row.dataset.id;
-        const formData = new FormData();
-        formData.append('accion', 'eliminar');
-        formData.append('id', idCliente);
-
-        fetch('../../../controllers/clienteController.php', { method: 'POST', body: formData })
-            .then(response => response.text())
-            .then(result => {
-                if (result.trim() === 'eliminado') {
-                    row.remove();
-                } else {
-                    alert('Error del servidor: ' + result);
-                }
-            })
-            .catch(error => console.error('Error de red al eliminar:', error));
-    }
-
-    // --- MANEJO DEL FORMULARIO DEL MODAL ---
-    const editForm = document.getElementById('edit-form');
-    if(editForm) {
-        editForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const id = document.getElementById('edit-id').value;
-            const data = new FormData(editForm);
-            data.append('accion', 'editar');
-            data.append('id', id);
-
-            fetch('../../../controllers/clienteController.php', { method: 'POST', body: data })
-                .then(res => res.text())
-                .then(response => {
-                    if (response.trim() === 'ok' || response.trim() === 'sin cambios') {
-                        const tableBody = document.querySelector('.table-section tbody');
-                        const rowToUpdate = tableBody.querySelector(`tr[data-id='${id}']`);
-                        if (rowToUpdate) {
-                            rowToUpdate.children[2].innerText = data.get('nombre');
-                            rowToUpdate.children[3].innerText = data.get('email');
-                        }
-                        document.getElementById('edit-modal-overlay').style.display = 'none';
+        if (button.classList.contains('edit-btn')) {
+            e.preventDefault();
+            fetch(`${App.baseUrl}?action=admin&page=clients&crud=get_data&id=${clientId}`)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success && result.data) {
+                        openEditModal(result.data);
                     } else {
-                        alert('Error al guardar: ' + response);
+                        Swal.fire('Error', result.message || 'No se pudieron obtener los datos.', 'error');
                     }
-                })
-                .catch(error => console.error('Error de red al guardar:', error));
+                });
+        }
+
+        if (button.classList.contains('delete-btn')) {
+            e.preventDefault();
+            Swal.fire({
+                title: '¿Archivar cliente?',
+                text: "El cliente se marcará como inactivo y no se mostrará en esta lista.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, ¡archivar!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`${App.baseUrl}?action=admin&page=clients&crud=delete`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id_usuario: clientId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire('¡Archivado!', 'El cliente ha sido archivado.', 'success');
+                            
+                            // ✅ AQUÍ ESTÁ LA CORRECCIÓN:
+                            // Añadimos una transición suave y luego eliminamos la fila del DOM.
+                            row.style.transition = 'opacity 0.5s ease';
+                            row.style.opacity = '0';
+                            setTimeout(() => {
+                                row.remove();
+                            }, 500); // Esperamos 500ms para que la animación termine
+
+                        } else {
+                            Swal.fire('Error', data.message || 'No se pudo archivar el cliente.', 'error');
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+    if (editForm) {
+        editForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(editForm);
+            const data = Object.fromEntries(formData.entries());
+
+            fetch(`${App.baseUrl}?action=admin&page=clients&crud=update`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    Swal.fire({ title: '¡Actualizado!', icon: 'success', timer: 1500, showConfirmButton: false });
+                    
+                    const row = document.querySelector(`tr[data-id='${data.id_usuario}']`);
+                    row.cells[0].textContent = data.nombre;
+                    row.cells[1].textContent = data.correo_usuario;
+                    const statusSpan = row.cells[3].querySelector('span');
+                    statusSpan.textContent = data.estado.charAt(0).toUpperCase() + data.estado.slice(1);
+                    statusSpan.className = `status ${data.estado === 'activo' ? 'active' : 'inactive'}`;
+                    
+                    modalOverlay.style.display = 'none';
+                } else {
+                    Swal.fire('Error', result.message || 'No se pudo actualizar el cliente.', 'error');
+                }
+            });
         });
     }
 
-    const cancelEditBtn = document.getElementById('cancel-edit');
-    if(cancelEditBtn) {
-        cancelEditBtn.addEventListener('click', function() {
-            document.getElementById('edit-modal-overlay').style.display = 'none';
+    if (cancelBtn) cancelBtn.addEventListener('click', () => modalOverlay.style.display = 'none');
+    if (modalOverlay) modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            modalOverlay.style.display = 'none';
+        }
+    });
+
+    // --- Lógica para el menú desplegable del perfil ---
+    const userProfileBtn = document.getElementById('userProfileBtn');
+    const profileDropdownMenu = document.getElementById('profileDropdownMenu');
+    const userProfileContainer = document.querySelector('.user-profile-container');
+
+    if (userProfileBtn) {
+        userProfileBtn.addEventListener('click', function(event) {
+            event.stopPropagation();
+            profileDropdownMenu.classList.toggle('show');
+            userProfileContainer.classList.toggle('open');
         });
     }
+
+    window.addEventListener('click', function(event) {
+        if (profileDropdownMenu && profileDropdownMenu.classList.contains('show')) {
+            profileDropdownMenu.classList.remove('show');
+            userProfileContainer.classList.remove('open');
+        }
+    });
 });

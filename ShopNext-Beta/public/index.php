@@ -275,10 +275,25 @@ switch ($page) {
                 break; // Fin del case 'products'
 
 
-            case 'clients': // ✅ ¡NUEVA RUTA!
-                $controller = new AdminClient();
-                $controller->showClientsPage();
-                break;
+        case 'clients':
+            $controller = new AdminClient();
+            $crudAction = $_GET['crud'] ?? null;
+
+            switch ($crudAction) {
+                case 'get_data':
+                    $controller->getClientData();
+                    break;
+                case 'update':
+                    $controller->handleUpdate();
+                    break;
+                case 'delete':
+                    $controller->handleDelete();
+                    break;
+                default:
+                    $controller->showClientsPage();
+                    break;
+            }
+            break; // Fin del case 'clients'
 
             case 'help': // ✅ ¡NUEVA RUTA!
                 $controller = new AdminHelp();
