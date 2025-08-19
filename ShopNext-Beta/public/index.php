@@ -295,20 +295,50 @@ switch ($page) {
             }
             break; // Fin del case 'clients'
 
-            case 'help': // ✅ ¡NUEVA RUTA!
-                $controller = new AdminHelp();
-                $controller->showHelpPage();
-                break;
+        case 'help':
+            $controller = new AdminHelp();
+            $crudAction = $_GET['crud'] ?? null;
+
+            switch ($crudAction) {
+                case 'get_data':
+                    $controller->getTicketData();
+                    break;
+                case 'update':
+                    $controller->handleUpdate();
+                    break;
+                case 'delete':
+                    $controller->handleDelete();
+                    break;
+                default:
+                    $controller->showHelpPage();
+                    break;
+            }
+            break; // Fin del case 'help'
 
             case 'sellers': // ✅ ¡NUEVA RUTA!
                 $controller = new AdminSeller();
                 $controller->showSellersPage();
                 break;
 
-            case 'income': // ✅ ¡NUEVA RUTA!
-                $controller = new AdminIncome();
-                $controller->showIncomePage();
-                break;
+        case 'income':
+            $controller = new AdminIncome();
+            $crudAction = $_GET['crud'] ?? null;
+
+            switch ($crudAction) {
+                case 'get_data':
+                    $controller->getOrderData();
+                    break;
+                case 'update':
+                    $controller->handleUpdate();
+                    break;
+                case 'delete':
+                    $controller->handleDelete();
+                    break;
+                default:
+                    $controller->showIncomePage();
+                    break;
+            }
+            break; // Fin del case 'income'
 
             case 'reviews': // ✅ ¡NUEVA RUTA!
                 $controller = new AdminReviews();

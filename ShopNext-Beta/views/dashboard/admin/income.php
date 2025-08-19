@@ -81,29 +81,63 @@
                             <th>Cliente</th>
                             <th>Total</th>
                             <th>Estado del Pedido</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (!empty($data['orders'])): ?>
                             <?php foreach ($data['orders'] as $order): ?>
-                                <tr>
+                                <!-- ✅ CORRECCIÓN CLAVE: Añadimos el data-id a la fila -->
+                                <tr data-id="<?php echo htmlspecialchars($order['id_pedido']); ?>">
                                     <td>#<?php echo htmlspecialchars($order['id_pedido']); ?></td>
                                     <td><?php echo date("d/m/Y", strtotime($order['fecha'])); ?></td>
                                     <td><?php echo htmlspecialchars($order['nombre_cliente']); ?></td>
                                     <td>$<?php echo number_format($order['total_pedido'], 2); ?></td>
                                     <td><span class="status <?php echo strtolower(htmlspecialchars($order['estado'])); ?>"><?php echo ucfirst(htmlspecialchars($order['estado'])); ?></span></td>
+                                    <td class="table-actions">
+                                        <a href="#" class="action-icon edit-btn" title="Cambiar Estado"><i data-lucide="edit-2"></i></a>
+                                        <a href="#" class="action-icon delete-btn" title="Cancelar Pedido"><i data-lucide="trash-2"></i></a>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <tr><td colspan="5">No hay pedidos registrados.</td></tr>
+                            <tr><td colspan="6" style="text-align: center;">No hay pedidos registrados.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
             </section>
+
+            <div id="edit-modal-overlay" class="modal-overlay" style="display:none;">
+                <div class="modal-content">
+                    <h2>Actualizar Estado del Pedido</h2>
+                    <form id="edit-order-form">
+                        <input type="hidden" id="edit-order-id" name="id_pedido">
+                        <div class="form-group">
+                            <label for="edit-estado">Nuevo Estado</label>
+                            <select id="edit-estado" name="estado" required>
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Procesando">Procesando</option>
+                                <option value="Enviado">Enviado</option>
+                                <option value="Completado">Completado</option>
+                                <option value="Cancelado">Cancelado</option>
+                            </select>
+                        </div>
+                        <div class="modal-actions">
+                            <button type="button" class="btn-cancel" id="cancel-edit-btn">Cancelar</button>
+                            <button type="submit" class="btn-save">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </main>
     </div>
+    <!-- ✅ SCRIPTS NECESARIOS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const App = { baseUrl: '<?php echo BASE_URL; ?>' };
+        lucide.createIcons();
+    </script>
     <script>lucide.createIcons();</script>
-  <script src="../../../public/js/admin/ingresos.js"></script>
-    <script src="../../../public/js/main.js"></script>
+  <script src="js/admin/ingresos.js"></script>
 </body>
 </html>

@@ -1,6 +1,4 @@
 <?php
-// En: src/models/Admin/AdminProductModel.php
-
 namespace App\Models\Admin;
 
 use Config\Database;
@@ -28,7 +26,6 @@ class AdminProductModel {
      */
     public function getProductStats(): array {
         $stats = [];
-        // ✅ MODIFICADO: Las estadísticas ahora solo cuentan productos activos.
         $stats['total_productos'] = $this->conn->query("SELECT COUNT(*) as total FROM producto WHERE estado = 'activo'")->fetch_assoc()['total'] ?? 0;
         $stats['valor_inventario'] = $this->conn->query("SELECT SUM(precio * stock) as total FROM producto WHERE estado = 'activo'")->fetch_assoc()['total'] ?? 0;
         $stats['productos_agotados'] = $this->conn->query("SELECT COUNT(*) as total FROM producto WHERE stock = 0 AND estado = 'activo'")->fetch_assoc()['total'] ?? 0;
@@ -36,7 +33,6 @@ class AdminProductModel {
     }
 
     public function getAllProducts(): array {
-        // ✅ MODIFICADO: La consulta ahora solo trae productos con estado 'activo'.
         $sql = "SELECT
                     p.id_producto, p.nombre_producto, p.precio, p.categoria, p.stock,
                     v.nombre AS nombre_vendedor

@@ -1,44 +1,104 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const currentPage = window.location.pathname.split('/').pop(); // ejemplo: "clientes.html"
-    const menuLinks = document.querySelectorAll('.menu li a');
+document.addEventListener('DOMContentLoaded', function () {
+    const tableBody = document.querySelector('#pedidos-table tbody');
+    if (!tableBody) return;
 
-    menuLinks.forEach(link => {
-      const linkPage = link.getAttribute('href').split('/').pop(); // Extrae solo el nombre del archivo del href
-      // Si el href es exactamente igual al nombre de la página actual, o si es la página de ingresos
-      if (linkPage === currentPage || (currentPage === 'ingresos.html' && linkPage === 'ingresos.html')) { // Ajuste para ingresos.html
-        link.parentElement.classList.add('active'); //
-      } else {
-        link.parentElement.classList.remove('active'); //
-      }
+    const modalOverlay = document.getElementById('edit-modal-overlay');
+    const editForm = document.getElementById('edit-order-form');
+    const cancelBtn = document.getElementById('cancel-edit-btn');
+
+    const openEditModal = (orderData) => {
+        document.getElementById('edit-order-id').value = orderData.id_pedido;
+        document.getElementById('edit-estado').value = orderData.estado;
+        modalOverlay.style.display = 'flex';
+    };
+
+    tableBody.addEventListener('click', function (e) {
+        const button = e.target.closest('.action-icon');
+        if (!button) return;
+
+        const row = button.closest('tr');
+        const orderId = row.dataset.id;
+
+        if (button.classList.contains('edit-btn')) {
+            e.preventDefault();
+            fetch(`${App.baseUrl}?action=admin&page=income&crud=get_data&id=${orderId}`)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success && result.data) {
+                        openEditModal(result.data);
+                    } else {
+                        Swal.fire('Error', result.message || 'No se pudieron obtener los datos del pedido.', 'error');
+                    }
+                });
+        }
+
+        if (button.classList.contains('delete-btn')) {
+            e.preventDefault();
+            Swal.fire({
+                title: '¿Cancelar este pedido?',
+                text: "Esta acción cambiará el estado a 'Cancelado'.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, ¡cancelar!',
+                cancelButtonText: 'Volver'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`${App.baseUrl}?action=admin&page=income&crud=delete`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id_pedido: orderId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire('¡Cancelado!', 'El pedido ha sido cancelado.', 'success');
+                            const statusSpan = row.querySelector('.status');
+                            statusSpan.textContent = 'Cancelado';
+                            statusSpan.className = 'status cancelado';
+                        } else {
+                            Swal.fire('Error', data.message || 'No se pudo cancelar el pedido.', 'error');
+                        }
+                    });
+                }
+            });
+        }
     });
 
-    lucide.createIcons(); // Asegura íconos visibles
+    if (editForm) {
+        editForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(editForm);
+            const data = Object.fromEntries(formData.entries());
 
-    // JavaScript para el menú desplegable del perfil
-    const userProfileBtn = document.querySelector('.user'); // Selecciona el div .user para el botón del perfil
-    const profileDropdownMenu = document.getElementById('profileDropdownMenu'); // Asegúrate de añadir un id="profileDropdownMenu" al div del menú desplegable del perfil en tu HTML si lo tienes.
-    const profileArrow = userProfileBtn ? userProfileBtn.querySelector('.profile-arrow') : null; // Asegúrate de tener una flecha con clase .profile-arrow dentro de .user
-
-    if (userProfileBtn) { // Solo si el botón de perfil existe
-        userProfileBtn.addEventListener('click', () => {
-            if (profileDropdownMenu) { // Solo si el menú desplegable existe
-                profileDropdownMenu.classList.toggle('show');
-            }
-            if (profileArrow) { // Solo si la flecha existe
-                profileArrow.classList.toggle('rotate');
-            }
-        });
-
-        // Cerrar el menú si se hace clic fuera de él
-        window.addEventListener('click', function(event) {
-            if (profileDropdownMenu && userProfileBtn && !userProfileBtn.contains(event.target) && !profileDropdownMenu.contains(event.target)) {
-                if (profileDropdownMenu.classList.contains('show')) {
-                    profileDropdownMenu.classList.remove('show');
-                    if (profileArrow) {
-                        profileArrow.classList.remove('rotate');
-                    }
+            fetch(`${App.baseUrl}?action=admin&page=income&crud=update`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    Swal.fire({ title: '¡Actualizado!', icon: 'success', timer: 1500, showConfirmButton: false });
+                    
+                    const row = document.querySelector(`tr[data-id='${data.id_pedido}']`);
+                    const statusSpan = row.querySelector('.status');
+                    statusSpan.textContent = data.estado;
+                    statusSpan.className = `status ${data.estado.toLowerCase()}`;
+                    
+                    modalOverlay.style.display = 'none';
+                } else {
+                    Swal.fire('Error', result.message || 'No se pudo actualizar el pedido.', 'error');
                 }
-            }
+            });
         });
     }
+
+    if (cancelBtn) cancelBtn.addEventListener('click', () => modalOverlay.style.display = 'none');
+    if (modalOverlay) modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            modalOverlay.style.display = 'none';
+        }
+    });
 });

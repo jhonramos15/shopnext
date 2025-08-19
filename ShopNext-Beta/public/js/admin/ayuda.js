@@ -1,109 +1,111 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const currentPage = window.location.pathname.split('/').pop(); // ejemplo: "clientes.html"
-    const menuLinks = document.querySelectorAll('.menu li a');
-
-    menuLinks.forEach(link => {
-      const linkPage = link.getAttribute('href').split('/').pop(); // Extrae solo el nombre del archivo del href
-      // Si el href es exactamente igual al nombre de la página actual, o si es la página de ingresos
-      if (linkPage === currentPage || (currentPage === 'ingresos.html' && linkPage === 'ingresos.html')) { // Ajuste para ingresos.html
-        link.parentElement.classList.add('active'); //
-      } else {
-        link.parentElement.classList.remove('active'); //
-      }
-    });
-
-    lucide.createIcons(); // Asegura íconos visibles
-
-    // JavaScript para el menú desplegable del perfil
-    const userProfileBtn = document.querySelector('.user'); // Selecciona el div .user para el botón del perfil
-    const profileDropdownMenu = document.getElementById('profileDropdownMenu'); // Asegúrate de añadir un id="profileDropdownMenu" al div del menú desplegable del perfil en tu HTML si lo tienes.
-    const profileArrow = userProfileBtn ? userProfileBtn.querySelector('.profile-arrow') : null; // Asegúrate de tener una flecha con clase .profile-arrow dentro de .user
-
-    if (userProfileBtn) { // Solo si el botón de perfil existe
-        userProfileBtn.addEventListener('click', () => {
-            if (profileDropdownMenu) { // Solo si el menú desplegable existe
-                profileDropdownMenu.classList.toggle('show');
-            }
-            if (profileArrow) { // Solo si la flecha existe
-                profileArrow.classList.toggle('rotate');
-            }
-        });
-
-        // Cerrar el menú si se hace clic fuera de él
-        window.addEventListener('click', function(event) {
-            if (profileDropdownMenu && userProfileBtn && !userProfileBtn.contains(event.target) && !profileDropdownMenu.contains(event.target)) {
-                if (profileDropdownMenu.classList.contains('show')) {
-                    profileDropdownMenu.classList.remove('show');
-                    if (profileArrow) {
-                        profileArrow.classList.remove('rotate');
-                    }
-                }
-            }
-        });
-    }
-});
-
-// public/js/admin/ayuda.js
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function () {
     const tableBody = document.querySelector('#ayuda-table tbody');
-
     if (!tableBody) return;
 
-    tableBody.addEventListener('click', function(event) {
-        const responderBtn = event.target.closest('.responder-btn');
+    const modalOverlay = document.getElementById('edit-modal-overlay');
+    const editForm = document.getElementById('edit-ticket-form');
+    const cancelBtn = document.getElementById('cancel-edit-btn');
 
-        if (responderBtn) {
-            event.preventDefault();
-            const row = responderBtn.closest('tr');
-            const ticketId = row.dataset.id;
-            
-            // Confirmación antes de cambiar el estado
+    const openEditModal = (ticketData) => {
+        document.getElementById('edit-ticket-id').value = ticketData.id_ticket;
+        document.getElementById('edit-asunto').value = ticketData.asunto;
+        document.getElementById('edit-prioridad').value = ticketData.prioridad;
+        document.getElementById('edit-estado').value = ticketData.estado;
+        modalOverlay.style.display = 'flex';
+    };
+
+    tableBody.addEventListener('click', function (e) {
+        const button = e.target.closest('.action-icon');
+        if (!button) return;
+
+        const row = button.closest('tr');
+        const ticketId = row.dataset.id;
+
+        if (button.classList.contains('edit-btn')) {
+            e.preventDefault();
+            fetch(`${App.baseUrl}?action=admin&page=help&crud=get_data&id=${ticketId}`)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success && result.data) {
+                        openEditModal(result.data);
+                    } else {
+                        Swal.fire('Error', result.message || 'No se pudieron obtener los datos del ticket.', 'error');
+                    }
+                });
+        }
+
+        if (button.classList.contains('delete-btn')) {
+            e.preventDefault();
             Swal.fire({
-                title: '¿Marcar como Resuelto?',
-                text: "Esta acción cambiará el estado del ticket.",
-                icon: 'question',
+                title: '¿Cerrar este ticket?',
+                text: "El ticket se marcará como 'Cerrado' y se archivará.",
+                icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#28a745',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Sí, resolver',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, ¡cerrar ticket!',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    resolverTicket(ticketId, row);
+                    fetch(`${App.baseUrl}?action=admin&page=help&crud=delete`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id_ticket: ticketId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire('¡Cerrado!', 'El ticket ha sido cerrado.', 'success');
+                            row.style.transition = 'opacity 0.5s ease';
+                            row.style.opacity = '0';
+                            setTimeout(() => row.remove(), 500);
+                        } else {
+                            Swal.fire('Error', data.message || 'No se pudo cerrar el ticket.', 'error');
+                        }
+                    });
                 }
             });
         }
     });
 
-    function resolverTicket(id, rowElement) {
-        const formData = new URLSearchParams();
-        formData.append('id_ticket', id);
-        formData.append('accion', 'resolver'); // Enviamos la acción que queremos realizar
+    if (editForm) {
+        editForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(editForm);
+            const data = Object.fromEntries(formData.entries());
 
-        fetch('../../../controllers/admin/accionesTicket.php', {
-            method: 'POST',
-            credentials: 'same-origin', // Importante para la sesión
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire('¡Éxito!', 'El ticket ha sido marcado como resuelto.', 'success');
-                
-                // Actualizamos la fila en la tabla al instante
-                const estadoCell = rowElement.querySelector('.status.status-abierto');
-                if (estadoCell) {
-                    estadoCell.textContent = 'Resuelto';
-                    estadoCell.classList.remove('status-abierto');
-                    estadoCell.classList.add('status-resuelto');
+            fetch(`${App.baseUrl}?action=admin&page=help&crud=update`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    Swal.fire({ title: '¡Actualizado!', icon: 'success', timer: 1500, showConfirmButton: false });
+                    
+                    const row = document.querySelector(`tr[data-id='${data.id_ticket}']`);
+                    const prioritySpan = row.querySelector('.status[class*="priority-"]');
+                    const statusSpan = row.querySelector('.status[class*="status-"]');
+
+                    prioritySpan.textContent = data.prioridad;
+                    prioritySpan.className = `status priority-${data.prioridad.toLowerCase()}`;
+                    
+                    statusSpan.textContent = data.estado;
+                    statusSpan.className = `status status-${data.estado.toLowerCase().replace(' ', '-')}`;
+
+                    modalOverlay.style.display = 'none';
+                } else {
+                    Swal.fire('Error', result.message || 'No se pudo actualizar el ticket.', 'error');
                 }
-            } else {
-                Swal.fire('Error', data.error || 'No se pudo actualizar el ticket.', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            Swal.fire('Error de Conexión', 'Hubo un problema al contactar con el servidor.', 'error');
+            });
         });
     }
+
+    if (cancelBtn) cancelBtn.addEventListener('click', () => modalOverlay.style.display = 'none');
+    if (modalOverlay) modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            modalOverlay.style.display = 'none';
+        }
+    });
 });

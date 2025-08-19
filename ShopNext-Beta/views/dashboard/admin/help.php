@@ -89,28 +89,67 @@
                     <tbody>
                         <?php if (!empty($data['tickets'])): ?>
                             <?php foreach ($data['tickets'] as $ticket): ?>
-                                <tr>
+                                <tr data-id="<?php echo htmlspecialchars($ticket['id_ticket']); ?>">
                                     <td><?php echo htmlspecialchars($ticket['nombre_cliente']); ?></td>
                                     <td><?php echo htmlspecialchars($ticket['asunto']); ?></td>
                                     <td><?php echo date("d M, Y", strtotime($ticket['fecha_creacion'])); ?></td>
                                     <td><span class="status priority-<?php echo strtolower(htmlspecialchars($ticket['prioridad'])); ?>"><?php echo htmlspecialchars($ticket['prioridad']); ?></span></td>
                                     <td><span class="status status-<?php echo strtolower(htmlspecialchars($ticket['estado'])); ?>"><?php echo htmlspecialchars($ticket['estado']); ?></span></td>
                                     <td class="table-actions">
-                                        <a href="#" class="action-icon ver-btn"><i data-lucide="eye"></i></a>
-                                        <a href="#" class="action-icon responder-btn"><i data-lucide="send"></i></a>
+                                        <a href="#" class="action-icon edit-btn" title="Editar Ticket"><i data-lucide="edit-2"></i></a>
+                                        <a href="#" class="action-icon delete-btn" title="Cerrar Ticket"><i data-lucide="check-circle"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <tr><td colspan="6">No hay tickets recientes.</td></tr>
+                            <tr><td colspan="6" style="text-align: center;">No hay tickets recientes.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
             </section>
+
+            <!-- ✅ NUEVO MODAL -->
+            <div id="edit-modal-overlay" class="modal-overlay" style="display:none;">
+                <div class="modal-content">
+                    <h2>Gestionar Ticket</h2>
+                    <form id="edit-ticket-form">
+                        <input type="hidden" id="edit-ticket-id" name="id_ticket">
+                        <div class="form-group">
+                            <label for="edit-asunto">Asunto</label>
+                            <input type="text" id="edit-asunto" name="asunto" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-prioridad">Prioridad</label>
+                            <select id="edit-prioridad" name="prioridad" required>
+                                <option value="Baja">Baja</option>
+                                <option value="Media">Media</option>
+                                <option value="Alta">Alta</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-estado">Estado</label>
+                            <select id="edit-estado" name="estado" required>
+                                <option value="Abierto">Abierto</option>
+                                <option value="En progreso">En progreso</option>
+                                <option value="Resuelto">Resuelto</option>
+                                <option value="Cerrado">Cerrado</option>
+                            </select>
+                        </div>
+                        <div class="modal-actions">
+                            <button type="button" class="btn-cancel" id="cancel-edit-btn">Cancelar</button>
+                            <button type="submit" class="btn-save">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </main>
     </div>
     <script>lucide.createIcons();</script>
+    <script>
+        const App = { baseUrl: '<?php echo BASE_URL; ?>' };
+        lucide.createIcons();
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="../../../public/js/admin/ayuda.js"></script> 
+    <script src="js/admin/ayuda.js"></script> 
 </body>
 </html>

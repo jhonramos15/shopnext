@@ -50,4 +50,28 @@ class AdminIncomeModel {
         $resultado = $this->conn->query($sql);
         return $resultado->fetch_all(MYSQLI_ASSOC);
     }
+    
+    public function findOrderById(int $id_pedido): ?array {
+        $stmt = $this->conn->prepare("SELECT id_pedido, estado FROM pedido WHERE id_pedido = ?");
+        $stmt->bind_param("i", $id_pedido);
+        $stmt->execute();
+        $resultado = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $resultado;
+    }
+
+    /**
+     * ✅ NUEVO: Actualiza el estado de un pedido.
+     */
+    public function updateOrderStatus(int $id_pedido, string $estado): bool {
+        // Lista de estados permitidos para seguridad
+        $allowed_statuses = ['Pendiente', 'Procesando', 'Enviado', 'Completado', 'Cancelado'];
+        if (!in_array($estado, $allowed_statuses)) {
+            return false; // Estado no válido
+        }
+
+        $stmt = $this->conn->prepare("UPDATE pedido SET estado = ? WHERE id_pedido = ?");
+        $stmt->bind_param("si", $estado, $id_pedido);
+        return $stmt->execute();
+    }
 }
