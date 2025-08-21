@@ -34,24 +34,38 @@ class AdminReviewsModel {
         return $stats;
     }
 
+public function getAllReviews(): array {
+    // ✅ MODIFICADO: Usamos LEFT JOIN para más robustez.
+    $sql = "SELECT 
+                r.id_resena, p.nombre_producto, c.nombre AS nombre_cliente,
+                r.puntuacion, r.comentario, r.fecha_creacion, r.estado
+            FROM resenas r
+            LEFT JOIN producto p ON r.id_producto = p.id_producto
+            LEFT JOIN cliente c ON r.id_cliente = c.id_usuario
+            WHERE r.estado IN ('pendiente', 'aprobado')
+            ORDER BY r.fecha_creacion DESC";
+    
+    $resultado = $this->conn->query($sql);
+
+    // Buena práctica: verificar si la consulta falló
+    if ($resultado === false) {
+        // Puedes loggear el error: error_log($this->conn->error);
+        return []; 
+    }
+    
+    return $resultado->fetch_all(MYSQLI_ASSOC);
+}
+
     /**
-     * Obtiene la lista completa de todas las reseñas.
+     * ✅ NUEVO: Actualiza el estado de una reseña.
      */
-    public function getAllReviews(): array {
-        $sql = "SELECT 
-                    r.id_resena,
-                    p.nombre_producto,
-                    c.nombre AS nombre_cliente,
-                    r.puntuacion,
-                    r.comentario,
-                    r.fecha_creacion,
-                    r.estado
-                FROM resenas r
-                JOIN producto p ON r.id_producto = p.id_producto
-                JOIN cliente c ON r.id_cliente = c.id_cliente
-                ORDER BY r.fecha_creacion DESC";
-        
-        $resultado = $this->conn->query($sql);
-        return $resultado->fetch_all(MYSQLI_ASSOC);
+    public function updateReviewStatus(int $id_resena, string $estado): bool {
+        $allowed_statuses = ['aprobado', 'pendiente', 'rechazado'];
+        if (!in_array($estado, $allowed_statuses)) {
+            return false;
+        }
+        $stmt = $this->conn->prepare("UPDATE resenas SET estado = ? WHERE id_resena = ?");
+        $stmt->bind_param("si", $estado, $id_resena);
+        return $stmt->execute();
     }
 }

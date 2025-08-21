@@ -35,60 +35,40 @@ class AdminProductController {
 
     public function getProductData() {
         header('Content-Type: application/json');
-        $id_producto = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-        if (!$id_producto) {
-            echo json_encode(['success' => false, 'message' => 'ID no válido.']);
+        if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+            echo json_encode(['success' => false, 'message' => 'ID de producto no válido.']);
             return;
         }
-        $productModel = new \App\Models\Admin\AdminProductModel();
+        $id_producto = (int)$_GET['id'];
+        $productModel = new AdminProductModel();
         $product = $productModel->findProductById($id_producto);
         echo json_encode(['success' => !!$product, 'data' => $product]);
     }
 
-    /**
-     * ✅ NUEVO: Maneja la actualización de un producto.
-     */
     public function handleUpdate() {
         header('Content-Type: application/json');
-        $data = json_decode(file_get_contents('php://input'), true);
-        $id_producto = $data['id_producto'] ?? 0;
-
-        $productModel = new \App\Models\Admin\AdminProductModel();
-        $success = $productModel->updateProduct($id_producto, $data);
-        
-        echo json_encode(['success' => $success]);
-    }
-
-    /**
-     * ✅ NUEVO: Maneja la eliminación de un producto.
-     */
-    public function handleDelete() {
-        header('Content-Type: application/json');
-        $response = ['success' => false, 'message' => 'Error desconocido al eliminar.'];
-
         try {
             $data = json_decode(file_get_contents('php://input'), true);
             $id_producto = $data['id_producto'] ?? 0;
-
-            if ($id_producto > 0) {
-                $productModel = new AdminProductModel();
-                if ($productModel->deleteProduct($id_producto)) {
-                    $response = ['success' => true];
-                } else {
-                    $response['message'] = 'La operación de borrado falló en la base de datos.';
-                }
-            } else {
-                $response['message'] = 'ID de producto no válido.';
-            }
+            $data['id_categoria'] = $data['categoria']; // Aseguramos que el ID de categoría se pase correctamente
+            $productModel = new AdminProductModel();
+            $success = $productModel->updateProduct($id_producto, $data);
+            echo json_encode(['success' => $success]);
         } catch (Exception $e) {
-            // CLAVE: Capturamos el error de la base de datos (ej. clave foránea)
-            if (str_contains($e->getMessage(), 'foreign key constraint')) {
-                 $response['message'] = 'No se puede eliminar. El producto está asociado a pedidos o reseñas.';
-            } else {
-                $response['message'] = 'Error del servidor: ' . $e->getMessage();
-            }
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
-        
-        echo json_encode($response);
+    }
+
+    public function handleDelete() {
+        header('Content-Type: application/json');
+        try {
+            $data = json_decode(file_get_contents('php://input'), true);
+            $id_producto = $data['id_producto'] ?? 0;
+            $productModel = new AdminProductModel();
+            $success = $productModel->deleteProduct($id_producto);
+            echo json_encode(['success' => $success]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
 }

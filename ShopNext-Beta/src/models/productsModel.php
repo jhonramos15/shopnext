@@ -72,9 +72,9 @@ class ProductsModel {
     public function findProductById($id) {
         // 1. Obtener los datos principales del producto y su categoría
         // Se usa LEFT JOIN para que los productos sin categoría no causen un error.
-        $sql = "SELECT p.*, c.nombre AS nombre_categoria 
+        $sql = "SELECT p.*, c.nombre AS nombre 
                 FROM producto p
-                LEFT JOIN categorias c ON p.id_categoria = c.id_categoria
+                LEFT JOIN categoria c ON p.id_categoria = c.id_categoria
                 WHERE p.id_producto = ?";
         
         $stmt = $this->conn->prepare($sql);

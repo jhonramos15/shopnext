@@ -16,7 +16,7 @@ class AdminProductModel {
     }
 
     public function getAllCategories(): array {
-        $sql = "SELECT id_categoria, nombre FROM categorias ORDER BY nombre ASC";
+        $sql = "SELECT id_categoria, nombre FROM categoria ORDER BY nombre ASC";
         $resultado = $this->conn->query($sql);
         return $resultado->fetch_all(MYSQLI_ASSOC);
     }

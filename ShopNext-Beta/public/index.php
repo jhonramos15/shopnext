@@ -340,10 +340,22 @@ switch ($page) {
             }
             break; // Fin del case 'income'
 
-            case 'reviews': // ✅ ¡NUEVA RUTA!
-                $controller = new AdminReviews();
-                $controller->showReviewsPage();
-                break;
+        case 'reviews':
+            $controller = new AdminReviews();
+            $crudAction = $_GET['crud'] ?? null;
+
+            switch ($crudAction) {
+                case 'update':
+                    $controller->handleUpdate();
+                    break;
+                case 'delete':
+                    $controller->handleDelete();
+                    break;
+                default:
+                    $controller->showReviewsPage();
+                    break;
+            }
+            break; // Fin del case 'reviews'
 
 
             default:

@@ -73,38 +73,45 @@
                             <th>Acciones</th>
                         </tr>
                     </thead>
-<tbody>
-    <?php if (!empty($data['reviews'])): ?>
+                    <tbody>
+                        <?php if (!empty($data['reviews'])): ?>
                             <?php foreach ($data['reviews'] as $review): ?>
-                                <tr data-id="<?php echo $review['id_resena']; ?>">
-                                    <td><?php echo htmlspecialchars($review['nombre_producto']); ?></td>
-                                    <td><?php echo htmlspecialchars($review['nombre_cliente']); ?></td>
+                                <tr data-id="<?php echo htmlspecialchars($review['id_resena']); ?>">
+                                    <td><?php echo htmlspecialchars($review['nombre_producto'] ?? 'Producto Eliminado'); ?></td>
+                                    <td><?php echo htmlspecialchars($review['nombre_cliente'] ?? 'Cliente Eliminado'); ?></td>
                                     <td>
-                                        <div class="review-rating">
-                                            <?php for ($i = 1; $i <= 5; $i++): ?>
-                                                <i class="fa-solid fa-star <?php echo ($i <= $review['puntuacion']) ? 'filled' : ''; ?>"></i>
+                                        <div class="stars">
+                                            <?php for($i = 0; $i < 5; $i++): ?>
+                                                <i data-lucide="star" class="<?php echo ($i < $review['puntuacion']) ? 'filled' : ''; ?>"></i>
                                             <?php endfor; ?>
                                         </div>
                                     </td>
                                     <td class="comment"><?php echo htmlspecialchars($review['comentario']); ?></td>
                                     <td><?php echo date("d/m/Y", strtotime($review['fecha_creacion'])); ?></td>
-                                    <td><span class="status <?php echo strtolower(htmlspecialchars($review['estado'])); ?>"><?php echo ucfirst(htmlspecialchars($review['estado'])); ?></span></td>
+                                    <td>
+                                        <span class="status <?php echo strtolower(htmlspecialchars($review['estado'])); ?>">
+                                            <?php echo ucfirst(htmlspecialchars($review['estado'])); ?>
+                                        </span>
+                                    </td>
                                     <td class="table-actions">
                                         <a href="#" class="action-icon approve-btn" title="Aprobar"><i data-lucide="check-circle"></i></a>
                                         <a href="#" class="action-icon reject-btn" title="Rechazar"><i data-lucide="x-circle"></i></a>
-                                        <a href="#" class="action-icon delete-btn" title="Eliminar"><i data-lucide="trash-2"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
-    <?php else: ?>
-        <tr><td colspan="7">No hay reseñas para mostrar.</td></tr>
-    <?php endif; ?>
-</tbody>
+                        <?php else: ?>
+                            <tr><td colspan="7" style="text-align: center;">No hay reseñas para moderar.</td></tr>
+                        <?php endif; ?>
+                    </tbody>
                 </table>
             </section>
         </main>
     </div>
     <script>lucide.createIcons();</script>
-    <script src="<?php echo BASE_URL; ?>js/admin/script-admin.js"></script>
+    <script>
+        const App = { baseUrl: '<?php echo BASE_URL; ?>' };
+        lucide.createIcons();
+    </script>
+    <script src="<?php echo BASE_URL; ?>js/admin/reviews.js"></script>
 </body>
 </html>
