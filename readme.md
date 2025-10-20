@@ -46,6 +46,14 @@ Upon successful completion of the database import, the project will be fully ope
 
 
 
+![photo_5](https://github.com/user-attachments/assets/f6fd7644-3b3e-4edc-9387-ba733d17cc07)
+![photo_4](https://github.com/user-attachments/assets/7c4d07fc-4804-40b5-8449-4f42c34518f9)
+![photo_3](https://github.com/user-attachments/assets/f254a2a6-7e92-4068-963d-d0cc5b46233b)
+![photo_2](https://github.com/user-attachments/assets/68e6e66b-1dd6-42be-bb61-572567d7535d)
+![photo_1](https://github.com/user-attachments/assets/a6cdda2b-b75e-4295-a55c-e2ac3a255a96)
+![photo_8](https://github.com/user-attachments/assets/88c66d6c-ce1b-4c4e-8702-efc995d5ac53)
+![photo_7](https://github.com/user-attachments/assets/c9960994-352f-438f-bbce-68f626ed02dc)
+![photo_6](https://github.com/user-attachments/assets/ded73396-b8e0-4726-9c5e-6370d11d0f53)
 
 
 
